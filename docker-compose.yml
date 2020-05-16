@@ -1,0 +1,24 @@
+version: '3.6'
+services:
+  mongo_db:
+    container_name: pocas_mongo
+    image: mongo
+    volumes:
+      - mongo_db:/data/db
+    restart: always
+    env_file:
+      - local.env
+    ports:
+      - 27017:27017
+
+
+  api:
+    container_name: pocas_api
+    build:
+      context: ./
+      dockerfile: Dockerfile_Python
+    env_file:
+      - local.env
+
+volumes:
+  mongo_db:

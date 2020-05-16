@@ -1,0 +1,7 @@
+pandas
+numpy
+mongo
+flask
+flask-restx
+googlemaps==3.0.2
+pytz

@@ -1,0 +1,14 @@
+FROM python:3.6
+
+RUN apt-get update && apt-get install -y \
+    git \
+    apt-utils \
+    build-essential
+
+RUN mkdir /app
+COPY requirements.txt /app/
+WORKDIR /app
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
+
+COPY python /app
