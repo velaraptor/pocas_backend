@@ -17,6 +17,9 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile_Python
+    command: python api/app.py
+    ports:
+      - 8080:80
     env_file:
       - local.env
 
