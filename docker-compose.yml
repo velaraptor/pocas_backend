@@ -23,5 +23,10 @@ services:
     env_file:
       - local.env
 
+# TODO: init script to upload to mongo
+# TODO: Add nginx
+# TODO: Add oauth. or nginx
+# TODO: send questionaire and then create return of lat/lon and things to use
+
 volumes:
   mongo_db:
