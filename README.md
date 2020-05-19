@@ -1,5 +1,5 @@
 # pocas_backend
-![Python application](https://github.com/velaraptor/pocas_backend/workflows/Python%20application/badge.svg)
+![Code Coverage](https://github.com/velaraptor/pocas_backend/workflows/Code%20Coverage/badge.svg)
 
 Flask API, Lambda, and Mongo DB Dockerized
 
