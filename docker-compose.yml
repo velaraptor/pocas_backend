@@ -26,10 +26,7 @@ services:
       - local.env
       - keys.env
 
-# TODO: init script to upload to mongo
 # TODO: Add nginx
-# TODO: Add oauth. or nginx
-# TODO: send questionaire and then create return of lat/lon and things to use
-
+# https://www.digitalocean.com/community/tutorials/how-to-build-and-deploy-a-flask-application-using-docker-on-ubuntu-18-04
 volumes:
   mongo_db:

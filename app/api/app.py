@@ -1,10 +1,11 @@
+import os
+
 from flask import Flask, Blueprint
 from flask_restx import Api, Resource, fields
 from cosine_search.top_results import GetTopNResults
 from db.mongo_connector import MongoConnector
 from db.upload_data import main as upload_data
 from db.consts import get_env_bool, DB_SERVICES
-import os
 
 VERSION = os.getenv('VERSION')
 api_v1 = Blueprint('api', __name__, url_prefix=f'/api/v{VERSION}/')

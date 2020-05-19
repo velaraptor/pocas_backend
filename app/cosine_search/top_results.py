@@ -1,16 +1,22 @@
-from db.mongo_connector import MongoConnector
-import googlemaps
 from datetime import datetime
 import os
 import logging
 import traceback
 
+import googlemaps
+
 from db.consts import DB_SERVICES
+from db.mongo_connector import MongoConnector
+
 import pandas as pd
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 
-AGE_MAPPER = {''}
+AGE_MAPPER = {
+    'Elderly': [51, 120],
+    'Adult': [36, 50],
+    'Young Adult': [21, 35],
+    'Adolescent': [0, 20]}
 
 ANSWERS_MAPPER = {''}
 
@@ -60,9 +66,15 @@ class GetTopNResults:
 
         :return: Array of Tags Matched
         """
-        a = self.answers
-        # TODO: map with age and tags 
-        return ['Public Benefits']
+        answers = self.answers
+
+        # TODO: map with tags
+        age_df = pd.DataFrame(AGE_MAPPER)
+        vals = np.abs(np.sum(age_df - self.age))
+
+        age_tags = vals[vals == np.min(vals)].index.values[0]
+        answer_tags = ['Public Benefits']
+        return answer_tags + [age_tags]
 
     def run_similarity(self, results):
         """
@@ -84,7 +96,8 @@ class GetTopNResults:
         empty_user_tags = pd.DataFrame([np.zeros(overall_length)],
                                        columns=np.concatenate((general_topic_unique, tags_unique)))
         for tag in self.tags:
-            empty_user_tags[tag] = 1
+            if tag in empty_user_tags:
+                empty_user_tags[tag] = 1
 
         user_vector = [self.lat, self.lon]
         user_vector = np.concatenate((user_vector, empty_user_tags.values[0]))
