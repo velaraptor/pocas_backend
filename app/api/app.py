@@ -16,7 +16,7 @@ ns = api.namespace('top_results', description='recieve questionaire and get resu
 top_results = api.model(
     'TopResults', {'id': fields.Integer(required=True, description="Unique id of Service", example=1),
                    'name': fields.String(required=True, description="The Name of Service", example='Indigent Legal Fund'),
-                   'phone': fields.Integer(required=True, description="Phone Number of service"),
+                   'phone': fields.Integer(required=True, description="Phone Number of service", example=5551114444),
                    'address': fields.String(required=False, description="the address of service", example='1111 S 1st'),
                    'general_topic': fields.String(required=True, description="the general topic service belongs to",
                                                   example='Immigration'),
@@ -37,6 +37,7 @@ top_results = api.model(
 
 
 parser = api.parser()
+# TODO; change these args
 parser.add_argument(
     "address", type=str, required=True, help="the address"
 )
@@ -57,8 +58,7 @@ class TopResults(Resource):
     @api.marshal_with(top_results)
     def post(self):
         """
-        Send questionaire and get top n results
-        :return:
+        Send questionnaire and get Top N results
         """
         args = parser.parse_args()
         return TEST
@@ -66,8 +66,7 @@ class TopResults(Resource):
     @api.marshal_with(top_results)
     def get(self):
         """
-        Get all services
-        :return:
+        Get all Services for POCAS
         """
         m = MongoConnector()
         results = m.query_results(db='results', collection='services', query={})
@@ -79,7 +78,6 @@ class TopResults(Resource):
 
 if __name__ == '__main__':
     app = Flask(__name__)
-    app.config['RESTX_MASK_SWAGGER'] = False
-
+    app.config['RESTX_MASK_SWAGGER'] = os.getenv('RESTX_MASK_SWAGGER', False)
     app.register_blueprint(api_v1)
     app.run(debug=True, port=80, host='0.0.0.0')

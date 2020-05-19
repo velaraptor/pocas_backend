@@ -3,6 +3,9 @@ import os
 
 
 class MongoConnector:
+    """
+    General MongoDB Connector
+    """
     def __init__(self):
         self.host = os.getenv('MONGO_HOST')
         self.port = os.getenv('MONGO_PORT')
@@ -12,6 +15,17 @@ class MongoConnector:
         self.client = MongoClient(uri)
 
     def query_results(self, db, collection, query):
+        """
+        Query Mongo DB with database, collection and query
+
+        :param db: database to look at
+        :type db: str
+        :param collection: collection to look at
+        :type collection: str
+        :param query: query to run on collection
+        :type query: dict
+        :return: list[dict]
+        """
         db = self.client[db]
         c = db[collection]
         results = []
@@ -20,6 +34,17 @@ class MongoConnector:
         return results
 
     def upload_results(self, db, collection, data):
+        """
+        Upload Results to database, collection with data as a list of dictionaries
+
+        :param db: database to look at
+        :type db: str
+        :param collection: collection to look at
+        :type collection: str
+        :param data: data to insert into mongodb
+        :type data: list[dict]
+        :return: list of meta ids of inserted documents
+        """
         db = self.client[db]
         c = db[collection]
         result = c.insert_many(data)
