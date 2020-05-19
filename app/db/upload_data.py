@@ -5,6 +5,8 @@ import googlemaps
 import os
 import ast
 import logging
+from bson.objectid import ObjectId
+from db.consts import DB_SERVICES
 
 logging.basicConfig(level=logging.INFO)
 
@@ -16,6 +18,7 @@ def parse_lat_lon(row):
     if len(a) > 0:
         row['lat'] = a[0]['geometry']['location']['lat']
         row['lon'] = a[0]['geometry']['location']['lng']
+    row['loc'] = [row['lon'], row['lat']]
     return row
 
 
@@ -30,6 +33,9 @@ def main():
     :return:
     """
     m = MongoConnector()
+    collection = m.client.results.services
+    for doc in collection.find({}):
+        collection.delete_one({'_id': ObjectId(doc['_id'])})
     file = os.getenv('SERVICES_CSV')
     if file is None:
         raise Exception('Add file to upload in local.env!')
@@ -42,10 +48,10 @@ def main():
     data['tags'] = data.tags.apply(lambda x: ast.literal_eval(x))
     data = data.apply(lambda x: parse_lat_lon(x), axis=1)
     data = data[['name', 'phone', 'address', 'general_topic', 'tags',
-                 'city', 'state', 'zip_code', 'web_site', 'lat', 'lon']]
+                 'city', 'state', 'zip_code', 'web_site', 'lat', 'lon', 'loc']]
     data = data.to_dict(orient='records')
     log().info(data)
-    ids = m.upload_results(db='results', collection='services', data=data)
+    ids = m.upload_results(db=DB_SERVICES['db'], collection=DB_SERVICES['collection'], data=data, geo_index=True)
     log().info(ids)
 
 

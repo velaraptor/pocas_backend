@@ -2,8 +2,9 @@ from flask import Flask, Blueprint
 from flask_restx import Api, Resource, fields
 from cosine_search.top_results import GetTopNResults
 from db.mongo_connector import MongoConnector
+from db.upload_data import main as upload_data
+from db.consts import get_env_bool, DB_SERVICES
 import os
-import ast
 
 VERSION = os.getenv('VERSION')
 api_v1 = Blueprint('api', __name__, url_prefix=f'/api/v{VERSION}/')
@@ -11,7 +12,7 @@ api = Api(api_v1, version='v%s' % VERSION, title='POCAS API',
           description='an api to get results for pocas',
           )
 
-ns = api.namespace('top_results', description='recieve questionaire and get results')
+ns = api.namespace('services', description='recieve questionaire and get results')
 
 services = api.model(
     'Service', {'id': fields.String(required=True, description="Unique id of Service", example='1fjdasd'),
@@ -52,12 +53,30 @@ parser.add_argument(
     "top_n", type=int, required=True, help="top n results"
 )
 
-TEST = {'id': 1, 'name': 'test', 'phone': 5551114444, 'general_topic': 'test', 'tags': ['tag1', 'tag2'],
-        'web_site': 'http://www.example.com', 'pocas_score': 0.98}
-
 
 @ns.route("/")
-class TopResults(Resource):
+class Services(Resource):
+    @api.marshal_with(results)
+    def get(self):
+        """
+        Get all Services for POCAS
+        """
+        m = MongoConnector()
+        all_services = m.query_results(db=DB_SERVICES['db'], collection=DB_SERVICES['collection'],
+                                       query={}, exclude={'loc': 0})
+        for r in all_services:
+            r['id'] = str(r['_id'])
+            r.pop('_id', None)
+        num_docs = len(all_services)
+        if num_docs > 0:
+            response = {'services': all_services, 'num_of_services': num_docs}
+            return response, 201
+        else:
+            return None, 404
+
+
+@ns.route('/top_n')
+class TopNResults(Resource):
     @api.doc(parser=parser)
     @api.marshal_with(results)
     def post(self):
@@ -70,29 +89,20 @@ class TopResults(Resource):
         address = args['address']
         answers = args['question_answers']
         gtr = GetTopNResults(top_n=top_n, dob=dob, answers=answers, address=address)
-        services = gtr.get_top_results()
-        return {'services': services, 'num_of_services': len(services)}
-
-    @api.marshal_with(results)
-    def get(self):
-        """
-        Get all Services for POCAS
-        """
-        m = MongoConnector()
-        results = m.query_results(db='results', collection='services', query={})
-        for r in results:
+        top_services = gtr.get_top_results()
+        for r in top_services:
             r['id'] = str(r['_id'])
             r.pop('_id', None)
-        num_docs = len(results)
-        if num_docs > 0:
-            response = {'services': results, 'num_of_services': num_docs}
-            return response, 201
-        else:
-            return None, 404
+        return {'services': top_services, 'num_of_services': len(top_services)}
 
 
 if __name__ == '__main__':
+    # upload data
+    rerun_upload_services = get_env_bool('RERUN_SERVICES')
+    if rerun_upload_services:
+        upload_data()
+
     app = Flask(__name__)
-    app.config['RESTX_MASK_SWAGGER'] = ast.literal_eval(os.getenv('RESTX_MASK_SWAGGER', 'False'))
+    app.config['RESTX_MASK_SWAGGER'] = get_env_bool('RESTX_MASK_SWAGGER')
     app.register_blueprint(api_v1)
     app.run(debug=True, port=80, host='0.0.0.0')
