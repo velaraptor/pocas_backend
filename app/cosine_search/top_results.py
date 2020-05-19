@@ -26,6 +26,7 @@ class GetTopNResults:
         self.lat = None
         self.lon = None
         self.age = self.get_age()
+        self.tags = []
 
     def get_lat_lon(self):
         """
@@ -60,6 +61,7 @@ class GetTopNResults:
         :return: Array of Tags Matched
         """
         a = self.answers
+        # TODO: map with age and tags 
         return ['Public Benefits']
 
     def run_similarity(self, results):
@@ -75,15 +77,17 @@ class GetTopNResults:
 
         matrix = pd.concat([df_results[['lat', 'lon']], dummies_tags, dummies_general_topic], axis=1)
         matrix_val = matrix.values
-        # TODO: make sure tags match up
         general_topic_unique = dummies_general_topic.columns.values
         tags_unique = dummies_tags.columns.values
-        # TODO: for now
         overall_length = len(general_topic_unique) + len(tags_unique)
-        tags_user_vals = np.random.choice(2, overall_length)
-        
+
+        empty_user_tags = pd.DataFrame([np.zeros(overall_length)],
+                                       columns=np.concatenate((general_topic_unique, tags_unique)))
+        for tag in self.tags:
+            empty_user_tags[tag] = 1
+
         user_vector = [self.lat, self.lon]
-        user_vector = np.concatenate((user_vector, tags_user_vals))
+        user_vector = np.concatenate((user_vector, empty_user_tags.values[0]))
 
         sim_matrix = np.vstack((matrix_val, user_vector))
         sim_values = cosine_similarity(sim_matrix)
@@ -102,10 +106,10 @@ class GetTopNResults:
         :return:
         """
         self.get_lat_lon()
-        tags = self.map_answers_tags()
+        self.tags = self.map_answers_tags()
         m = MongoConnector()
         top_results = m.query_results(db=DB_SERVICES['db'], collection=DB_SERVICES['collection'],
-                                      query={'tags': {'$in': tags}},
+                                      query={'tags': {'$in': self.tags}},
                                       exclude={'loc': 0})
         self.log().info(self.__dict__)
         try:
