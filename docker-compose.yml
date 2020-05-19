@@ -22,6 +22,7 @@ services:
       - 8080:80
     env_file:
       - local.env
+      - keys.env
 
 # TODO: init script to upload to mongo
 # TODO: Add nginx
