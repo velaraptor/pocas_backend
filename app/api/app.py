@@ -40,12 +40,13 @@ results = api.model('TopResults', {'services': fields.List(fields.Nested(service
                                    'num_of_services': fields.Integer(required=True, example=1)})
 
 parser = api.parser()
-# TODO; change these args
 parser.add_argument(
     "address", type=str, required=True, help="the address"
 )
 parser.add_argument(
     "dob", type=int, required=True, help="the date of birth")
+
+# TODO; change these args
 parser.add_argument(
     "question_answers", type=str, required=True, help="the answer to question"
 )

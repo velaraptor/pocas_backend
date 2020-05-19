@@ -3,6 +3,8 @@ import googlemaps
 from datetime import datetime
 import os
 import logging
+import traceback
+
 from db.consts import DB_SERVICES
 import pandas as pd
 import numpy as np
@@ -11,12 +13,13 @@ from sklearn.metrics.pairwise import cosine_similarity
 AGE_MAPPER = {''}
 
 ANSWERS_MAPPER = {''}
+
 logging.basicConfig(level=logging.INFO)
 
 
 class GetTopNResults:
     def __init__(self, top_n, dob, answers, address):
-        self.top_n = top_n
+        self.top_n = top_n if top_n != 0 else 1
         self.address = address
         self.dob = datetime.strptime(str(dob), '%m%d%Y')
         self.answers = answers
@@ -52,12 +55,45 @@ class GetTopNResults:
 
     def map_answers_tags(self):
         """
-        Map Questionairre to Mapper
+        Map Questionnaire to Mapper
 
         :return: Array of Tags Matched
         """
         a = self.answers
         return ['Public Benefits']
+
+    def run_similarity(self, results):
+        """
+        run cosine similarity and euclidean distance, get top n, normalize lat/lon
+        :param results:
+        :return:
+        """
+
+        df_results = pd.DataFrame(results)
+        dummies_tags = pd.get_dummies(df_results.tags.apply(pd.Series).stack()).sum(level=0)
+        dummies_general_topic = pd.get_dummies(df_results.general_topic)
+
+        matrix = pd.concat([df_results[['lat', 'lon']], dummies_tags, dummies_general_topic], axis=1)
+        matrix_val = matrix.values
+        # TODO: make sure tags match up
+        general_topic_unique = dummies_general_topic.columns.values
+        tags_unique = dummies_tags.columns.values
+        # TODO: for now
+        overall_length = len(general_topic_unique) + len(tags_unique)
+        tags_user_vals = np.random.choice(2, overall_length)
+        
+        user_vector = [self.lat, self.lon]
+        user_vector = np.concatenate((user_vector, tags_user_vals))
+
+        sim_matrix = np.vstack((matrix_val, user_vector))
+        sim_values = cosine_similarity(sim_matrix)
+        sim_vals = sim_values[len(df_results)][:len(df_results)]
+
+        df_results['pocas_score'] = sim_vals
+        df_results = df_results.sort_values('pocas_score', ascending=False)
+        final_results = df_results[:int(self.top_n)]
+        final_results = final_results.to_dict(orient='records')
+        return final_results
 
     def get_top_results(self):
         """
@@ -71,9 +107,13 @@ class GetTopNResults:
         top_results = m.query_results(db=DB_SERVICES['db'], collection=DB_SERVICES['collection'],
                                       query={'tags': {'$in': tags}},
                                       exclude={'loc': 0})
-        self.log().info(top_results)
         self.log().info(self.__dict__)
-        # run cosine similiarty and euclidean distance, get top n, normalize lat/lon
-        for t in top_results:
-            t['pocas_score'] = 0.99
-        return top_results
+        try:
+            final_results = self.run_similarity(top_results)
+        except Exception:
+            traceback.print_exc()
+            self.log().warning('Could not run cosine sim, reverting to mongo query results')
+            final_results = top_results
+        self.log().info(final_results)
+
+        return final_results
