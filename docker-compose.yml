@@ -18,6 +18,8 @@ services:
       context: ./
       dockerfile: Dockerfile_Python
     command: python api/app.py
+    volumes:
+      - ./data:/data
     ports:
       - 8080:80
     env_file:
