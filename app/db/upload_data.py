@@ -13,12 +13,17 @@ logging.basicConfig(level=logging.INFO)
 
 def parse_lat_lon(row):
     gmaps = googlemaps.Client(key=os.getenv('GOOGLE_KEY'))
-    a = row['google_address']
-    a = gmaps.geocode(a)
-    if len(a) > 0:
-        row['lat'] = a[0]['geometry']['location']['lat']
-        row['lon'] = a[0]['geometry']['location']['lng']
-    row['loc'] = [row['lon'], row['lat']]
+    try:
+        a = row['google_address']
+        a = gmaps.geocode(a)
+        if len(a) > 0:
+            row['lat'] = a[0]['geometry']['location']['lat']
+            row['lon'] = a[0]['geometry']['location']['lng']
+        row['loc'] = [row['lon'], row['lat']]
+    except:
+        row['lat'] = None
+        row['lon'] = None
+        row['loc'] = None
     return row
 
 

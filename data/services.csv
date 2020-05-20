@@ -1,5 +1,8 @@
 name,phone,address,general_topic,tags,city,state,zip_code,web_site
-Southern Arizona Legal Aid,5206239461,2343 E. Broadway Blvd #20,Public Benefits,"['Public Benefits', 'Social Security', 'Domestic Violence']",Tuscon,AZ,85719,https://www.sazlegalaid.org/services
+Southern Arizona Legal Aid,5206239461,2343 E. Broadway Blvd #20,Public Benefits,"['Public Benefits', 'Social Security', 'Domestic Violence', 'Legal Services']",Tuscon,AZ,85719,https://www.sazlegalaid.org/services
 SSA,866331769,3808 N 1ST AVE,Public Benefits,"['Public Benefits', 'Social Security']",Tuscon,AZ,85719,www.ssa.gov
 SSA,8662207896,"88 W 38Th St, Ste 100",Public Benefits,"['Public Benefits', 'Social Security']",Tuscon,AZ,85713,www.ssa.gov
 Tucson Indian Center,5208847131,160 Stone Ave,Public Benefits,"['Domestic Violence', 'Housing', 'Indigent']",Tuscon,AZ,85701,https://www.ticenter.org/
+S. AZ Gender Alliance,5204777096,2030 EAST BROADWAY,LGBTQ,['LGBTQ'],Tuscon,AZ,85719,http://www.sagatucson.org/
+Tucson Alliance for Autism,5203195857,3111 E. 2nd Street,Special Education,"['Special Education', 'Mental Health', 'Adolescent']",Tuscon,AZ,85716,https://tucsonallianceforautism.com/
+Our Town Family Center,5203231708,2590 N. Alvernon Way,Young Adult,"['Young Adult', 'Legal Services', 'Shelter', 'Domestic Violence']",Tuscon,AZ,85712,https://www.ourfamilyservices.org/
