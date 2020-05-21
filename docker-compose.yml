@@ -17,16 +17,15 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile_Python
-    command: python api/app.py
+#    command: python api/app.py
     volumes:
       - ./data:/data
     ports:
-      - 8080:80
+      - 8080:8080
     env_file:
       - local.env
       - keys.env
+      - api.env
 
-# TODO: Add nginx
-# https://www.digitalocean.com/community/tutorials/how-to-build-and-deploy-a-flask-application-using-docker-on-ubuntu-18-04
 volumes:
   mongo_db:
