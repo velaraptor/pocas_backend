@@ -6,6 +6,13 @@ from cosine_search.top_results import GetTopNResults
 from db.mongo_connector import MongoConnector
 from db.upload_data import main as upload_data
 from db.consts import get_env_bool, DB_SERVICES
+import logging
+
+
+logging.basicConfig(level=logging.INFO,
+                    format='[%(asctime)s] %(name)s [%(levelname)s]: %(message)s',
+                    datefmt='%Y-%m-%d %H:%M:%S')
+
 
 VERSION = os.getenv('VERSION')
 api_v1 = Blueprint('api', __name__, url_prefix=f'/api/v{VERSION}/')
@@ -15,6 +22,21 @@ api = Api(api_v1, version='v%s' % VERSION, title='POCAS API',
 
 ns = api.namespace('services', description='recieve questionaire and get results')
 
+
+top_n_model = api.model('PatientInfo',
+                        {'dob': fields.Integer(required=True,
+                                               description='Date of Birth in integer such 12252011',
+                                               example=12252011),
+                         'address': fields.String(required=True,
+                                                  description='Address with City State',
+                                                  example='1111 S 1st Tuscon AZ'),
+                         'answers': fields.List(
+                             fields.Integer(description='Answers to Questionnaire Question', example=1), required=True,
+                                                description='List of answers to Questionnaire', example=[1,0,1,0,1]),
+                         'top_n': fields.Integer(required=True,
+                                                 description='Top N Services to Return',
+                                                 example=2)
+                         })
 services = api.model(
     'Service', {'id': fields.String(required=True, description="Unique id of Service", example='1fjdasd'),
                 'name': fields.String(required=True, description="The Name of Service", example='Indigent Legal Fund'),
@@ -42,16 +64,6 @@ results = api.model('TopResults', {'services': fields.List(fields.Nested(service
 
 parser = api.parser()
 parser.add_argument(
-    "address", type=str, required=True, help="the address"
-)
-parser.add_argument(
-    "dob", type=int, required=True, help="the date of birth")
-
-# TODO; change these args
-parser.add_argument(
-    "question_answers", type=str, required=True, help="the answer to question"
-)
-parser.add_argument(
     "top_n", type=int, required=True, help="top n results"
 )
 
@@ -59,10 +71,13 @@ parser.add_argument(
 @ns.route("/")
 class Services(Resource):
     @api.marshal_with(results)
+    @api.response(404, "Results not found")
     def get(self):
         """
         Get all Services for POCAS
         """
+        ns.logger.info("Ran Get Method")
+
         m = MongoConnector()
         all_services = m.query_results(db=DB_SERVICES['db'], collection=DB_SERVICES['collection'],
                                        query={}, exclude={'loc': 0})
@@ -72,31 +87,36 @@ class Services(Resource):
         num_docs = len(all_services)
         if num_docs > 0:
             response = {'services': all_services, 'num_of_services': num_docs}
-            return response, 201
+            return response, 200
         else:
-            return None, 404
+            api.abort(404)
 
 
 @ns.route('/top_n')
 class TopNResults(Resource):
-    @api.doc(parser=parser)
+    @api.expect(top_n_model)
     @api.marshal_with(results)
+    @api.response(404, "Results not found")
     def post(self):
         """
         Send questionnaire and get Top N results
         """
-        args = parser.parse_args()
-        top_n = args['top_n']
-        dob = args['dob']
-        address = args['address']
-        answers = args['question_answers']
-        gtr = GetTopNResults(top_n=top_n, dob=dob, answers=answers, address=address)
-        top_services = gtr.get_top_results()
-        for r in top_services:
-            r['id'] = str(r['_id'])
-            r.pop('_id', None)
-        return {'services': top_services, 'num_of_services': len(top_services)}
-
+        ns.logger.info("Ran Post Method")
+        top_n = api.payload['top_n']
+        dob = api.payload['dob']
+        answers = api.payload['answers']
+        address = api.payload['address']
+        try:
+            gtr = GetTopNResults(top_n=top_n, dob=dob, answers=answers, address=address)
+            top_services = gtr.get_top_results()
+            for r in top_services:
+                r['id'] = str(r['_id'])
+                r.pop('_id', None)
+            assert len(top_services) == int(top_n)
+            return {'services': top_services, 'num_of_services': len(top_services)}, 200
+        except Exception as e:
+            ns.logger.error(e)
+            api.abort(404)
 
 if __name__ == '__main__':
     # upload data

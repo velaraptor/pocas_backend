@@ -8,7 +8,9 @@ import logging
 from bson.objectid import ObjectId
 from db.consts import DB_SERVICES
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO,
+                    format='[%(asctime)s] %(levelname)s: %(message)s',
+                    datefmt='%Y-%m-%d %H:%M:%S')
 
 
 def parse_lat_lon(row):
@@ -47,6 +49,8 @@ def main():
     if os.getenv('GOOGLE_KEY') is None:
         raise Exception('Could not find Google Key! Set it in keys.env!')
     data = pd.read_csv(file)
+    log().info('Size of Services: %s' % str(len(data)))
+    # TODO: what to do with only online services
     ids = np.arange(1, len(data) + 1)
     data['id'] = ids
     data['google_address'] = data.address + ' ' + data.city + ' ' + data.state + ' ' + data.zip_code.astype(str)

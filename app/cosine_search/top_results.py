@@ -21,8 +21,9 @@ AGE_MAPPER = {
 
 ANSWERS_MAPPER = {''}
 
-logging.basicConfig(level=logging.INFO)
-
+logging.basicConfig(level=logging.INFO,
+                    format='[%(asctime)s] %(name)s [%(levelname)s]: %(message)s',
+                    datefmt='%Y-%m-%d %H:%M:%S')
 
 class GetTopNResults:
     def __init__(self, top_n, dob, answers, address):
@@ -105,7 +106,7 @@ class GetTopNResults:
         weights = np.concatenate(([0.0005, 0.0005], np.ones(overall_length) * 1.25))
         sim_matrix = Normalizer().transform(sim_matrix * weights)
         sim_values = cosine_similarity(sim_matrix)
-        self.log().info(sim_values)
+        self.log().debug(sim_values)
         sim_vals = sim_values[len(df_results)][:len(df_results)]
 
         df_results['pocas_score'] = sim_vals
