@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, Blueprint
+from flask import Flask, Blueprint, request
 from flask_restx import Api, Resource, fields
 from cosine_search.top_results import GetTopNResults
 from db.mongo_connector import MongoConnector
@@ -13,11 +13,18 @@ logging.basicConfig(level=logging.INFO,
                     format='[%(asctime)s] %(name)s [%(levelname)s]: %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S')
 
+authorizations = {
+    'apikey': {
+        'type': 'apiKey',
+        'in': 'header',
+        'name': 'X-API-KEY'
+    }
+}
 
 VERSION = os.getenv('VERSION')
 api_v1 = Blueprint('api', __name__, url_prefix=f'/api/v{VERSION}/')
 api = Api(api_v1, version='v%s' % VERSION, title='POCAS API',
-          description='an api to get results for pocas',
+          description='an api to get results for pocas', authorizations=authorizations, security='apikey'
           )
 
 ns = api.namespace('services', description='recieve questionaire and get results')
@@ -72,10 +79,13 @@ parser.add_argument(
 class Services(Resource):
     @api.marshal_with(results)
     @api.response(404, "Results not found")
+    @api.response(401, "Unauthorized key!")
     def get(self):
         """
         Get all Services for POCAS
         """
+        if request.headers.get('X-API-KEY', '') != os.getenv('API_SECRET'):
+            api.abort(401)
         ns.logger.info("Ran Get Method")
 
         m = MongoConnector()
@@ -97,10 +107,13 @@ class TopNResults(Resource):
     @api.expect(top_n_model)
     @api.marshal_with(results)
     @api.response(404, "Results not found")
+    @api.response(401, "Unauthorized key!")
     def post(self):
         """
         Send questionnaire and get Top N results
         """
+        if request.headers.get('X-API-KEY', '') != os.getenv('API_SECRET'):
+            api.abort(401)
         ns.logger.info("Ran Post Method")
         top_n = api.payload['top_n']
         dob = api.payload['dob']

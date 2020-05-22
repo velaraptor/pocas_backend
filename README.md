@@ -13,6 +13,6 @@ Add keys.env file at top directory and add Google API Key
 ## ports open
 
  * MongoDB: http://0.0.0.0:27017
- * API: http://0.0.0.0:8080/api/v1
+ * API: http://0.0.0.0:80/api/v1
   
     * ```$VERSION``` is set in local.env; is int, for example ```v1```
