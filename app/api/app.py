@@ -5,7 +5,7 @@ from flask_restx import Api, Resource, fields
 from cosine_search.top_results import GetTopNResults
 from db.mongo_connector import MongoConnector
 from db.upload_data import main as upload_data
-from db.consts import get_env_bool, DB_SERVICES
+from db.consts import get_env_bool, DB_SERVICES, get_lat_lon
 import logging
 
 
@@ -69,15 +69,32 @@ services = api.model(
 results = api.model('TopResults', {'services': fields.List(fields.Nested(services)),
                                    'num_of_services': fields.Integer(required=True, example=1)})
 
-parser = api.parser()
-parser.add_argument(
-    "top_n", type=int, required=True, help="top n results"
-)
+success_service = api.model('MongoId',
+                            {'id': fields.String(required=True,
+                                                 description='Id of Service on MongoDB')})
 
+post_service = api.model(
+    'ServiceUpload', {
+                'name': fields.String(required=True, description="The Name of Service", example='Indigent Legal Fund'),
+                'phone': fields.Integer(required=True, description="Phone Number of service", example=5551114444),
+                'address': fields.String(required=False, description="the address of service", example='1111 S 1st'),
+                'general_topic': fields.String(required=True, description="the general topic service belongs to",
+                                               example='Immigration'),
+                'tags': fields.List(fields.String(required=False, description='tag', example='Young Adult'),
+                                    required=True, description='tags associated'),
+                'city': fields.String(required=False, description="city service is in", example='Tuscon'),
+                'state': fields.String(required=False, description="state service is in", example='AZ'),
+                'lat': fields.Float(required=False, description="Latitude coordinates", example=72.34),
+                'lon': fields.Float(required=False, description="Longitude coordinates", example=34.01),
+                'zip_code': fields.Integer(required=False, description='zip code for service', example=78724),
+                'web_site': fields.String(required=False, description='web site for service',
+                                          example='http://www.example.com')
+                }
+)
 
 @ns.route("/")
 class Services(Resource):
-    @api.marshal_with(results)
+    @api.marshal_with(results, skip_none=True)
     @api.response(404, "Results not found")
     @api.response(401, "Unauthorized key!")
     def get(self):
@@ -87,7 +104,6 @@ class Services(Resource):
         if request.headers.get('X-API-KEY', '') != os.getenv('API_SECRET'):
             api.abort(401)
         ns.logger.info("Ran Get Method")
-
         m = MongoConnector()
         all_services = m.query_results(db=DB_SERVICES['db'], collection=DB_SERVICES['collection'],
                                        query={}, exclude={'loc': 0})
@@ -101,11 +117,24 @@ class Services(Resource):
         else:
             api.abort(404)
 
+    @api.expect(post_service, skip_none=True)
+    @api.marshal_with(success_service, skip_none=True)
+    def post(self):
+        """
+        Upload Service to MongoDB
+        :return:
+        """
+        ns.logger.info("Ran Post Method")
+        m = MongoConnector()
+        payload = api.payload
+        payload = get_lat_lon(payload)
+        mongo_id = m.upload_results(db=DB_SERVICES['db'], collection=DB_SERVICES['collection'], data=[payload])
+        return {'id': mongo_id[0].id}, 200
 
 @ns.route('/top_n')
 class TopNResults(Resource):
     @api.expect(top_n_model)
-    @api.marshal_with(results)
+    @api.marshal_with(results, skip_none=True)
     @api.response(404, "Results not found")
     @api.response(401, "Unauthorized key!")
     def post(self):

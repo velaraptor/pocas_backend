@@ -8,3 +8,6 @@ pytz
 pymongo==3.10.1
 scikit-learn==0.23.1
 pytest
+flask-admin
+flask-mongoengine
+Flask-Login>=0.3.0
