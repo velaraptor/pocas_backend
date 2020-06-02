@@ -132,7 +132,7 @@ class Services(Resource):
         payload = api.payload
         payload = get_lat_lon(payload)
         mongo_id = m.upload_results(db=DB_SERVICES['db'], collection=DB_SERVICES['collection'], data=[payload])
-        return {'id': mongo_id[0].id}, 200
+        return {'id': mongo_id[0]}, 200
 
 @ns.route('/top_n')
 class TopNResults(Resource):
