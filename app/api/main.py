@@ -1,33 +1,31 @@
 from db.consts import get_env_bool
-from flask import Flask, url_for, render_template
+from flask import Flask, url_for, redirect
 from api.app import api_v1
 from admin.app import admin
 from flask_security import Security, MongoEngineUserDatastore, \
-    UserMixin, RoleMixin, login_required
+    UserMixin, RoleMixin, auth_required, hash_password
 from flask_mongoengine import MongoEngine
 from flask_admin import helpers as admin_helpers
 import os
+import secrets
 
 app = Flask(__name__)
 app.config['RESTX_MASK_SWAGGER'] = get_env_bool('RESTX_MASK_SWAGGER')
 app.config['FLASK_ADMIN_SWATCH'] = 'cerulean'
-app.config['SECRET_KEY'] = '1234567904872'
+app.config['SECRET_KEY'] = secrets.token_urlsafe()
 # Flask-Security config
 app.config['SECURITY_URL_PREFIX'] = "/admin"
-app.config['SECURITY_PASSWORD_HASH'] = "pbkdf2_sha512"
-app.config['SECURITY_PASSWORD_SALT'] = "ATGUOHAELKiubahiughaerGOJAEGj"
+app.config['SECURITY_PASSWORD_SALT'] = os.environ.get("SECURITY_PASSWORD_SALT", '146585145368132386173505678016728509634')
 
 # Flask-Security URLs, overridden because they don't put a / at the end
 app.config['SECURITY_LOGIN_URL'] = "/login/"
 app.config['SECURITY_LOGOUT_URL'] = "/logout/"
-app.config['SECURITY_REGISTER_URL'] = "/register/"
 
 app.config['SECURITY_POST_LOGIN_VIEW'] = "/admin/"
 app.config['SECURITY_POST_LOGOUT_VIEW'] = "/admin/"
-app.config['SECURITY_POST_REGISTER_VIEW'] = "/admin/"
 
 # Flask-Security features
-app.config['SECURITY_REGISTERABLE'] = True
+app.config['SECURITY_REGISTERABLE'] = False
 app.config['SECURITY_SEND_REGISTER_EMAIL'] = False
 
 
@@ -41,7 +39,6 @@ app.config['MONGODB_SETTINGS'] = {
 
 db = MongoEngine(app)
 
-
 class Role(db.Document, RoleMixin):
     name = db.StringField(max_length=80, unique=True)
     description = db.StringField(max_length=255)
@@ -50,23 +47,25 @@ class User(db.Document, UserMixin):
     email = db.StringField(max_length=255)
     password = db.StringField(max_length=255)
     active = db.BooleanField(default=True)
+    fs_uniquifier = db.StringField(max_length=255)
     confirmed_at = db.DateTimeField()
-    roles = db.ListField(db.ReferenceField(Role), default=['superuser'])
+    roles = db.ListField(db.ReferenceField(Role), default=[])
 
 user_datastore = MongoEngineUserDatastore(db, User, Role)
 security = Security(app, user_datastore)
 
 
 # Create a user to test with
-# @app.before_first_request
-# def create_user():
-#     user_datastore.create_user(email='chris@gmail.com', password='password')
+@app.before_first_request
+def create_user():
+    user_datastore.create_user(email=os.getenv('ADMIN_USER'), password=hash_password(os.getenv('ADMIN_PASS')))
+
 
 # Views
 @app.route('/')
-@login_required
+@auth_required()
 def home():
-    return render_template('index.html')
+    return redirect(url_for('admin.index'))
 
 
 @security.context_processor
