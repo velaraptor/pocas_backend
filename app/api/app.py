@@ -119,11 +119,14 @@ class Services(Resource):
 
     @api.expect(post_service, skip_none=True)
     @api.marshal_with(success_service, skip_none=True)
+    @api.response(401, "Unauthorized key!")
     def post(self):
         """
         Upload Service to MongoDB
         :return:
         """
+        if request.headers.get('X-API-KEY', '') != os.getenv('API_SECRET'):
+            api.abort(401)
         ns.logger.info("Ran Post Method")
         m = MongoConnector()
         payload = api.payload
