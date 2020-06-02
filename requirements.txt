@@ -11,3 +11,5 @@ pytest
 flask-admin
 flask-mongoengine
 Flask-Login>=0.3.0
+flask-security
+email_validator
