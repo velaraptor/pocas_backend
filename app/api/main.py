@@ -40,7 +40,7 @@ app.config['MONGODB_SETTINGS'] = {
 db = MongoEngine(app)
 
 class Role(db.Document, RoleMixin):
-    name = db.StringField(max_length=80, unique=True)
+    name = db.StringField(max_length=80)
     description = db.StringField(max_length=255)
 
 class User(db.Document, UserMixin):
@@ -49,7 +49,7 @@ class User(db.Document, UserMixin):
     active = db.BooleanField(default=True)
     fs_uniquifier = db.StringField(max_length=255)
     confirmed_at = db.DateTimeField()
-    roles = db.ListField(db.ReferenceField(Role), default=[])
+    roles = db.ListField(default=[])
 
 user_datastore = MongoEngineUserDatastore(db, User, Role)
 security = Security(app, user_datastore)
@@ -58,7 +58,11 @@ security = Security(app, user_datastore)
 # Create a user to test with
 @app.before_first_request
 def create_user():
-    user_datastore.create_user(email=os.getenv('ADMIN_USER'), password=hash_password(os.getenv('ADMIN_PASS')))
+    if get_env_bool('CREATE_USERS'):
+        user_datastore.create_role(name='superuser', description='super user')
+        user_datastore.create_role(name='user', description='normal user')
+        user_datastore.create_user(email=os.getenv('ADMIN_USER'), password=hash_password(os.getenv('ADMIN_PASS')),
+                                   roles=['superuser'])
 
 
 # Views
