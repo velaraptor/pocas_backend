@@ -1,4 +1,4 @@
-from flask_admin import Admin, AdminIndexView
+from flask_admin import Admin, AdminIndexView, expose
 from flask_admin.menu import MenuLink
 from wtforms import form, fields
 from db.mongo_connector import MongoConnector
@@ -7,11 +7,11 @@ from flask_admin.model.fields import InlineFieldList
 from db.consts import DB_SERVICES, get_lat_lon
 import os
 from flask_security import current_user
-from flask import url_for, redirect, request, abort
+from flask import url_for, redirect, request, abort, flash
 from flask_security import hash_password
 import uuid
 from bson.dbref import DBRef
-
+import json
 conn = MongoConnector().client
 db = conn[DB_SERVICES['db']]
 
@@ -109,6 +109,8 @@ class UsersView(SuperUserView):
 
         model['roles'] = valid_roles
         return model
+
+# TODO: ADD import csv https://blog.sneawo.com/blog/2018/02/16/export-and-import-for-mongoengine-model-in-flask-admin/
 
 VERSION = os.getenv('VERSION')
 admin = Admin(name='POCAS Admin Panel', url='/admin', index_view=MyAdminIndexView(

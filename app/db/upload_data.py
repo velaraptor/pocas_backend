@@ -16,18 +16,32 @@ logging.basicConfig(level=logging.INFO,
 def parse_lat_lon(row):
     gmaps = googlemaps.Client(key=os.getenv('GOOGLE_KEY'))
     try:
-        a = row['google_address']
-        a = gmaps.geocode(a)
-        if len(a) > 0:
-            row['lat'] = a[0]['geometry']['location']['lat']
-            row['lon'] = a[0]['geometry']['location']['lng']
-        row['loc'] = [row['lon'], row['lat']]
+        if row['no_address'] == 0:
+            a = row['google_address']
+            a = gmaps.geocode(a)
+            if len(a) > 0:
+                row['lat'] = a[0]['geometry']['location']['lat']
+                row['lon'] = a[0]['geometry']['location']['lng']
+            row['loc'] = [row['lon'], row['lat']]
+            row['online_service'] = 0
+        else:
+            row['lat'] = None
+            row['lon'] = None
+            row['loc'] = None
+            row['online_service'] = 1
     except:
         row['lat'] = None
         row['lon'] = None
         row['loc'] = None
+        row['online_service'] = 1
     return row
 
+
+def get_tags(x):
+    if type(x) == str:
+        return ast.literal_eval(x)
+    else:
+        return []
 
 def log():
     return logging.getLogger('upload_data')
@@ -54,10 +68,11 @@ def main():
     ids = np.arange(1, len(data) + 1)
     data['id'] = ids
     data['google_address'] = data.address + ' ' + data.city + ' ' + data.state + ' ' + data.zip_code.astype(str)
-    data['tags'] = data.tags.apply(lambda x: ast.literal_eval(x))
+    data['tags'] = data.tags.apply(lambda x: get_tags(x))
     data = data.apply(lambda x: parse_lat_lon(x), axis=1)
     data = data[['name', 'phone', 'address', 'general_topic', 'tags',
-                 'city', 'state', 'zip_code', 'web_site', 'lat', 'lon', 'loc']]
+                 'city', 'state', 'zip_code', 'web_site', 'lat', 'lon', 'loc', 'online_service', 'hours', 'days']]
+    data = data.where(pd.notnull(data), None)
     data = data.to_dict(orient='records')
     log().info(data)
     ids = m.upload_results(db=DB_SERVICES['db'], collection=DB_SERVICES['collection'], data=data, geo_index=True)

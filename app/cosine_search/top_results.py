@@ -14,7 +14,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.preprocessing import Normalizer
 
 AGE_MAPPER = {
-    'Elderly': [51, 120],
+    'Elder': [51, 120],
     'Adult': [36, 50],
     'Young Adult': [21, 35],
     'Adolescent': [0, 20]}
