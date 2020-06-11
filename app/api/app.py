@@ -39,7 +39,9 @@ top_n_model = api.model('PatientInfo',
                                                   example='1111 S 1st Tuscon AZ'),
                          'answers': fields.List(
                              fields.Integer(description='Answers to Questionnaire Question', example=1), required=True,
-                                                description='List of answers to Questionnaire', example=[1,0,1,0,1]),
+                                                description='List of answers to Questionnaire',
+                             example=[1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                      0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1]),
                          'top_n': fields.Integer(required=True,
                                                  description='Top N Services to Return',
                                                  example=2)
@@ -57,9 +59,12 @@ services = api.model(
                 'state': fields.String(required=False, description="state service is in", example='AZ'),
                 'lat': fields.Float(required=False, description="Latitude coordinates", example=72.34),
                 'lon': fields.Float(required=False, description="Longitude coordinates", example=34.01),
-                'zip_code': fields.Integer(required=False, description='zip code for service', example=78724),
+                'zip_code': fields.Float(required=False, description='zip code for service', example=78724.0),
                 'web_site': fields.String(required=False, description='web site for service',
                                           example='http://www.example.com'),
+                'online_service': fields.Integer(required=False, description='Binary for Online Service'),
+                'hours': fields.String(description='Hours'),
+                'days': fields.String(description='Days'),
                 'pocas_score': fields.Float(required=False,
                                             description='score for ordering results, higher is better',
                                             example=0.12)
@@ -152,6 +157,7 @@ class TopNResults(Resource):
         answers = api.payload['answers']
         address = api.payload['address']
         try:
+            assert len(answers) == 30
             gtr = GetTopNResults(top_n=top_n, dob=dob, answers=answers, address=address)
             top_services = gtr.get_top_results()
             for r in top_services:

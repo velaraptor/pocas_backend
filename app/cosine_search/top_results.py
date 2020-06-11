@@ -4,6 +4,7 @@ import logging
 import traceback
 
 import googlemaps
+from collections import OrderedDict
 
 from db.consts import DB_SERVICES
 from db.mongo_connector import MongoConnector
@@ -19,7 +20,52 @@ AGE_MAPPER = {
     'Young Adult': [21, 35],
     'Adolescent': [0, 20]}
 
-ANSWERS_MAPPER = {''}
+
+ALL_TAGS = ['Adolescent', 'Child Support', 'Disability', 'Domestic Violence',
+       'Education', 'Elder', 'Employment', 'Family', 'Food and Nutrition',
+       'Health Insurance', 'Housing', 'Indigent', 'LGBTQ', 'Legal Services',
+       'Low Income', 'Mental Health', 'Public Benefits', 'Shelter',
+       'Social Security', 'Special Education', 'Transportation',
+       'Young Adult']
+# TODO: get all possible answers
+# map this
+
+
+QUESTIONS = OrderedDict({'In the last year, have you worried that food would, run out before you got money to buy more?': ['Food and Nutrition', 'Family', 'Public Benefits'],
+             'Is anyone scaring, threatening or hurting you or your children?': ['Domestic Violence', 'Shelter'],
+             'Every family has fights.  What are fights like in your home?': ['Domestic Violence', 'Family', 'Shelter'],
+             'Do  you  ever  skip  or  cut  the  dose  of  a  medicine  because of cost?': ['Health Insurance', 'Low Income'],
+             'Do you and your family have health insurance?  If not, have you applied for AHCCCS, KidsCare, ACA insurance or other benefits?': ['Health Insurance'],
+             'Are you pregnant?  If so, have you spoken to anyone about WIC?': ['Family', 'Health Insurance', 'Public Benefits', 'Low Income'],
+             'If you have applied for assistance and been denied, have you filed an appeal?': ['Pubic Benefits', 'Social Security', 'Low Income', 'Child Support'],
+             'Are you working?': ['Employment', 'Public Benefits', 'Low Income'],
+             'Do you always have enough food to eat?': ['Public Benefits', 'Food and Nutrition'],
+             'Are you receiving benefits from programs such as Cash Assistance or Food Stamps?': ['Public Benefits', 'Food and Nutrition', 'Employment', 'Low Income'],
+             'In the last year, have you worried that food would run out before you got money to buy more?': ['Public Benefits', 'Food and Nutrition', 'Employment', 'Low Income'],
+             'Are you or anyone in your family >65, blind or disabled?': ['Social Security', 'Elder', 'Disability'],
+             'Have you applied for SSI /SSDI benefits?': ['Social Security', 'Public Benefits'],
+             'Do you have concerns/problems with your home?': ['Housing', 'Public Benefits', 'Shelter'],
+             'Do you have any problems with your landlord?': ['Housing', 'Public Benefits'],
+             'Do you have mold, mice or roaches in your home?': ['Housing', 'Public Benefits'],
+             'Was your home built before 1978?': ['Housing', 'Public Benefits'],
+             'Do you have peeling/chipping paint in your home?': ['Housing', 'Public Benefits'],
+             'Do you have smoke and CO2 detectors?': ['Housing', 'Public Benefits'],
+             'How are your children doing in school?': ['Education', 'Family', 'Adolescent', 'Young Adult'],
+             'Are they failing or struggling in any classes?': ['Education', 'Family', 'Adolescent'],
+             'Do they have problems getting along with other children or teachers? ': ['Education', 'Family', 'Adolescent', 'Mental Health'],
+             'How often do they miss school?': ['Education', 'Family', 'Adolescent'],
+             'Does your child have a disability?': ['Education', 'Family', 'Adolescent', 'Disability', 'Special Education'],
+             'Has your child been evaluated for special education services?': ['Education', 'Family', 'Adolescent', 'Disability', 'Special Education'],
+             'Does your child have an Individual Education Program (IEP) or Section 504 plan?': ['Education', 'Family', 'Adolescent', 'Disability', 'Special Education'],
+             'Would you  like to discuss any legal problems with an attorney at no cost': ['Legal Services', 'Indigent'],
+             'Identify as LBTQ?': ['LGBTQ'],
+             'Identify as Indigent?': ['Indigent'],
+             'Need transportation': ['Transportation']
+             })
+
+
+QUESTIONS_LIST = list(QUESTIONS)
+
 
 logging.basicConfig(level=logging.INFO,
                     format='[%(asctime)s] %(name)s [%(levelname)s]: %(message)s',
@@ -69,14 +115,28 @@ class GetTopNResults:
         :return: Array of Tags Matched
         """
         answers = self.answers
-
-        # TODO: map with tags
         age_df = pd.DataFrame(AGE_MAPPER)
         vals = np.abs(np.sum(age_df - self.age))
 
         age_tags = vals[vals == np.min(vals)].index.values[0]
-        answer_tags = ['Domestic Violence', 'Legal Services']
-        return answer_tags + [age_tags]
+
+        # find tags from questions
+
+        # make binary to boolean
+        bool_answers = list(map(bool, answers))
+        # filter questions that were answered yes
+        answers_to_use = np.array(QUESTIONS_LIST)[bool_answers]
+
+        # add all tags from yes answered questions
+        tags_user = []
+        for answer in answers_to_use:
+            tags_user = tags_user + QUESTIONS[answer]
+
+        # add question and age tags
+        answer_tags = tags_user + [age_tags]
+        # remove dups
+        answer_tags = list(set(answer_tags))
+        return answer_tags
 
     def run_similarity(self, results):
         """
@@ -87,6 +147,9 @@ class GetTopNResults:
 
         df_results = pd.DataFrame(results)
         dummies_tags = pd.get_dummies(df_results.tags.apply(pd.Series).stack()).sum(level=0)
+        # if null it is online service, put same lat/lon as user
+        df_results['lat'] = df_results.lat.fillna(self.lat)
+        df_results['lon'] = df_results.lon.fillna(self.lon)
         matrix = pd.concat([df_results[['lat', 'lon']], dummies_tags], axis=1)
         matrix_val = matrix.values
         tags_unique = dummies_tags.columns.values
@@ -103,7 +166,7 @@ class GetTopNResults:
 
         sim_matrix = np.vstack((matrix_val, user_vector))
 
-        weights = np.concatenate(([0.0005, 0.0005], np.ones(overall_length) * 1.25))
+        weights = np.concatenate(([0.05, 0.05], np.ones(overall_length) * 1.25))
         sim_matrix = Normalizer().transform(sim_matrix * weights)
         sim_values = cosine_similarity(sim_matrix)
         self.log().debug(sim_values)
@@ -114,6 +177,22 @@ class GetTopNResults:
         final_results = df_results[:int(self.top_n)]
         final_results = final_results.to_dict(orient='records')
         return final_results
+
+    def del_none(self, d):
+        """
+        Delete keys with the value ``None`` in a dictionary, recursively.
+
+        This alters the input so you may wish to ``copy`` the dict first.
+        """
+        for key, value in list(d.items()):
+            if value is None:
+                del d[key]
+            elif type(value) == float:
+                if np.isnan(value):
+                    del d[key]
+            elif isinstance(value, dict):
+                self.del_none(value)
+        return d
 
     def get_top_results(self):
         """
@@ -134,6 +213,10 @@ class GetTopNResults:
             traceback.print_exc()
             self.log().warning('Could not run cosine sim, reverting to mongo query results')
             final_results = top_results
-        self.log().info(final_results)
 
-        return final_results
+        final = []
+        for final_result in final_results:
+            final.append(self.del_none(final_result))
+        self.log().info(final)
+
+        return final
