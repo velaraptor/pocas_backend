@@ -31,8 +31,9 @@ ALL_TAGS = ['Adolescent', 'Child Support', 'Disability', 'Domestic Violence',
 # map this
 
 
-QUESTIONS = OrderedDict({'In the last year, have you worried that food would, run out before you got money to buy more?': ['Food and Nutrition', 'Family', 'Public Benefits'],
-             'Is anyone scaring, threatening or hurting you or your children?': ['Domestic Violence', 'Shelter'],
+QUESTIONS = OrderedDict({
+            'In the last year, have you worried that food would, run out before you got money to buy more?': ['Food and Nutrition', 'Family', 'Public Benefits'],
+             'Is anyone scaring, threatening or hurting you or your children?': ['Domestic Violence', 'Shelter', 'Family'],
              'Every family has fights.  What are fights like in your home?': ['Domestic Violence', 'Family', 'Shelter'],
              'Do  you  ever  skip  or  cut  the  dose  of  a  medicine  because of cost?': ['Health Insurance', 'Low Income'],
              'Do you and your family have health insurance?  If not, have you applied for AHCCCS, KidsCare, ACA insurance or other benefits?': ['Health Insurance'],
@@ -57,7 +58,7 @@ QUESTIONS = OrderedDict({'In the last year, have you worried that food would, ru
              'Does your child have a disability?': ['Education', 'Family', 'Adolescent', 'Disability', 'Special Education'],
              'Has your child been evaluated for special education services?': ['Education', 'Family', 'Adolescent', 'Disability', 'Special Education'],
              'Does your child have an Individual Education Program (IEP) or Section 504 plan?': ['Education', 'Family', 'Adolescent', 'Disability', 'Special Education'],
-             'Would you  like to discuss any legal problems with an attorney at no cost': ['Legal Services', 'Indigent'],
+             'Would you like to discuss any legal problems with an attorney at no cost': ['Legal Services', 'Indigent'],
              'Identify as LBTQ?': ['LGBTQ'],
              'Identify as Indigent?': ['Indigent'],
              'Need transportation': ['Transportation']
@@ -166,7 +167,7 @@ class GetTopNResults:
 
         sim_matrix = np.vstack((matrix_val, user_vector))
 
-        weights = np.concatenate(([0.05, 0.05], np.ones(overall_length) * 1.25))
+        weights = np.concatenate(([0.005, 0.005], np.ones(overall_length) * 1.5))
         sim_matrix = Normalizer().transform(sim_matrix * weights)
         sim_values = cosine_similarity(sim_matrix)
         self.log().debug(sim_values)
@@ -202,6 +203,9 @@ class GetTopNResults:
         """
         self.get_lat_lon()
         self.tags = self.map_answers_tags()
+
+        if len(self.tags) <= 1:
+            self.tags = ['Public Benefits']
         m = MongoConnector()
         top_results = m.query_results(db=DB_SERVICES['db'], collection=DB_SERVICES['collection'],
                                       query={'tags': {'$in': self.tags}},
