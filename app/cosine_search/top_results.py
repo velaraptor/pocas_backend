@@ -216,7 +216,7 @@ class GetTopNResults:
         except Exception:
             traceback.print_exc()
             self.log().warning('Could not run cosine sim, reverting to mongo query results')
-            final_results = top_results
+            final_results = top_results[:int(self.top_n)]
 
         final = []
         for final_result in final_results:
