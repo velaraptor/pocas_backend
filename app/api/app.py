@@ -163,7 +163,7 @@ class TopNResults(Resource):
             for r in top_services:
                 r['id'] = str(r['_id'])
                 r.pop('_id', None)
-            assert len(top_services) == int(top_n)
+            assert len(top_services) <= int(top_n)
             return {'services': top_services, 'num_of_services': len(top_services)}, 200
         except Exception as e:
             ns.logger.error(e)
