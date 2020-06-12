@@ -208,7 +208,7 @@ class GetTopNResults:
             self.tags = ['Public Benefits']
         m = MongoConnector()
         top_results = m.query_results(db=DB_SERVICES['db'], collection=DB_SERVICES['collection'],
-                                      query={'tags': {'$in': self.tags}},
+#                                      query={'tags': {'$in': self.tags}},
                                       exclude={'loc': 0})
         self.log().debug(self.__dict__)
         try:
