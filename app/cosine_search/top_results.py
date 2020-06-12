@@ -147,6 +147,7 @@ class GetTopNResults:
         """
 
         df_results = pd.DataFrame(results)
+        df_results = df_results.drop_duplicates(subset=['name'])
         df_results['tags'] = df_results.apply(lambda x: x['tags'] + [x['general_topic']], axis=1)
         dummies_tags = pd.get_dummies(df_results.tags.apply(pd.Series).stack()).sum(level=0)
         dummies_tags[dummies_tags > 1] = 1
