@@ -64,7 +64,6 @@ def main():
         raise Exception('Could not find Google Key! Set it in keys.env!')
     data = pd.read_csv(file)
     log().info('Size of Services: %s' % str(len(data)))
-    # TODO: what to do with only online services
     ids = np.arange(1, len(data) + 1)
     data['id'] = ids
     data['google_address'] = data.address + ' ' + data.city + ' ' + data.state + ' ' + data.zip_code.astype(str)

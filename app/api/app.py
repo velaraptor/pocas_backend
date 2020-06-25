@@ -71,8 +71,11 @@ services = api.model(
                 }
 )
 
+loc = api.model('Location', {'lat': fields.Float(required=False),
+                             'lon': fields.Float(required=False)})
 results = api.model('TopResults', {'services': fields.List(fields.Nested(services)),
-                                   'num_of_services': fields.Integer(required=True, example=1)})
+                                   'num_of_services': fields.Integer(required=True, example=1),
+                                   'user_loc': fields.Nested(loc, required=False)})
 
 success_service = api.model('MongoId',
                             {'id': fields.String(required=True,
@@ -117,7 +120,7 @@ class Services(Resource):
             r.pop('_id', None)
         num_docs = len(all_services)
         if num_docs > 0:
-            response = {'services': all_services, 'num_of_services': num_docs}
+            response = {'services': all_services, 'num_of_services': num_docs, 'user_loc': None}
             return response, 200
         else:
             api.abort(404)
@@ -159,12 +162,12 @@ class TopNResults(Resource):
         try:
             assert len(answers) == 30
             gtr = GetTopNResults(top_n=top_n, dob=dob, answers=answers, address=address)
-            top_services = gtr.get_top_results()
+            top_services, user_loc = gtr.get_top_results()
             for r in top_services:
                 r['id'] = str(r['_id'])
                 r.pop('_id', None)
             assert len(top_services) <= int(top_n)
-            return {'services': top_services, 'num_of_services': len(top_services)}, 200
+            return {'services': top_services, 'num_of_services': len(top_services), 'user_loc': user_loc}, 200
         except Exception as e:
             ns.logger.error(e)
             api.abort(404)

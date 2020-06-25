@@ -27,9 +27,6 @@ ALL_TAGS = ['Adolescent', 'Child Support', 'Disability', 'Domestic Violence',
        'Low Income', 'Mental Health', 'Public Benefits', 'Shelter',
        'Social Security', 'Special Education', 'Transportation',
        'Young Adult']
-# TODO: get all possible answers
-# map this
-
 
 QUESTIONS = OrderedDict({
             'In the last year, have you worried that food would, run out before you got money to buy more?': ['Food and Nutrition', 'Family', 'Public Benefits'],
@@ -226,4 +223,4 @@ class GetTopNResults:
             final.append(self.del_none(final_result))
         self.log().info(final)
 
-        return final
+        return final, {'lat': self.lat, 'lon': self.lon}
