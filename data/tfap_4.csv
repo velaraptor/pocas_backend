@@ -1,0 +1,192 @@
+name,phone,address,no_address,days,hours,general_topic,tags,city,state,zip_code,web_site,notes
+S. AZ Gender Alliance,5204777096,2030 EAST BROADWAY,0,,,LGBTQ,['LGBTQ'],Tuscon,AZ,85719,http://www.sagatucson.org/,
+Our Town Family Center,5203231708,2590 N. Alvernon Way,0,,,Young Adult,"['Young Adult', 'Legal Services', 'Shelter', 'Domestic Violence']",Tuscon,AZ,85712,https://www.ourfamilyservices.org/,
+CoverAZ,8003773536,,1,,,Health Insurance,,,,,http://coveraz.org/,
+AHCCCS,8005280142,,1,,,Health Insurance,,,,,www.healthearizonaplus.gov,
+AHCCCS Freedom to Work,8006548713,,1,,,Health Insurance,,,,,,
+AZ Long Term Care (ALTCS),5202058600,1010 N Finance Center Dr STE 201,0,"M,T, W, Th, F",7:30 am - 5:00 pm,Health Insurance,,Tucson,AZ,85710,,
+KidsCare ,8003773536,,1,,,Health Insurance,"['Adolescent', 'Young Adult']",,,,http://coveraz.org/kidscare-enrollment/,
+Medicare Premium Cost Sharing (QMB/SLMB/QI),8005280142,,1,,,Health Insurance,,,,,,Apply at ALTCS
+Pima Council on Aging,5205462011,8467 E Broadway Blvd,0,"M, T, W, Th, F",8:30 am - 5:00 pm,Health Insurance,['Elder'],,,,,
+UA Mobile Health Clinic,5206260178,,1,,,Health Insurance/Health Resources,,,,,,
+Pima County WIC Program,5207929890,839 W Congress St,0,,,Health Insurance,['Food and Nutrition'],Tucson,AZ,85745,,located inside El Rio Health
+Pima County WIC Program,5207247777,3950 S Country Club Rd,0,"T, W, Th, F",8:00 am - 5:00 pm,Health Insurance,['Food and Nutrition'],Tucson,AZ,85714,,
+Pima County WIC/Food Plus,15207247777,4500 N Old Romero Rd,0,"T, W, Th, F, Sat",8:00 am - 5:00 pm,Health Insurance,['Food and Nutrition'],Tucson,AZ,85705,,
+Pima County WIC,15207247777,1390 W Speedway Blvd,0,,,Health Insurance,['Food and Nutrition'],Tucson,AZ,85745,,
+WIC Program at Erickson,15206166213,6750 E Stella Rd,0,"T, Th",8:00 am - 5:00 pm,Health Insurance,['Food and Nutrition'],Tucson,AZ,85730,,
+MHC WIC at The Womens Center,15207247777,2055 W Hospital Dr,0,,,Health Insurance,['Food and Nutrition'],Tucson,AZ,85704,,
+"Arizona Women, Infants, and Children (WIC)",15206166213,13395 N Marana Main St,0,,,Health Insurance,['Food and Nutrition'],Marana,AZ,85653,,
+MHC Healthcare WIC Program at Clinica del Alma,15206166760,3690 S Park Ave #805,0,"M, T, W, Th, F, Sat",8:00 am - 5:00 pm,Health Insurance,['Food and Nutrition'],Tucson,AZ,85713,,
+Arizona Department of Economic Security,,316 W Fort Lowell Rd,0,"M, T, W, Th, F",7:00 am - 5:00 pm,Public Benefits,"['Employment', 'Child Support', 'Food and Nutrition', 'Health Insurance']",Tucson,AZ,85705,des.az.gov,
+Arizona Department of Economic Security,15206290225,100 N Stone Ave #500b,0,Temporarily Closed,,Public Benefits,"['Employment', 'Child Support', 'Food and Nutrition', 'Health Insurance']",Tucson,AZ,85701,des.az.gov,
+Arizona Department of Economic Security,,400 W Congress St,0,"M, T, W, Th, F",8:00 am - 5:00 pm,Public Benefits,"['Employment', 'Child Support', 'Food and Nutrition', 'Health Insurance']",Tucson,AZ,85701,des.az.gov,
+Arizona Department of Economic Security,,1455 S Alvernon Way,0,"M, T, W, Th, F",8:00 am - 5:00 pm,Public Benefits,"['Employment', 'Child Support', 'Food and Nutrition', 'Health Insurance']",Tucson,AZ,85711,des.az.gov,
+Arizona Department of Economic Security,15207900107,899 N Wilmot Rd c7,0,"M, T, W, Th, F ",8:00 am - 5:00 pm,Public Benefits,"['Employment', 'Child Support', 'Food and Nutrition', 'Health Insurance']",Tucson,AZ,85711,des.az.gov,
+Arizona Department of Economic Security,,5441 E 22nd St #101,0,Temporarily Closed,,Public Benefits,"['Employment', 'Child Support', 'Food and Nutrition', 'Health Insurance']",Tucson,AZ,85711,des.az.gov,
+Arizona Department of Economic Security,15207247700,2797 E Ajo Way,0,"M, T, W, Th, F",8:00 am - 5:00 pm,Public Benefits,"['Employment', 'Child Support', 'Food and Nutrition', 'Health Insurance']",Tucson,AZ,85713,des.az.gov,
+Arizona Department of Economic Security,,195 W Irvington Rd,0,"M, T, W, Th, F",8:00 am - 5:00 pm,Public Benefits,"['Employment', 'Child Support', 'Food and Nutrition', 'Health Insurance']",Tucson,AZ,85714,des.az.gov,
+Arizona Department of Economic Security,18554327587,2255 W Ina Rd,0,"M, T, W, Th, F",7:00 am - 5:00 pm,Public Benefits,"['Employment', 'Child Support', 'Food and Nutrition', 'Health Insurance']",Tucson,AZ,85741,des.az.gov,
+Arizona Department of Economic Security,15207455588,6740 S Tucson Blvd,0,"M, T, W, Th, F ",8:00 am - 5:00 pm,Public Benefits,"['Employment', 'Child Support', 'Food and Nutrition', 'Health Insurance']",Tucson,AZ,85756,des.az.gov,
+Arizona Department of Economic Security,15205448618,7225 N Mona Lisa Rd #202,0,Temporarily Closed,,Public Benefits,"['Employment', 'Child Support', 'Food and Nutrition', 'Health Insurance']",Tucson,AZ,85741,des.az.gov,
+Arizona Department of Economic Security,15206382000,4710 S Palo Verde Rd,0,"M, T, W, Th, F",8:00 am - 5:00 pm,Public Benefits,"['Employment', 'Child Support', 'Food and Nutrition', 'Health Insurance']",Tucson,AZ,85714,des.az.gov,
+Southern Arizona Legal Aid,5206239461,2343 E. Broadway Blvd #20,0,"M, T, W, Th, F",8:30 am -12:00 pm and 1:00 pm - 4:00 pm,Public Benefits,"['Public Benefits', 'Social Security', 'Domestic Violence', 'Legal Services']",Tuscon,AZ,85719,https://www.sazlegalaid.org/services,
+SSA,866331769,3808 N 1ST AVE,0,"M, T, W, Th, F",9:00 am - 4:00 pm,Public Benefits,"['Public Benefits', 'Social Security']",Tuscon,AZ,85719,www.ssa.gov,
+SSA,8662207896,"88 W 38th St, Ste 100",0,"M, T, W, Th, F",9:00 am - 4:00 pm,Public Benefits,"['Public Benefits', 'Social Security']",Tuscon,AZ,85713,www.ssa.gov,
+Tucson Indian Center,5208847131,160 Stone Ave,0,"M, T, W, Th, F",8:00 am - 5:00 pm,Public Benefits,"['Housing', 'Indigent']",Tuscon,AZ,85701,https://www.ticenter.org/,
+Youth Employment One Stop Job Services,15207249649,320 N Commerce Park Loop #200,0,"M, T, W, Th, F",8:00 am - 5:00 pm,Public Benefits,"['Employment', 'Young Adult']",Tucson,AZ,85745,http://webcms.pima.gov/government/community_services_employment_and_training/,
+Arizona@WORK Pima County,15207247700,2797 E Ajo Way,0,"M, T, W, Th, F",8:00 am - 5:00 pm,Public Benefits,,Tucson,AZ,85713,http://webcms.pima.gov/government/community_services_employment_and_training/,
+Public Benefits Application,,,1,,,Public Benefits,,,,,www.healthearizonaplus.gov,
+Public Benefits Screening,,,1,,,Public Benefits,,,,,www.arizonaselfhelp.org,
+Public Benefits Screening,,,1,,,Public Benefits,['Elder'],,,,www.benefitscheckup.org,For senior citizens
+Arizona 211,8772118661,,1,,,Public Benefits,['Food and Nutrition'],,,,211arizona.org,
+Tucson Alliance for Autism,5203195857,3111 E. 2nd Street,0,,,Special Education,"['Special Education', 'Mental Health', 'Adolescent']",Tuscon,AZ,85716,https://tucsonallianceforautism.com/,
+Arizona Center for Disability Law,15203279547,177 N Church Ave #800,0,,,Special Education,['Disability'],Tucson,AZ,85701,www.acdl.com,
+Easterseals Blake Foundation,15203271529,7750 E Broadway Blvd # 200,0,"M, T, W, Th, F",8:30 am - 5:00 pm,Special Education,['Disability'],Tucson,AZ,85710,http://www.easterseals.com/,
+Easterseals Blake Foundation,15202023549,330 N Commerce Park Loop,0,,,Special Education,['Disability'],Tucson,AZ,85745,http://www.easterseals.com/,
+Easterseals Blake Foundation,15203271529,7750 E Broadway Blvd,0,,,Special Education,['Disability'],Tucson,AZ,85710,http://www.easterseals.com/blakefoundation,
+Tucson Unified School District: Child Find,15202327034,5145 East 5th Street,0,,,Special Education,"['Disability', 'Adolescent', 'Young Adult', 'Education']",Tucson,AZ,85711,,
+Raising Special Kids ,6022424366,,0,,,Special Education,"['Disability', 'Adolescent', 'Young Adult']",,,,www.raisingspecialkids.org,
+Pilot Parents of Southern Arizona ,18773657220,2600 N Wyatt Dr,0,,,Special Education,"['Disability', 'Adolescent', 'Young Adult']",Tucson,AZ,85712,,
+Chicanos Por La Causa ,15208820018,1525 N Oracle Rd,0,"M, T, W, Th, F",8:00 am - 5:00 pm,Housing,,Tucson,AZ,85705,http://www.cplc.org/,Mortgage counseling; assistance to avoid eviction or foreclosure; subsidized housing
+Housing and Community Development,15207914171,310 N Commerce Park Loop,0,"M, T, W, Th, F",8:00 am - 4:00 pm,Housing,,Tucson,AZ,85745,https://www.tucsonaz.gov/housing-and-community-development,Property and Housing complaints
+Tucson Section 8 Housing Program,15207914171,310 N Commerce Park Loop,0,"M, T, W, Th, F",8:00 am - 4:00 pm,Housing,,Tucon,AZ,85745,https://www.tucsonaz.gov/hcd/section-8-program-information,
+"City of Tucson, Housing Application Hotline",5207915262,,1,,,Housing,,,,,,
+Housing Search,,,1,,,Housing,,,,,www.pimacountyhousingsearch.org,
+Tucson Urban League,15207919522,3425 E Grant Rd #101,0,"M, T, W, Th, F",9:00 am - 5:00 pm,Housing,['Public Benefits'],Tucson,AZ,85716,http://www.tucsonurbanleague.org/,"Homeowner repair program, rental assistance; utility assistance; affordable housing counseling"
+Bus Passes,15207914100,,1,,,Public Benefits,"['Disability', 'Elder', 'Low Income', 'Transportation']",,,,,"Low-income, senior, ADA"
+Child & Family Resources Inc.,15208818940,2800 E Broadway Blvd,0,"M, T, W, Th, F",8:00 am - 5:00 pm,Public Benefits,"['Family', 'Adolescent', 'Young Adult']",Tucson,AZ,85716,http://www.childfamilyresources.org/,
+Sun Van ,15207981000,3401 E Ajo Way,0,,,Public Benefits,['Transportation'],Tucson,AZ,85713,https://www.sunvan.com/,Provides transportation to those people unable to use SunTran due to their disability
+AZ Coalition Against Domestic Violence Hotline,18007826400,,1,,,Domestic Violence,,,,,http://www.acesdv.org/,
+Emerge! Center Against Domestic Abuse,15207958001,2545 E Adams St,0,"M, T, W, Th, F",8:30 am - 5:00 pm,Domestic Violence,,Tucson,AZ,85716,http://www.emergecenter.org/,
+Emerge! Center Against Domestic Abuse,15205733637,101 W Irvington Rd,0,,,Domestic Violence,,Tucson,AZ,85714,https://www.emergecenter.org/,
+Late Life Domestic Violence Program,15206233341,,1,,,Domestic Violence,['Elder'],,,,,
+Pima County Att.'s Victim Services Program,15207405525,32 N Stone Ave # 1400,0,"M, T, W, Th, F",8:00 am - 5:00 pm,Domestic Violence,,Tucson,AZ,85701,http://www.pcao.pima.gov/victimservicesdivision.aspx,
+Southern Arizona Center Against Sexual Assault,15203271171,1600 N Country Club Rd,0,"M, T, W, Th, F",8:00 am - 5:00 pm,Domestic Violence,,Tucson,AZ,85716,http://www.sacasa.org/,
+UA Domestic Violence Clinic,15206211373,1224 E Lowell St,0,"M, T, W, Th, F","8:00 am - 4:00 pm, W 9:00 am - 4:00 pm",Domestic Violence,,Tucson,AZ,85721,http://www.health.arizona.edu/,
+ARC (Administration of Resources and Choices) Elder Shelter,15203392801,1625 N Alvernon Way Suite 101,0,,,Elder,['Family'],Tucson,AZ,85712,https://arc-az.org/late-life-domestic-violence-services/,
+KARE Family Center,15203234476,220 E Speedway Blvd,0,"M, T, W, Th, F",9:00 am - 5:00 pm,Elder,['Family'],Tucson,AZ,85705,http://www.casey.org/Locations/Arizona/KARE/,
+Community Food Bank,15206220525,3003 S Country Club Rd,0,"T, Th",7:00 am - 10:00 am,Food and Nutrition ,,Tucson,AZ,85713,https://www.communityfoodbank.org/,
+Az211,18772118661,,1,,,Food and Nutrition ,,,,,www.cir.org,Community information and referrals
+Food Box Program ,15206220525,3003 S Country Club Rd,0,,,Food and Nutrition ,,Tucson,AZ,85713,,
+Mobile Meals of Southern Arizona,15206221600,"4803 E. 5th Street, Suite 209",0,"M, T, W, Th, F",8:00 am - 5:00 pm,Food and Nutrition ,,Tucson,AZ,85711,https://www.mobilemealssoaz.org/,
+Pima Meals on Wheels ,15207907262,8467 E Broadway Blvd,0,"M, T, W, Th, F",8:30 am - 5:00 pm,Food and Nutrition ,"['Elder', 'Family']",Tucson,AZ,85710,https://www.pcoa.org/,
+Market on the Move,,,1,,,Food and Nutrition ,,,,,http://the3000club.org/wordpress/marketonthemove/  ,
+Anti-Violence Project ,15206240348,,1,Permanently Closed,,LGBTQ Resources,,,,,,
+Southern Arizona Aids Foundation,15206287223,375 S Euclid Ave,0,"M, T, W, Th, F ",8:00 am - 5:00 pm ,LGBTQ Resources/Health Care Resources,,Tucson ,AZ,85719,http://saaf.org/,
+Living Out Loud (CODAC) ,15202021832,1600 N Country Club Rd,0,,,LGBTQ Resources,,Tucson ,AZ,85716,https://www.livingoutloudaz.org/contact,
+ANCHOR Project ,15209090754,,1,,,LGBTQ Resources,,,,,sirrow.arizona.edu/ANCHOR,LGBTQ housing 
+Southern Arizona Senior Pride ,15203128923,1632 N Country Club Rd,0,"M, T, W, Th, F ",10:00 am - 3:00 pm ,LGBTQ Resources/Elderly Resources,,Tucson,AZ,85716,https://soazseniorpride.org/,
+Eon Youth ,15205476106,375 S. Euclid Avenue ,0,,,LGBTQ Resources,,Tucson,AZ,85719,http://www.saaf.org,LGBTQ Support and community
+Diaper Bank of Southern Arizona,15203251400,1050 S Plumer Ave,0,"M, T, W, Th, F ",9:00 am - 5:00 pm ,Health Care Resources,,Tucson,AZ,85719,http://www.diaperbank.org/,
+El Rio Community Health Center Administration,15206703909,450 W Paseo Redondo,0,,,Health Care Resources,,Tucson,AZ,85701,http://www.elrio.org/,"Offer sliding fee scale, not determined by immigration status, it is available to all income eligible uninsured or under‐insured patients. Eligibility for the sliding fee scale will be established by determining the household size and annual household income"
+El Rio Community Health Center,15206703909,340 W Prince Rd,0,"M, T, W, Th, F ",8:00 am - 8:00 pm ,Health Care Resources,,Tucson,AZ,85705,,
+El Rio Health ,15206703909,839 W Congress St,0,"M, T, W, Th, F & Sat","8:00 am - 8:00 pm, *Sat 8:00 am - 2:00 pm ",Health Care Resources,,Tucson,AZ,85745,,
+El Rio Community Health Center,15206703909,101 W Irvington Rd,0,"M, T, W, Th, F & Sat","7:00 am - 8:00 pm, * Sat: 8:00 am - 4:00 pm ",Health Care Resources,,Tucson,AZ,85714,,
+El Rio Community Center-Northwest Dental,15206703909,340 W Prince Rd,0,"M, T, W, Th, F",7:00 am - 6:00 pm,Health Care Resources/Dental,,Tucson,AZ,85705,,
+El Rio-Congress Dental Center,15206703909,839 W Congress St,0,"M, T, W, Th, F ",8:00 am - 4:30 pm,Health Care Resources/Dental,,Tucson,AZ,85745,,
+El Rio Southwest Clinic ,15206703909,1500 W Commerce Ct bldg 1,0,"M, T, W, Th, F ",8:00 am - 5:00 pm ,Health Care Resources,,Tucson,AZ,85746,,
+El Rio Community Health Center,15206703909,225 W Irvington Rd,0,"M, T, W, Th, F ",8:00 am - 5:00 pm,Health Care Resources,,Tucson,AZ,85714,,
+El Rio Southeast,15203092289,6950 E Golf Links Rd,0,"M, T, W, Th, F, Sat, Sun",8:00 am - 5:00 pm,Health Care Resources,,Tucson,AZ,85730,,
+El Rio Southwest Dental ,15206703758,1530 W Commerce Ct,0,"M, T, W, Th, F",7:00 am - 12:00 pm & 1:00 pm - 6:00 pm ,Health Care Resources/Dental,,Tucson,AZ,85746,,
+El Rio Community Health Center-Northwest Dental ,15206703909,340 W Prince Rd,0,"M, T, W, Th, F",7:00 am - 6:00 pm,Health Care Resources/Dental,,Tucson,AZ,85705,,
+El Rio Community Health Center-Congress Dental Center,15206703909,839 W Congress St,0,"M, T, W, Th, F ",8:00 am - 4:30 pm ,Health Care Resources/Dental,,Tucson,AZ,85745,,
+El Rio Birth & Women's ,15207959912,"5979 E. Grant Rd, #107",0,"M, T, W, Th, F ","8:00 am - 5:00 pm, *W: 9:00 am - 5:00 pm",Health Care Resources/Women's Health,,Tucson,AZ,85712,,
+El Rio Community Health Center ,15206703909,1230 S. Cherrybell Stravenue ,0,"M, T, W, Th, F, Sat","M-F: 7:00 am - 8:00 pm, * Sat: 8:00 am - 4:00 pm ",Health Care Resources,,Tucson,AZ,85713,,
+El Rio-Health On Broadway ,15203094200,1 W Broadway Blvd,0,"M, T, W, Th, F, Sat","M-F: 7:00 am - 8:00 pm, * Sat: 8:00 am - 4:00 pm ",Health Care Resources,,Tucson,AZ,85701,http://healthontucson.org/,HealthOn Broadway is an integrated health and wellness collaboration between Tucson Medical Center and El Rio Health.
+El Rio-Health On University ,15203094250,434 E University Blvd Ste #100,0,"M,T, W, Th, F, Sat, Sun","M-F, Sun: 7:00 am - 8:00 pm, *Sat: 8:00 am - 4:00 pm ",Health Care Resources,,Tucson,AZ,85705,http://healthontucson.org/,
+El Rio-Pascua Yaqui ,15208796225,7490 S Camino De Oeste,0,"M, T, W, Th, F",7:00 am - 5:00 pm ,Health Care Resources ,,Tucson,AZ,85746,,
+El Rio-St. Elizabeth's Health Center,15206287871,140 W Speedway Blvd #100,0,"M, T, W, Th, F ",8:00 am - 5:00 pm ,Health Care Resources/Women's Health,,Tucson,AZ,85705,http://saintehc.com/,"Since 1961, St. Elizabeth's has provided medical, dental, behavioral and preventive health services to the working poor using a sliding-fee scale and community partnerships. In 2010, SEHC provided 25,000 visits to persons of all ages seeking care who either did not qualify for or could not afford health insurance."
+El Rio OBGYN Associates ,15206703909,225 W Irvington Rd,0,"M, T, W, Th, F ",8:00 am - 5:00 pm ,Health Care Resources/Women's Health,,Tucson,AZ,85714,,
+New Spirit Lutheran Church ,15202962461,8701 E Old Spanish Trail,0,,,Health Care Resources,,Tucson,AZ,85710,http://www.newspiritlutherantucson.org/,For med equipment ( I guess used? Should call them and verify if this is still a thing)
+Casa De Los Ninos ,15203268250,40 N Swan Rd # 45,0,,,Health Care Resources,,Tucson,AZ,85711,https://www.casadelosninos.org/,"Our deep-rooted community connection acts as a guiding force for Casa de los Niños’ vision to increase the number of children and families living safe and healthy lives. We deliver a continuum of services –evidence-based and best practice models meld together prevention, intervention, and treatment strategies to effectively address the needs of at-risk children and their families within our community.
+
+Casa de los Niños partners with families so every child can be raised in a healthy home. Last fiscal year, our programs served over 6,000 kids and over 4,000 families, which is a testament to the great need. Success is due to the efforts and dedication of over 300 employees, along with a corps of community volunteers who work together to comprise a formidable team dedicated to making child well-being and family stability the norm throughout our community."
+Pima County Health Department- North Office,15207242850,3550 N 1st Ave,0,"M, T, W, Th, F",8:00 am - 5:00 pm ,Health Care Resources,,Tucson,AZ,85719,http://webcms.pima.gov/cms/One.aspx?portalId=169&pageId=19986,
+Pima County Health Department,15207247770,3950 S Country Club Rd #100,0,"M, T, W, Th, F, Sat","M-F: 8:00 am - 5:00 pm, *Sat: 8:00 am - 1:00 pm ",Health Care Resources,,Tucson,AZ,85714,http://webcms.pima.gov/government/health_department,
+Pima County Public Health ,15207249650,6920 E Broadway Blvd Suite G & E,0,Temporarily Closed,,Health Care Resources,,Tucson,AZ,85710,http://webcms.pima.gov/cms/one.aspx?portalId=169&pageId=19974,
+Pima County Health Department ,15207247797,175 W Irvington Rd,0,"M, T, W, Th, F ",8:00 am - 5:00 pm ,Health Care Resources,,Tucson,AZ,85714,http://webcms.pima.gov/government/health_department/,
+Planned Parenthood-Southern Arizona Regional Health Center,15204087526,2255 N Wyatt Dr,0,"M, T, W, Th, F ","M: 9:00 am - 5:00 pm; T: 7:30 am - 6:00 pm; W, Th, F: 7:30 am - 5:00 pm ",Health Care Resources,,Tucson,AZ,85712,https://www.plannedparenthood.org/health-center/arizona/tucson/85712/southern-arizona-regional-health-center-3261-90030?utm_campaign=southern-arizona-regional-health-center&utm_medium=organic&utm_source=local-listing,
+Tucson Interfaith HIV/AIDS Network,15202996647,2660 N 1st Ave,0,"M, T, W, Th, F ",8:30 am - 4:30 pm ,Health Care Resources/LGBTQ Resources,,Tucson,AZ,85719,http://www.tihan.org/,
+Catholic Community Services,15206234555,140 W Speedway Blvd #230,0,"M, T, W, Th, F",8:00 am - 5:00 pm,Immigrant/Refugee Resources,,Tucson,AZ,85705,http://www.ccs-soaz.org/,
+Catholic Community Services Southern,15206230344,2109 S 6th Ave,0,,,Immigrant/Refugee Resources,,Tucson,AZ,85713,http://www.ccs-soaz.org/,
+Derechos Humanos,15207701373,225 E 26th St Suite #2,0,"M, T, W, Th, F","M: 8:30 am - 2:00 pm, T: 11:00 am - 4:30 pm, W: 8:30 am - 12:30 pm, Th: 12:00 - 5:00 pm, F: 8:30 am - 12:30 pm",Immigrant/Refugee Resources,,Tucson,AZ,85713,http://www.derechoshumanosaz.net/,
+Florence Immigrant & Refugee Rights Project,15207775600,P.O. Box 86299,1,,,Immigrant/Refugee Resources,,Tucson,AZ,85754,firrp.org,Can provide pro bono representation for asylum seekers
+International Rescue Committee,15203192128,1011 N Craycroft Rd Ste 404,0,"M, T, W, Th, F",9:00 am - 5:00 pm,Immigrant/Refugee Resources,,Tucson,AZ,85711,rescue.org,
+Iskashitaa Refugee Network,15204400100,1406 E Grant Rd Bldg. #2,0,,,Immigrant/Refugee Resources,,Tucson,AZ,85719,iskashitaa.org,
+Lutheran Social Services of the Southwest,15207482300,1231 N Norris Ave,0,"M, T, W, Th, F ",8:00 am - 5:00 pm,Immigrant/Refugee Resources,,Tucson,AZ,85719,http://www.lss-sw.org/,
+Merciful Refugee and Immigrant Services,15202750403,4560 E Broadway Blvd suite 217,0,"M, T, W, Th, F ",9:00 am - 5:00 pm,Immigrant/Refugee Resources,,Tucson,AZ,85711,,
+Refugee Mobile App ,,,1,,,Immigrant/Refugee Resources,,Tucson,AZ,,https://refaid.com/,
+UA Immigration Law Clinic,15206211373,1201 E Speedway Blvd,0,,,Immigrant/Refugee Resources,,Tucson,AZ,85721,,Call to ask to be represented 
+UA Worker's Rights Clinic,15206217331,1201 E Speedway Blvd,0,,,Immigrant/Refugee Resources,,Tucson,AZ,85721,,Call the number or email workersrights@email.arizona.edu
+Arizona Center for Disability Law,15203279547,177 N Church Ave #800,0,,,Legal Services and Advocacy,,Tucson,AZ,85701,https://www.azdisabilitylaw.org/,
+AZ Law Help ,18666375341,,1,,,Legal Services and Advocacy,,Tucson,AZ,,www.azlawhelp.org,
+Asylum Program of AZ,15206234555,,1,,,Legal Services and Advocacy,,,,,,immigration help
+Beacon Group,15206224874,308 W Glenn St,0,"M, T, W, Th, F ",7:30 am - 4:30 pm,Legal Services and Advocacy,,Tucson,AZ,85705,https://www.beacongroup.org/,
+Florence Immigrant & Refugee Rights Project,15207775600,P.O. Box 86299,1,,,Legal Services and Advocacy,,Tucson,AZ,85754,firrp.org,Can provide pro bono representation for asylum seekers
+Hospice Legal Partnership,15203335774,P.O. Box 13485,1,,,Legal Services and Advocacy,,Tucson,AZ,85732,hospicelegalline.org,
+KARE Family Center,15203234476,220 E Speedway Blvd,0,"M, T, W, Th, F",9:00 am - 5:00 pm,Legal Services and Advocacy,['Legal Assistance'],Tucson,AZ,85705,http://www.casey.org/Locations/Arizona/KARE/,
+Our Family Services,15203231708,2590 N Alvernon Way,0,"M, T, W, Th, F",9:00 am - 5:00 pm,Legal Services and Advocacy,,Tucson,AZ,85712,http://ourfamilyservices.org/,Community mediation
+Our Family Services ,15203231708,3830 E Bellevue St,0,"M, T, W, Th, F","M-Th 9:00 am - 5:00 pm, F 9:00 am - 4:00 pm",Legal Services and Advocacy,,Tucson,AZ,85716,http://ourfamilyservices.org/,Community mediation
+Pima County Bar Association,15206238258,177 N Church Ave # 101,0,"M, T, W, Th, F",8:00 am - 5:00 pm,Legal Services and Advocacy,,Tucson,AZ,85701,http://www.pimacountybar.org/,for lawyer referral
+Pima Council on Aging,15205462011,8467 E Broadway Blvd,0,"M, T, W, Th, F",8:30 am - 5:00 pm,Legal Services and Advocacy,['Legal Assistance'],,,,,elder law clinic
+Southern Arizona Legal Aid,15206239461,2343 E. Broadway Blvd #20,0,"M, T, W, Th, F",8:30 am -12:00 pm and 1:00 pm - 4:00 pm,Legal Services and Advocacy,"['Public Benefits', 'Social Security', 'Domestic Violence', 'Legal Services']",Tuscon,AZ,85719,https://www.sazlegalaid.org/services,
+Step Up To Justice,,,1,,,Legal Services and Advocacy,,,,,http://www.stepuptojustice.org/,
+Pima County Victim Services,15207405525,32 N Stone Ave # 1400,0,"M, T, W, Th, F",8:00 am - 5:00 pm,Legal Services and Advocacy,,Tucson,AZ,85701,http://www.pcao.pima.gov/victimservicesdivision.aspx,
+UA Child and Family Law Clinic,15206265232,1201 E Speedway Blvd,0,,,Legal Services and Advocacy,,Tucson,AZ,85721,,
+Easterseals Blake Foundation,15203271529,7750 E Broadway Blvd # 200,0,"M, T, W, Th, F",8:30 am - 5:00 pm,Mental Health Resources,['Mental Health'],Tucson,AZ,85710,http://www.easterseals.com/,
+Easterseals Blake Foundation,15202023549,330 N Commerce Park Loop,0,,,Mental Health Resources,['Mental Health'],Tucson,AZ,85745,http://www.easterseals.com/,
+Easterseals Blake Foundation,15203271529,7750 E Broadway Blvd,0,,,Mental Health Resources,['Mental Health'],Tucson,AZ,85710,http://www.easterseals.com/blakefoundation,
+COPE Support Line,15209031563,,1,,,Mental Health Resources,,,,,,"Mental health support line, PM and weekends only"
+International Rescue Committee,15203192128,1011 N Craycroft Rd Ste 404,0,"M, T, W, Th, F",9:00 am - 5:00 pm,Mental Health Resources,,Tucson,AZ,85711,rescue.org,Mental health resources for refugees. Or assistance in the right direction.
+Tucson Alliance for Autism,5203195857,3111 E. 2nd Street,0,,,Mental Health Resources,"['Special Education', 'Mental Health', 'Adolescent']",Tuscon,AZ,85716,https://tucsonallianceforautism.com/,
+Crisis Line,18664956735,,1,,,Mental Health Resources,,,,,,
+National Suicide Hotline,18002738255,,1,,,Mental Health Resources,,,,,,
+"CODAC Health, Recovery & Wellness- Medication Addiction Treatment",15203274505,380 E Fort Lowell Rd,0,"M, T, W, Th, F, Sa, Sun",24 hrs,Addiction Resources,,Tucson,AZ,85705,http://www.codac.org/,mental health and addiction
+"CODAC Health, Recovery & Wellness- Alvernon",15203274505,630 N Alvernon Way,0,"T, W, Th, F ",8:00 am - 5:00 pm ,Mental Health Resources,,Tucson,AZ,85711,http://www.codac.org/,mental health and addiction
+"CODAC Health, Recovery & Wellness- Country Club",15203274505,1600 N Country Club Rd,0,,,Mental Health Resources,,Tucson,AZ,85716,http://www.codac.org/,mental health and addiction
+"CODAC Health, Recovery & Wellness- Cobblestone Court",15203274505,1075 E Fort Lowell Rd,0,"T, W, Th, F ",8:00 am - 5:00 pm,Mental Health Resources,,Tucson,AZ,85719,http://www.codac.org/,mental health and addiction
+Community Partners of Southern Arizona,15203254268,44 E Broadway Blvd,0,"M, T, W, Th, F",8:00 am - 5:00 pm,Mental Health Resources,,Tucson,AZ,85701,http://www.communitypartnersinc.org/,Mental health
+Community Partners of Southern Arizona,15203334320,3939 S Park Ave #150,0,,,Mental Health Resources,,Tucson,AZ,85714,http://www.communitypartnersinc.org/,Mental health
+"COPE Community Services, Inc. -Youth And Family Services",15202079348,924 N Alvernon Way,0,"M, T, W, Th, F",8:00 am - 5:00 pm,Mental Health Resources,,Tucson,AZ,85711,http://www.copecommunityservices.org/,
+"COPE Community Services, Inc.",15206228030,2435 N Castro Ave,0,"M, T, W, Th, F",8:00 am - 5:00 pm,Mental Health Resources,,Tucson,AZ,85705,http://www.copecommunityservices.org/,
+Cope Behavioral Services,15203190749,1918 N Tucson Blvd,0,,,Mental Health Resources,,Tucson,AZ,85716,http://www.copecommunityservices.org/,
+"COPE Community Services, Inc.",15205198540,620 N Craycroft Rd,0,"M, T, W, Th, F",8:00 am - 5:00 pm,Mental Health Resources,,Tucson,AZ,85711,http://www.copecommunityservices.org/,
+COPE Community Services,15208796680,5401 East 5th Street,0,"M,T, W, Th, F, Sat","M, T, Th, F: 4:30 am - 11 am; W: 4:30 am - 11 am; Sat: 6:00 am - 10 am ",Mental Health Resources,,Tucson,AZ,85711,http://www.copecommunityservices.org/,
+Cope Behavioral Services,15207923293,1501 W Commerce Ct,0,"M, T, W, Th, F ",8:00 am - 5:00 pm ,Mental Health Resources,,Tucson,AZ,85746,http://www.copecommunityservices.org/,
+COPE Community Services,15205845820,8050 E Lakeside Pkwy,0,"M, T, W, Th, F, Sat ","M, T, W, Th, F: 8:00 am - 5:00 pm; Sat: 9:00 am - 1:00 pm ",Mental Health Resources,,Tucson,AZ,85730,http://www.copecommunityservices.org/,
+"COPE Community Services, Inc.",15204983900,5840 N La Cholla Blvd,0,"M, T, W, Th, F",8:00 am - 5:00 pm ,Mental Health Resources,,Tucson,AZ,85741,http://www.copecommunityservices.org/,
+"La Frontera Center, Inc.",15208825145,3620 N Mountain Ave,0,"M, T, W, Th, F ",8:00 am - 5:00 pm ,Mental Health Resources,,Tucson,AZ,85719,http://lafronteraaz.org/,
+La Frontera Center,15202068600,1141 W Grant Rd #100,0,,,Mental Health Resources,,Tucson,AZ,85705,http://lafronteraaz.org/,
+La Frontera Center East Clinic,15202963296,4891 E Grant Rd,0,"M, T, W, Th, F ",8:00 am - 5:00 pm ,Mental Health Resources,,Tucson,AZ,85712,http://lafronteraaz.org/,
+La Frontera Center,15208849920,502 W 29th St,0,"M, T, W, Th, F ",8:00 am - 5:00 pm,Mental Health Resources,,Tucson,AZ,85713,http://lafronteraaz.org/,
+Lafrontera,15207412351,1210 E Pennsylvania St,0,"M, T, W, Th, F ",8:00 am - 5:00 pm,Mental Health Resources,,Tucson,AZ,85714,http://lafronteraaz.org/,
+La Frontera Center Inc,15208828422,1082 E Ajo Way #100,0,"M, T, W, Th, F ",8:00 am - 4:00 pm ,Mental Health Resources,,Tucson,AZ,85713,http://lafronteraaz.org/,
+La Frontera Center,15208385610,410 S 6th Ave,0,,,Mental Health Resources,,Tucson,AZ,85701,http://lafronteraaz.org/,
+La Frontera Center,15205855408,260 S Scott Ave,0,"M, T, W, Th, F, Sat",M-F: 5:00 am - 12:00 pm; Sat: 6:00 am - 9:00 am,Mental Health Resources,,Tucson,AZ,85701,http://lafronteraaz.org/,Rehab center
+La Frontera Center Inc.,15208849920,504 W 29th St,0,,,Mental Health Resources,,Tucson,AZ,85713,http://lafronteraaz.org/,
+La Frontera Center,15207460260,1601 E Apache Park Pl,0,M-Sun,24 hrs,Mental Health Resources,,Tucson,AZ,85714,http://lafronteraaz.org/,
+La Frontera Center-Thornydale,15205798786,10845 N Thornydale Rd,0,,,Mental Health Resources,,Tucson,AZ,85742,http://lafronteraaz.org/,
+AZ Copper Card,8882278315,,1,,,Prescription Medication Assistance,,,,,,"Free, no age limits"
+Care Mark Card,8773212652,,1,,,Prescription Medication Assistance,,,,,,"Free, no age limits"
+Discount ($4) RX Plans,,,1,,,Prescription Medication Assistance,,,,,,"at various pharms and stores, e.g Walgreens, Walmart, Target, Frys"
+Medical Assistance Tool ,,,1,,,Prescription Medication Assistance,,,,,https://medicineassistance.tool.org/,
+Gospel Rescue Mission: Women's Recovery Center,15207401501,707 W Miracle Mile,0,M-Sun,10:00 am - 5:00 pm,Shelter Resources,,Tucson,AZ,85705,https://www.grmtucson.com/,
+Gospel Rescue Mission,15207401501,4550 S Palo Verde Rd,0,M-Sun,8:00 am - 4:30 am,Shelter Resources,,Tucson,AZ,85714,https://www.grmtucson.com/,
+Gospel Rescue Mission: Community Ministries,15207401501,338 W 28th St,0,Temporarily Closed,,Shelter Resources,,Tucson,AZ,85713,https://www.grmtucson.com/,
+Primavera Foundation - Homeless Intervention & Prevention Drop-In Center,15206235111,811 S 6th Ave,0,"M, W, Th, F ",9:00 am - 12:30 pm,Shelter Resources,,Tucson,AZ,85701,http://www.primavera.org/,
+Primavera Foundation - Administrative Offices,15208825383,151 W 40th St,0,M-F,8:00 am - 5:00 pm ,Shelter Resources,,Tucson,AZ,85713,http://www.primavera.org/,
+Primavera Foundation - Men's Shelter,15206234300,200 E Benson Hwy,0,M-Sun,24hrs ,Shelter Resources,,Tucson,AZ,85713,http://www.primavera.org/,
+Primavera Foundation - Project Action for Veterans,15203083093,3504 S 6th Ave Ste. 150,0,"M, T, Th, F",8:00 am -12:00 pm and 1:00 pm - 3:00 pm ,Shelter Resources,,Tucson,AZ,85713,http://www.primavera.org/,
+Food Distribution Center - Primavera Foundation - Homeless Intervention & Prevention,15206235111,702 S 6th Ave,0,,,Shelter Resources,,Tucson,AZ,85701,,Food bank
+Our Family Services,15203231708,2590 N Alvernon Way,0,M-F,9:00 am - 5:00 pm,Shelter Resources,,Tucson,AZ,85712,http://ourfamilyservices.org/,
+Our Family Services,15203231708,3830 E Bellevue St,0,M-F,9:00 am - 5:00 pm,Shelter Resources,,Tucson,AZ,85716,http://ourfamilyservices.org/,
+The Salvation Army Hospitality House,15206225411,1002 N Main Ave,0,M-Sun,"M-F: 8:00 am - 4:30 pm; Sat, Sun: 24 hrs",Shelter Resources,,Tucson,AZ,85705,http://www.salvationarmytucson.org/,
+Alcoholics Anonymous,15206244183,840 S Campbell Ave,0,M-F,9:30 am - 4:30 pm,Substance Abuse,,Tucson,AZ,85719,,
+Al-Anon,15203232229,1011 N Craycroft Rd # 450,0,,,Substance Abuse,,Tucson,AZ,85711,http://www.so-az-alanon.org/,
+Arizona Smokers' Helpline,18005566222,2302 E Speedway Blvd #206,0,,,Substance Abuse,,Tucson,AZ,85719,http://ashline.org/,
+Narcotics Anonymous,15208818381,,1,,,Substance Abuse,,,,,,
+Pima County Community Action Agency,15207247700,2797 E Ajo Way,0,M-F,8:00 am - 5:00 pm ,Utility Assistance,,Tucson,AZ,85713,http://webcms.pima.gov/,
+Project PPEP,15206223553,802 E 46th St,0,,,Utility Assistance,,Tucson,AZ,85713,http://www.ppep.org/,
+Salvation Army Utilities/Rent,15207921111,,1,,,Utility Assistance,,,,,,
+TEP - Lifeline Discount Program,15206237711,,1,,,Utility Assistance,,,,,,
+Youth On Their Own,15202931136,1660 N Alvernon Way,0,M,9:00 am - 5:00 pm,Young Adult Resources,,Tucson,AZ,85712,http://yoto.org/,

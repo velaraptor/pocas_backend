@@ -4,7 +4,6 @@ from flask import Flask, Blueprint, request
 from flask_restx import Api, Resource, fields
 from cosine_search.top_results import GetTopNResults
 from db.mongo_connector import MongoConnector
-from db.upload_data import main as upload_data
 from db.consts import get_env_bool, DB_SERVICES, get_lat_lon
 import logging
 
@@ -173,11 +172,6 @@ class TopNResults(Resource):
             api.abort(404)
 
 if __name__ == '__main__':
-    # upload data
-    rerun_upload_services = get_env_bool('RERUN_SERVICES')
-    if rerun_upload_services:
-        upload_data()
-
     app = Flask(__name__)
     app.config['RESTX_MASK_SWAGGER'] = get_env_bool('RESTX_MASK_SWAGGER')
     app.register_blueprint(api_v1)

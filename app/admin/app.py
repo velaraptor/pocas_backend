@@ -11,11 +11,11 @@ from flask import url_for, redirect, request, abort
 from flask_security import hash_password
 import uuid
 from bson.dbref import DBRef
+
 conn = MongoConnector().client
 db = conn[DB_SERVICES['db']]
 
 
-# Create customized model view class
 class MyModelView(ModelView):
     def is_accessible(self):
         return (current_user.is_active and
