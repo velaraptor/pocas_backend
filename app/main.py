@@ -1,6 +1,6 @@
 from db.consts import get_env_bool
 from flask import Flask, url_for, redirect
-from api.app import api_v1
+from api.app import api_v1, limiter
 from admin.app import admin
 from flask_security import Security, MongoEngineUserDatastore, \
     UserMixin, RoleMixin, auth_required, hash_password
@@ -84,3 +84,4 @@ def security_context_processor():
 
 app.register_blueprint(api_v1)
 admin.init_app(app)
+limiter.init_app(app)

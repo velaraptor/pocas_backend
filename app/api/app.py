@@ -6,7 +6,13 @@ from cosine_search.top_results import GetTopNResults
 from db.mongo_connector import MongoConnector
 from db.consts import get_env_bool, DB_SERVICES, get_lat_lon
 import logging
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
+limiter = Limiter(
+    key_func=get_remote_address,
+    default_limits=["1000 per hour"]
+)
 
 logging.basicConfig(level=logging.INFO,
                     format='[%(asctime)s] %(name)s [%(levelname)s]: %(message)s',
@@ -23,7 +29,8 @@ authorizations = {
 VERSION = os.getenv('VERSION')
 api_v1 = Blueprint('api', __name__, url_prefix=f'/api/v{VERSION}/')
 api = Api(api_v1, version='v%s' % VERSION, title='POCAS API',
-          description='an api to get results for pocas', authorizations=authorizations, security='apikey'
+          description='an api to get results for pocas', authorizations=authorizations, security='apikey',
+          terms_url='/admin'
           )
 
 ns = api.namespace('services', description='recieve questionaire and get results')
@@ -104,6 +111,7 @@ class Services(Resource):
     @api.marshal_with(results, skip_none=True)
     @api.response(404, "Results not found")
     @api.response(401, "Unauthorized key!")
+    @limiter.limit('10/second')
     def get(self):
         """
         Get all Services for POCAS
@@ -127,6 +135,7 @@ class Services(Resource):
     @api.expect(post_service, skip_none=True)
     @api.marshal_with(success_service, skip_none=True)
     @api.response(401, "Unauthorized key!")
+    @limiter.limit('1/minute')
     def post(self):
         """
         Upload Service to MongoDB
@@ -147,6 +156,7 @@ class TopNResults(Resource):
     @api.marshal_with(results, skip_none=True)
     @api.response(404, "Results not found")
     @api.response(401, "Unauthorized key!")
+    @limiter.limit('250/hour')
     def post(self):
         """
         Send questionnaire and get Top N results

@@ -4,3 +4,9 @@
 keys.env
 
 google_github.txt
+
+.ipynb_checkpoints/
+
+*.icloud
+
+test_notebook.ipynb
