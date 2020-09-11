@@ -14,3 +14,4 @@ Flask-Login>=0.3.0
 flask-security-too
 email_validator
 bcrypt
+Flask-Limiter==1.4

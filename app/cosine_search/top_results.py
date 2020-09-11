@@ -20,7 +20,7 @@ AGE_MAPPER = {
     'Young Adult': [21, 35],
     'Adolescent': [0, 20]}
 
-
+# TODO: do this programatically
 ALL_TAGS = ['Adolescent', 'Child Support', 'Disability', 'Domestic Violence',
        'Education', 'Elder', 'Employment', 'Family', 'Food and Nutrition',
        'Health Insurance', 'Housing', 'Indigent', 'LGBTQ', 'Legal Services',
@@ -114,7 +114,7 @@ class GetTopNResults:
         """
         answers = self.answers
         age_df = pd.DataFrame(AGE_MAPPER)
-        vals = np.abs(np.sum(age_df - self.age))
+        vals = np.abs(np.sum(age_df.values - self.age))
 
         age_tags = vals[vals == np.min(vals)].index.values[0]
 
