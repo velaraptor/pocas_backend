@@ -2,7 +2,7 @@ name,phone,address,no_address,days,hours,general_topic,tags,city,state,zip_code,
 S. AZ Gender Alliance,5204777096,2030 EAST BROADWAY,0,,,LGBTQ,['LGBTQ'],Tuscon,AZ,85719,http://www.sagatucson.org/,
 Our Town Family Center,5203231708,2590 N. Alvernon Way,0,,,Young Adult Resources,"['Legal Services', 'Shelter', 'Domestic Violence']",Tuscon,AZ,85712,https://www.ourfamilyservices.org/,
 CoverAZ,8003773536,,1,,,Health Insurance,,,,,http://coveraz.org/,
-AHCCCS,8005280142,,1,,,Health Insurance,,,,,www.healthearizonaplus.gov,
+AHCCCS,8005280142,,1,,,Health Insurance,,,,,http://www.healthearizonaplus.gov,
 AHCCCS Freedom to Work,8006548713,,1,,,Health Insurance,,,,,,
 AZ Long Term Care (ALTCS),5202058600,1010 N Finance Center Dr STE 201,0,"M,T, W, Th, F",7:30 am - 5:00 pm,Health Insurance,,Tucson,AZ,85710,,
 KidsCare ,8003773536,,1,,,Health Insurance,"['Adolescent', 'Young Adult Resources']",,,,http://coveraz.org/kidscare-enrollment/,
@@ -30,28 +30,28 @@ Arizona Department of Economic Security,15207455588,6740 S Tucson Blvd,0,"M, T, 
 Arizona Department of Economic Security,15205448618,7225 N Mona Lisa Rd #202,0,Temporarily Closed,,Public Benefits,"['Employment', 'Child Support', 'Food and Nutrition', 'Health Insurance']",Tucson,AZ,85741,des.az.gov,
 Arizona Department of Economic Security,15206382000,4710 S Palo Verde Rd,0,"M, T, W, Th, F",8:00 am - 5:00 pm,Public Benefits,"['Employment', 'Child Support', 'Food and Nutrition', 'Health Insurance']",Tucson,AZ,85714,des.az.gov,
 Southern Arizona Legal Aid,5206239461,2343 E. Broadway Blvd #20,0,"M, T, W, Th, F",8:30 am -12:00 pm and 1:00 pm - 4:00 pm,Public Benefits,"['Public Benefits', 'Social Security', 'Domestic Violence', 'Legal Services']",Tuscon,AZ,85719,https://www.sazlegalaid.org/services,
-SSA,866331769,3808 N 1ST AVE,0,"M, T, W, Th, F",9:00 am - 4:00 pm,Public Benefits,"['Public Benefits', 'Social Security']",Tuscon,AZ,85719,www.ssa.gov,
-SSA,8662207896,"88 W 38th St, Ste 100",0,"M, T, W, Th, F",9:00 am - 4:00 pm,Public Benefits,"['Public Benefits', 'Social Security']",Tuscon,AZ,85713,www.ssa.gov,
+SSA,866331769,3808 N 1ST AVE,0,"M, T, W, Th, F",9:00 am - 4:00 pm,Public Benefits,"['Public Benefits', 'Social Security']",Tuscon,AZ,85719,http://www.ssa.gov,
+SSA,8662207896,"88 W 38th St, Ste 100",0,"M, T, W, Th, F",9:00 am - 4:00 pm,Public Benefits,"['Public Benefits', 'Social Security']",Tuscon,AZ,85713,http://www.ssa.gov,
 Tucson Indian Center,5208847131,160 Stone Ave,0,"M, T, W, Th, F",8:00 am - 5:00 pm,Public Benefits,"['Housing', 'Indigent']",Tuscon,AZ,85701,https://www.ticenter.org/,
 Youth Employment One Stop Job Services,15207249649,320 N Commerce Park Loop #200,0,"M, T, W, Th, F",8:00 am - 5:00 pm,Public Benefits,"['Employment', 'Young Adult Resources']",Tucson,AZ,85745,http://webcms.pima.gov/government/community_services_employment_and_training/,
 Arizona@WORK Pima County,15207247700,2797 E Ajo Way,0,"M, T, W, Th, F",8:00 am - 5:00 pm,Public Benefits,,Tucson,AZ,85713,http://webcms.pima.gov/government/community_services_employment_and_training/,
-Public Benefits Application,,,1,,,Public Benefits,,,,,www.healthearizonaplus.gov,
-Public Benefits Screening,,,1,,,Public Benefits,,,,,www.arizonaselfhelp.org,
-Public Benefits Screening,,,1,,,Public Benefits,['Elder'],,,,www.benefitscheckup.org,For senior citizens
+Public Benefits Application,,,1,,,Public Benefits,,,,,http://www.healthearizonaplus.gov,
+Public Benefits Screening,,,1,,,Public Benefits,,,,,http://www.arizonaselfhelp.org,
+Public Benefits Screening,,,1,,,Public Benefits,['Elder'],,,,http://www.benefitscheckup.org,For senior citizens
 Arizona 211,8772118661,,1,,,Public Benefits,['Food and Nutrition'],,,,211arizona.org,
 Tucson Alliance for Autism,5203195857,3111 E. 2nd Street,0,,,Special Education,"['Special Education', 'Mental Health', 'Adolescent']",Tuscon,AZ,85716,https://tucsonallianceforautism.com/,
-Arizona Center for Disability Law,15203279547,177 N Church Ave #800,0,,,Special Education,['Disability'],Tucson,AZ,85701,www.acdl.com,
+Arizona Center for Disability Law,15203279547,177 N Church Ave #800,0,,,Special Education,['Disability'],Tucson,AZ,85701,http://www.acdl.com,
 Easterseals Blake Foundation,15203271529,7750 E Broadway Blvd # 200,0,"M, T, W, Th, F",8:30 am - 5:00 pm,Special Education,['Disability'],Tucson,AZ,85710,http://www.easterseals.com/,
 Easterseals Blake Foundation,15202023549,330 N Commerce Park Loop,0,,,Special Education,['Disability'],Tucson,AZ,85745,http://www.easterseals.com/,
 Easterseals Blake Foundation,15203271529,7750 E Broadway Blvd,0,,,Special Education,['Disability'],Tucson,AZ,85710,http://www.easterseals.com/blakefoundation,
 Tucson Unified School District: Child Find,15202327034,5145 East 5th Street,0,,,Special Education,"['Disability', 'Adolescent', 'Young Adult Resources', 'Education']",Tucson,AZ,85711,,
-Raising Special Kids ,6022424366,,0,,,Special Education,"['Disability', 'Adolescent', 'Young Adult Resources']",,,,www.raisingspecialkids.org,
+Raising Special Kids ,6022424366,,0,,,Special Education,"['Disability', 'Adolescent', 'Young Adult Resources']",,,,http://www.raisingspecialkids.org,
 Pilot Parents of Southern Arizona ,18773657220,2600 N Wyatt Dr,0,,,Special Education,"['Disability', 'Adolescent', 'Young Adult Resources']",Tucson,AZ,85712,,
 Chicanos Por La Causa ,15208820018,1525 N Oracle Rd,0,"M, T, W, Th, F",8:00 am - 5:00 pm,Housing,,Tucson,AZ,85705,http://www.cplc.org/,Mortgage counseling; assistance to avoid eviction or foreclosure; subsidized housing
 Housing and Community Development,15207914171,310 N Commerce Park Loop,0,"M, T, W, Th, F",8:00 am - 4:00 pm,Housing,,Tucson,AZ,85745,https://www.tucsonaz.gov/housing-and-community-development,Property and Housing complaints
 Tucson Section 8 Housing Program,15207914171,310 N Commerce Park Loop,0,"M, T, W, Th, F",8:00 am - 4:00 pm,Housing,,Tucon,AZ,85745,https://www.tucsonaz.gov/hcd/section-8-program-information,
 "City of Tucson, Housing Application Hotline",5207915262,,1,,,Housing,,,,,,
-Housing Search,,,1,,,Housing,,,,,www.pimacountyhousingsearch.org,
+Housing Search,,,1,,,Housing,,,,,http://www.pimacountyhousingsearch.org,
 Tucson Urban League,15207919522,3425 E Grant Rd #101,0,"M, T, W, Th, F",9:00 am - 5:00 pm,Housing,['Public Benefits'],Tucson,AZ,85716,http://www.tucsonurbanleague.org/,"Homeowner repair program, rental assistance; utility assistance; affordable housing counseling"
 Bus Passes,15207914100,,1,,,Public Benefits,"['Disability', 'Elder', 'Low Income', 'Transportation']",,,,,"Low-income, senior, ADA"
 Child & Family Resources Inc.,15208818940,2800 E Broadway Blvd,0,"M, T, W, Th, F",8:00 am - 5:00 pm,Public Benefits,"['Family', 'Adolescent', 'Young Adult Resources']",Tucson,AZ,85716,http://www.childfamilyresources.org/,
@@ -66,7 +66,7 @@ UA Domestic Violence Clinic,15206211373,1224 E Lowell St,0,"M, T, W, Th, F","8:0
 ARC (Administration of Resources and Choices) Elder Shelter,15203392801,1625 N Alvernon Way Suite 101,0,,,Elder,"['Family', 'Shelter']",Tucson,AZ,85712,https://arc-az.org/late-life-domestic-violence-services/,
 KARE Family Center,15203234476,220 E Speedway Blvd,0,"M, T, W, Th, F",9:00 am - 5:00 pm,Elder,['Family'],Tucson,AZ,85705,http://www.casey.org/Locations/Arizona/KARE/,
 Community Food Bank,15206220525,3003 S Country Club Rd,0,"T, Th",7:00 am - 10:00 am,Food and Nutrition,,Tucson,AZ,85713,https://www.communityfoodbank.org/,
-Az211,18772118661,,1,,,Food and Nutrition,,,,,www.cir.org,Community information and referrals
+Az211,18772118661,,1,,,Food and Nutrition,,,,,http://www.cir.org,Community information and referrals
 Food Box Program ,15206220525,3003 S Country Club Rd,0,,,Food and Nutrition,,Tucson,AZ,85713,,
 Mobile Meals of Southern Arizona,15206221600,"4803 E. 5th Street, Suite 209",0,"M, T, W, Th, F",8:00 am - 5:00 pm,Food and Nutrition,,Tucson,AZ,85711,https://www.mobilemealssoaz.org/,
 Pima Meals on Wheels ,15207907262,8467 E Broadway Blvd,0,"M, T, W, Th, F",8:30 am - 5:00 pm,Food and Nutrition,"['Elder', 'Family']",Tucson,AZ,85710,https://www.pcoa.org/,
@@ -94,7 +94,7 @@ El Rio Birth & Women's ,15207959912,"5979 E. Grant Rd, #107",0,"M, T, W, Th, F "
 El Rio Community Health Center ,15206703909,1230 S. Cherrybell Stravenue,0,"M, T, W, Th, F, Sat","M-F: 7:00 am - 8:00 pm, * Sat: 8:00 am - 4:00 pm",Health Care Resources,,Tucson,AZ,85713,,
 El Rio-Health On Broadway ,15203094200,1 W Broadway Blvd,0,"M, T, W, Th, F, Sat","M-F: 7:00 am - 8:00 pm, * Sat: 8:00 am - 4:00 pm",Health Care Resources,,Tucson,AZ,85701,http://healthontucson.org/,HealthOn Broadway is an integrated health and wellness collaboration between Tucson Medical Center and El Rio Health.
 El Rio-Health On University ,15203094250,434 E University Blvd Ste #100,0,"M,T, W, Th, F, Sat, Sun","M-F, Sun: 7:00 am - 8:00 pm, *Sat: 8:00 am - 4:00 pm",Health Care Resources,,Tucson,AZ,85705,http://healthontucson.org/,
-El Rio-Pascua Yaqui ,15208796225,7490 S Camino De Oeste,0,"M, T, W, Th, F",7:00 am - 5:00 pm,Health Care Resources ,,Tucson,AZ,85746,,
+El Rio-Pascua Yaqui ,15208796225,7490 S Camino De Oeste,0,"M, T, W, Th, F",7:00 am - 5:00 pm,Health Care Resources,,Tucson,AZ,85746,,
 El Rio-St. Elizabeth's Health Center,15206287871,140 W Speedway Blvd #100,0,"M, T, W, Th, F ",8:00 am - 5:00 pm,Health Care Resources,['Women Health'],Tucson,AZ,85705,http://saintehc.com/,"Since 1961, St. Elizabeth's has provided medical, dental, behavioral and preventive health services to the working poor using a sliding-fee scale and community partnerships. In 2010, SEHC provided 25,000 visits to persons of all ages seeking care who either did not qualify for or could not afford health insurance."
 El Rio OBGYN Associates ,15206703909,225 W Irvington Rd,0,"M, T, W, Th, F ",8:00 am - 5:00 pm,Health Care Resources,['Women Health'],Tucson,AZ,85714,,
 New Spirit Lutheran Church ,15202962461,8701 E Old Spanish Trail,0,,,Health Care Resources,,Tucson,AZ,85710,http://www.newspiritlutherantucson.org/,For med equipment ( I guess used? Should call them and verify if this is still a thing)
@@ -119,7 +119,7 @@ Refugee Mobile App ,,,1,,,Immigrant/Refugee Resources,,Tucson,AZ,,https://refaid
 UA Immigration Law Clinic,15206211373,1201 E Speedway Blvd,0,,,Immigrant/Refugee Resources,,Tucson,AZ,85721,,Call to ask to be represented 
 UA Worker's Rights Clinic,15206217331,1201 E Speedway Blvd,0,,,Immigrant/Refugee Resources,,Tucson,AZ,85721,,Call the number or email workersrights@email.arizona.edu
 Arizona Center for Disability Law,15203279547,177 N Church Ave #800,0,,,Legal Services,,Tucson,AZ,85701,https://www.azdisabilitylaw.org/,
-AZ Law Help ,18666375341,,1,,,Legal Services,,Tucson,AZ,,www.azlawhelp.org,
+AZ Law Help ,18666375341,,1,,,Legal Services,,Tucson,AZ,,http://www.azlawhelp.org,
 Asylum Program of AZ,15206234555,,1,,,Legal Services,,,,,,immigration help
 Beacon Group,15206224874,308 W Glenn St,0,"M, T, W, Th, F ",7:30 am - 4:30 pm,Legal Services,,Tucson,AZ,85705,https://www.beacongroup.org/,
 Florence Immigrant & Refugee Rights Project,15207775600,P.O. Box 86299,1,,,Legal Services,,Tucson,AZ,85754,firrp.org,Can provide pro bono representation for asylum seekers

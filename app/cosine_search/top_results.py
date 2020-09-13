@@ -114,7 +114,7 @@ class GetTopNResults:
         """
         answers = self.answers
         age_df = pd.DataFrame(AGE_MAPPER)
-        vals = np.abs(np.sum(age_df.values - self.age))
+        vals = np.abs(np.sum(age_df - self.age))
 
         age_tags = vals[vals == np.min(vals)].index.values[0]
 
