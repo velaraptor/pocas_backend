@@ -102,6 +102,15 @@ def unauthorized():
     return redirect(url_for('login'))
 
 
+@app.route('/services', methods=['GET'])
+@login_required
+def get_services():
+    # TODO: filter by services, add services cards, click on card and go to map 
+    services_resp = requests.get('http://pocas_api/services')
+    services = services_resp.json()
+    return render_template('services.html', markers=services['services'])
+
+
 @app.route('/home', methods=['GET', 'POST'])
 @login_required
 def home_page():
@@ -166,10 +175,6 @@ def register():
     return render_template('register.html', form=form)
 
 # TODO: https://medium.com/geekculture/how-to-make-a-web-map-with-pythons-flask-and-leaflet-9318c73c67c3
-
-# TODO: add questionaire and hit api
-# return results
-# show all of them
 # add oauth with google and captcha
 # save to pdf or send to email results
 # filter by tags
