@@ -1,12 +1,13 @@
 from flask import Flask, render_template, redirect, flash, url_for, make_response, request, Response
 import os
+import requests
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import current_user, login_user, login_required, logout_user
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_caching import Cache
-import datetime
+from datetime import datetime
 from forms import SignupForm, LoginForm, Questions
 
 RECAPTCHA_PUBLIC_KEY = os.getenv('RECAPTCHA_PUBLIC_KEY')
@@ -105,6 +106,27 @@ def unauthorized():
 @login_required
 def home_page():
     form = Questions()
+    if form.validate_on_submit():
+        dob = form.dob.data
+        # change dob to int style
+        dob = int(datetime.strftime(dob, '%m%d%Y'))
+        address = form.zip_code.data
+        answers = [form.question_2.data, form.question_3.data, form.question_4.data, form.question_5.data,
+                   form.question_6.data, form.question_7.data, form.question_8.data, form.question_9.data,
+                   form.question_10.data, form.question_11.data, form.question_12.data, form.question_13.data,
+                   form.question_14.data, form.question_15.data, form.question_16.data, form.question_17.data,
+                   form.question_18.data, form.question_19.data, form.question_20.data, form.question_21.data,
+                   form.question_22.data, form.question_23.data, form.question_24.data,
+                   form.question_25.data, form.question_26.data, form.question_27.data, form.question_28.data,
+                   form.question_29.data, form.question_30.data]
+        answers = list(map(int, answers))
+        s = requests.Session()
+        # TODO: change this
+        s.auth = ('chris', 'duh')
+        post_questions = s.post(f"http://pocas_api/top_n?top_n=15&dob={dob}&address={address}",
+                                json=answers)
+        post_id = post_questions.json()
+        return post_id
     return render_template('home.html', form=form)
 
 

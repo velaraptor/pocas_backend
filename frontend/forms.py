@@ -51,17 +51,13 @@ class Questions(FlaskForm):
             DataRequired()
         ]
     )
-    zip_code = IntegerField(
+    zip_code = StringField(
         'Zip Code',
         validators=[
             DataRequired(),
             Length(min=5, max=5)
         ]
 
-    )
-    question_1 = SwitchField(
-        """In the last year, have you worried that food would, run out before
-              you got money to buy more?"""
     )
     question_2 = SwitchField(
         """Is anyone scaring, threatening or hurting you or your children?"""
