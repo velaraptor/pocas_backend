@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="/static/icon.png">
+
+    <title>POCAS</title>
+    <link href="/static/bootstrap.css" rel="stylesheet">
+    <script src="/static/bootstrap.bundle.min.js"></script>
+
+</head>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">    <img src ='/static/icon.png' width="40%"></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarColor01">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link active" href="#">Questions
+            <span class="visually-hidden">(current)</span>
+          </a>
+        </li>
+                  <li class="nav-item">
+          <a class="nav-link" href="/services">Services</a>
+        </li>
+      </ul>
+         <div class="d-flex">
+
+        <button id="myButton" class="btn btn-secondary my-2 my-sm-0" type="submit" >Logout</button>
+
+                  <script type="text/javascript">
+    document.getElementById("myButton").onclick = function () {
+        location.href = "/logout";
+    };
+</script>
+    </div>
+    </div>
+  </div>
+</nav>
+<body>
+<div class="container">
+    {% from "_formhelpers.html" import render_field %}
+    <div class="jumbotron vertical-center">
+        <div class="row">
+            <hr>
+            <h3 class="text-muted">Questions</h3>
+            <form method=post>
+                {{ form.csrf_token }}
+                <div class="form-group">
+                    <dl>
+                        {{ render_field(form.dob) }}
+                        {{ render_field(form.zip_code) }}
+                        <hr>
+                        <div class="row">
+                            <div class="accordion">
+                                <div class="col">
+                                    <div class="accordion-item border-success bg-light mb-3">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#collapseIncome"
+                                                aria-expanded="false" aria-controls="collapseIncome">
+                                            <h4 class="text-warning" id="headingIncome">Income</h4></button>
+                                    <div id="collapseIncome" class="accordion-collapse collapse"
+                                         aria-labelledby="headingIncome" style="">
+                                        <div style="padding: 1%;">
+                                            {{ render_field(form.question_7) }}
+                                            {{ render_field(form.question_8) }}
+                                            {{ render_field(form.question_4) }}
+                                            {{ render_field(form.question_30) }}
+                                            {{ render_field(form.question_10) }}
+                                            {{ render_field(form.question_13) }}
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="accordion-item border-success bg-light mb-3">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#collapseFood"
+                                                aria-expanded="false" aria-controls="collapseFood">
+                                            <h4 class="text-warning" id="headingFood">Food Insecurity</h4></button>
+                                         <div id="collapseFood" class="accordion-collapse collapse"
+                                         aria-labelledby="headingFood" style="">
+                                             <div style="padding: 1%;">
+                                                 {{ render_field(form.question_9) }}
+                                                 {{ render_field(form.question_11) }}
+                                             </div>
+                                         </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="accordion-item border-success bg-light mb-3">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#collapseHome"
+                                                aria-expanded="false" aria-controls="collapseHome">
+                                            <h4 class="text-warning" id="headingHome">Home</h4></button>
+                                        <div id="collapseHome" class="accordion-collapse collapse"
+                                         aria-labelledby="headingHome" style="">
+                                            <div style="padding: 1%;">
+                                                {{ render_field(form.question_14) }}
+                                                {{ render_field(form.question_15) }}
+                                                {{ render_field(form.question_16) }}
+                                                {{ render_field(form.question_17) }}
+                                                {{ render_field(form.question_18) }}
+                                                {{ render_field(form.question_19) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                <div class="accordion-item border-success bg-light mb-3">
+                                    <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#collapseFamily"
+                                                aria-expanded="false" aria-controls="collapseFamily">
+                                        <h4 class="text-warning" id="headingFamily">Family</h4></button>
+                                    <div id="collapseFamily" class="accordion-collapse collapse"
+                                         aria-labelledby="headingHome" style="">
+                                        <div style="padding: 1%;">
+                                            {{ render_field(form.question_2) }}
+                                            {{ render_field(form.question_3) }}
+                                            {{ render_field(form.question_5) }}
+                                            {{ render_field(form.question_12) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+                                <div class="col">
+                                    <div class="accordion-item border-success bg-light mb-3">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#collapseChild"
+                                                aria-expanded="false" aria-controls="collapseChild">
+                                        <h4 class="text-warning" id="headingChild">Children</h4></button>
+                                        <div id="collapseChild" class="accordion-collapse collapse"
+                                         aria-labelledby="headingChild" style="">
+                                            <div style="padding: 1%;">
+                                                {{ render_field(form.question_20) }}
+                                                {{ render_field(form.question_21) }}
+                                                {{ render_field(form.question_22) }}
+                                                {{ render_field(form.question_23) }}
+                                                {{ render_field(form.question_24) }}
+                                                {{ render_field(form.question_25) }}
+                                                {{ render_field(form.question_26) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="accordion-item border-success bg-light mb-3">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#collapseWomen"
+                                                aria-expanded="false" aria-controls="collapseWomen">
+                                        <h4 class="text-warning" id="headingWomen">Women Health</h4></button>
+                                        <div id="collapseWomen" class="accordion-collapse collapse"
+                                         aria-labelledby="headingWomen" style="">
+                                            <div style="padding: 1%;">
+                                                {{ render_field(form.question_6) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="accordion-item border-success bg-light mb-3">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#collapseIdentity"
+                                                aria-expanded="false" aria-controls="collapseIdentity">
+                                        <h4 class="text-warning" id="headingIdentity">Identity</h4></button>
+                                        <div id="collapseIdentity" class="accordion-collapse collapse"
+                                         aria-labelledby="headingIdentity" style="">
+                                            <div style="padding: 1%;">
+                                                {{ render_field(form.question_28) }}
+                                                {{ render_field(form.question_29) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{ render_field(form.question_27) }}
+
+
+
+                    </dl>
+                </div>
+
+                <p><input type=submit value=Submit class="btn  btn-lg btn-primary" style="width:100%">
+            </form>
+
+        </div>
+    </div>
+
+
+</div>
+</body>
+</html>

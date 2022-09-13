@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="/static/icon.png">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+    <title>POCAS</title>
+    <link href="/static/bootstrap.css" rel="stylesheet">
+    <script src="/static/bootstrap.bundle.min.js"></script>
+    <style>
+        #map-container {
+    position: relative;
+    height: 500px;
+    width: 100%;
+}
+
+#map {
+    position: relative;
+    height: inherit;
+    width: inherit;
+}
+    </style>
+
+</head>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+        <img src ='/static/icon.png' width="40%"></a>
+    <button class="navbar-toggler" type="button"
+            data-bs-toggle="collapse" data-bs-target="#navbarColor01"
+            aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarColor01">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/home">Questions
+          </a>
+        </li>
+          <li class="nav-item">
+              <a class="nav-link active" href="#">Services</a>
+          </li>
+      </ul>
+        <div class="d-flex">
+            <button id="myButton" class="btn btn-secondary my-2 my-sm-0" type="submit" >Logout</button>
+
+            <script type="text/javascript">
+                    document.getElementById("myButton").onclick = function () {
+                        location.href = "/logout";
+                    };
+</script>
+        </div>
+    </div>
+  </div>
+</nav>
+<body>
+<div class="container">
+     {% if not results %}
+    <form method="POST" id="filters" action="/filter">
+                {{ tags.csrf_token }}
+  <div class="form-group">
+        <div class="form-label mt-4">{{ tags.tags.label }}</div>
+      <div class="row">
+          <div class="col">
+            <select name="comp_select" class="selectpicker form-control">
+              {% for o in vals %}
+                {% if active == o %}
+                <option value="{{ o }}" selected>{{ o }}</option>
+
+                {% else %}
+
+              <option value="{{ o }}">{{ o }}</option>
+                                {% endif %}
+
+              {% endfor %}
+            </select>
+              </div>
+                    <div class="col">
+
+          <button type="submit" class="btn btn-success">Go</button>
+                    </div>
+</div>
+    </div>
+    </form>
+    {% endif %}
+    <hr>
+    <div class="jumbotron vertical-center" id="map-container">
+        <div id="map"></div>
+    </div>
+    <hr>
+    <div class="row">
+    {% for marker in markers %}
+        <div class="col">
+            <div class="card text-white bg-primary mb-3" style="width: 22rem;">
+                <div class="card-header">{{ marker['name'] }}</div>
+                <div class="card-body">
+                    <p class="card-text">
+                        {% if marker['phone'] %}
+                        Phone: <a href="tel:+{{ marker['phone'] }}">{{ marker['phone'] }}</a><br>
+                        {% endif %}
+                        {% if marker['address'] %}
+                        <small>
+                            {{ marker['address'] }} , {{ marker['city'] }} , {{ marker['state'] }} {{ marker['zip_code'] }}</small><br>
+                        {% endif %}
+                        {% if marker['days'] %}
+                        <br>DAYS: {{ marker['days'] }}
+                        {% endif %}
+                        {% if marker['hours'] %}
+                        <br>HOURS: {{ marker['hours'] }}
+                        {% endif %}
+                        {% if marker['web_site'] %}
+                        <br><a href="{{ marker['web_site'] }}" class="card-link">WEBSITE</a>
+                        {% endif %}
+                        {% if marker['general_topic'] %}
+                            <div class="list-group">
+                                <ul class="list-group list-group-flush bg-light">
+                                    <li class="list-group-item bg-light">{{ marker['general_topic'] }}</li>
+                                    {% for tags in marker['tags'] %}
+                                        <li class="list-group-item bg-light">{{ tags }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                    <br>
+                    {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+</body>
+<script>
+  var featureGroup = L.featureGroup([
+      {% for marker in markers %}
+      {% if marker['lon'] %}
+          L.marker([{{ marker['lat'] }}, {{ marker['lon'] }}]).bindPopup("{{ marker['name'] }}"),
+
+         {% endif %}
+    {% endfor %}
+    ]);
+var tileLayer = new L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}{r}.{ext}', {
+	attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+	subdomains: 'abcd',
+	minZoom: 0,
+	maxZoom: 15,
+	ext: 'png'
+});
+    var map = new L.Map('map', {
+          'center': [0, 0],
+          'zoom': 0,
+          'layers': [tileLayer, featureGroup]
+        });
+
+    map.fitBounds(featureGroup.getBounds());
+
+ </script>
+
+</html>

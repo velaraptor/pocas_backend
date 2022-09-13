@@ -5,7 +5,9 @@ Flask API, Lambda, and Mongo DB Dockerized
 
 ## before running
 Add keys.env file at top directory and add Google API Key
-
+ * API_USER
+* API_PASS
+* GOOGLE_KEY
 ## to run
 ```
 ./start_services.sh
@@ -13,7 +15,11 @@ Add keys.env file at top directory and add Google API Key
 ## ports open
 
  * MongoDB: http://0.0.0.0:27017
- * API: http://0.0.0.0/api/v1
+ * API: http://0.0.0.0/docs
  * ADMIN: http://0.0.0.0
-  
-    * ```$VERSION``` is set in local.env; is int, for example ```v1```
+
+
+# TODO: 
+change secrets, put on digital ocean and buy domain, redirect to subdomains
+https://stackoverflow.com/questions/53578729/docker-compose-make-container-available-under-subdomain
+https://medium.com/geekculture/how-to-make-a-web-map-with-pythons-flask-and-leaflet-9318c73c67c3

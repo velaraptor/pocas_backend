@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Depends,status
+from fastapi import FastAPI, HTTPException, Depends, status
 from typing import Optional, List
 from pydantic import BaseModel, Field
 from fastapi.middleware.wsgi import WSGIMiddleware
@@ -8,13 +8,14 @@ import secrets
 from cosine_search.top_results import GetTopNResults
 from db.mongo_connector import MongoConnector
 from db.consts import DB_SERVICES, get_lat_lon
+import os
 
 EXAMPLE_RESULTS = [1, 1, 0, 1, 1,
                    0, 1, 1, 1, 0,
                    0, 0, 0, 0, 0,
                    0, 0, 0, 0, 1,
                    0, 0, 0, 1, 1,
-                   1, 1, 0, 0, 1]
+                   1, 1, 0, 0]
 
 description = """
 # POCAS SERVICE API
@@ -30,16 +31,14 @@ app = FastAPI(title="POCAS API",
 security = HTTPBasic()
 
 
-# TODO: get name from database
-# !!SECURITY RISK!!!!
 def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
     current_username_bytes = credentials.username.encode("utf8")
-    correct_username_bytes = b"chris"
+    correct_username_bytes = bytes(os.getenv('API_USER'), 'utf-8')
     is_correct_username = secrets.compare_digest(
         current_username_bytes, correct_username_bytes
     )
     current_password_bytes = credentials.password.encode("utf8")
-    correct_password_bytes = b"duh"
+    correct_password_bytes = bytes(os.getenv('API_PASS'), 'utf-8')
     is_correct_password = secrets.compare_digest(
         current_password_bytes, correct_password_bytes
     )
@@ -61,14 +60,27 @@ class Service(BaseModel):
     city: Optional[str] = Field(example='Austin')
     state: Optional[str] = Field(example='TX')
     lat: Optional[float] = Field(example=72.34, default=None)
-    long: Optional[float] = Field(example=34.01, default=None)
+    lon: Optional[float] = Field(example=34.01, default=None)
     zip_code: Optional[int] = Field(example=78724)
     web_site: Optional[str] = Field(example="http://www.example.com")
+    days: Optional[str]
+    hours: Optional[str]
 
 
 class FullServices(BaseModel):
-    services: List[Service] = []
+    services: List[Service]
     num_of_services: int
+
+
+class UserLocation(BaseModel):
+    lat: float
+    lon: float
+
+
+class TopNResults(BaseModel):
+    services: List[Service]
+    num_of_services: int
+    user_loc: UserLocation
 
 
 @app.get('/services', response_model=FullServices)
@@ -103,13 +115,13 @@ async def post_new_service(service: Service):
     return {'id': str(mongo_id[0])}
 
 
-@app.post('/top_n', dependencies=[Depends(get_current_username)])
+@app.post('/top_n', dependencies=[Depends(get_current_username)], response_model=TopNResults)
 async def get_top_results(top_n: int, dob: int, address: str, answers: List[int] = EXAMPLE_RESULTS):
     """
     Send questionnaire and get Top N results
     """
     try:
-        assert len(answers) == 30
+        assert len(answers) == 29
         gtr = GetTopNResults(top_n=top_n, dob=dob, answers=answers, address=address)
         top_services, user_loc = gtr.get_top_results()
         for r in top_services:
@@ -117,8 +129,8 @@ async def get_top_results(top_n: int, dob: int, address: str, answers: List[int]
             r.pop('_id', None)
         assert len(top_services) <= int(top_n)
         return {'services': top_services, 'num_of_services': len(top_services), 'user_loc': user_loc}
-    except Exception as e:
-        print(str(e))
+    except Exception:
         raise HTTPException(status_code=404, detail="Results not found")
+
 
 app.mount("/", WSGIMiddleware(flask_app))
