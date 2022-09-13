@@ -38,49 +38,97 @@
     <div class="jumbotron vertical-center">
         <div class="row">
             <hr>
-            <h1>Questions</h1>
+            <h3 class="text-muted">Questions</h3>
             <form method=post>
                 {{ form.csrf_token }}
                 <div class="form-group">
                     <dl>
                         {{ render_field(form.dob) }}
                         {{ render_field(form.zip_code) }}
-                        {{ render_field(form.question_1) }}
-                        {{ render_field(form.question_2) }}
-                        {{ render_field(form.question_3) }}
-                        {{ render_field(form.question_4) }}
-                        {{ render_field(form.question_5) }}
-                        {{ render_field(form.question_6) }}
-                        {{ render_field(form.question_7) }}
-                        {{ render_field(form.question_8) }}
-                        {{ render_field(form.question_9) }}
-                        {{ render_field(form.question_10) }}
-                        {{ render_field(form.question_11) }}
-                        {{ render_field(form.question_12) }}
-                        {{ render_field(form.question_13) }}
+                        <hr>
+                        <div class="row">
+
+                        <div class="col">
+                            <h4 class="text-warning">Income</h4>
+                            <div class="card border-success mb-3" style="padding: 5%;">
+                            {{ render_field(form.question_7) }}
+                            {{ render_field(form.question_8) }}
+                            {{ render_field(form.question_4) }}
+                            {{ render_field(form.question_30) }}
+                            {{ render_field(form.question_7) }}
+                            {{ render_field(form.question_10) }}
+                            {{ render_field(form.question_13) }}
+                                </div>
+
+                        </div>
+                        <div class="col">
+                            <h4 class="text-warning">Food Insecurity</h4>
+                            <div class="card border-success mb-3" style="padding: 5%;">
+
+                            {{ render_field(form.question_9) }}
+                            {{ render_field(form.question_11) }}
+                                </div>
+                        </div>
+                                                    <div class="col">
+                            <h4 class="text-warning">Home</h4>
+                                                        <div class="card border-success mb-3" style="padding: 5%;">
+
                         {{ render_field(form.question_14) }}
                         {{ render_field(form.question_15) }}
-                        {{ render_field(form.question_16) }}
+                            {{ render_field(form.question_16) }}
                         {{ render_field(form.question_17) }}
                         {{ render_field(form.question_18) }}
                         {{ render_field(form.question_19) }}
-                        {{ render_field(form.question_20) }}
+                                                            </div>
+                        </div>
+                        <div class="col">
+                            <h4 class="text-warning">Family</h4>
+                            <div class="card border-success mb-3" style="padding: 5%;">
+
+                            {{ render_field(form.question_2) }}
+                            {{ render_field(form.question_3) }}
+                            {{ render_field(form.question_5) }}
+                            {{ render_field(form.question_12) }}
+                            </div>
+                        </div>
+                            <div class="col">
+                            <h4 class="text-warning">Children</h4>
+                            <div class="card border-success mb-3" style="padding: 5%;">
+
+                            {{ render_field(form.question_20) }}
                         {{ render_field(form.question_21) }}
                         {{ render_field(form.question_22) }}
                         {{ render_field(form.question_23) }}
                         {{ render_field(form.question_24) }}
                         {{ render_field(form.question_25) }}
                         {{ render_field(form.question_26) }}
-                        {{ render_field(form.question_27) }}
+                            </div>
+                        </div>
+                        <div class="col">
+                            <h4 class="text-warning">Women Health</h4>
+                            <div class="card border-success mb-3" style="padding: 5%;">
+
+                            {{ render_field(form.question_6) }}
+                                </div>
+                        </div>
+
+                        <div class="col">
+                            <h4 class="text-warning">Identity</h4>
+                            <div class="card border-success mb-3" style="padding: 5%;">
+
                         {{ render_field(form.question_28) }}
                         {{ render_field(form.question_29) }}
-                        {{ render_field(form.question_30) }}
+                                </div>
+                        </div>
+                        </div>
+                        {{ render_field(form.question_27) }}
+
 
 
                     </dl>
                 </div>
 
-                <p><input type=submit value=Submit class="btn btn-primary">
+                <p><input type=submit value=Submit class="btn  btn-lg btn-primary" style="width:100%">
             </form>
 
         </div>

@@ -14,7 +14,7 @@ EXAMPLE_RESULTS = [1, 1, 0, 1, 1,
                    0, 0, 0, 0, 0,
                    0, 0, 0, 0, 1,
                    0, 0, 0, 1, 1,
-                   1, 1, 0, 0, 1]
+                   1, 1, 0, 0]
 
 description = """
 # POCAS SERVICE API
@@ -109,7 +109,7 @@ async def get_top_results(top_n: int, dob: int, address: str, answers: List[int]
     Send questionnaire and get Top N results
     """
     try:
-        assert len(answers) == 30
+        assert len(answers) == 29
         gtr = GetTopNResults(top_n=top_n, dob=dob, answers=answers, address=address)
         top_services, user_loc = gtr.get_top_results()
         for r in top_services:
