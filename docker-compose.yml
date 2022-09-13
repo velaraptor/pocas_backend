@@ -17,11 +17,10 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile_Python
-#    command: python api/app.py
     volumes:
       - ./data:/data
     ports:
-      - 80:80
+      - 8002:80
     env_file:
       - local.env
       - keys.env

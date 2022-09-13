@@ -1,9 +1,4 @@
-FROM tiangolo/uwsgi-nginx-flask:python3.7
-
-RUN apt-get update && apt-get install -y \
-    git \
-    apt-utils \
-    build-essential
+FROM tiangolo/uvicorn-gunicorn-fastapi:python3.8
 
 COPY requirements.txt /app/
 WORKDIR /app
