@@ -1,87 +1,124 @@
-from db.consts import get_env_bool
-from flask import Flask, url_for, redirect
-from api.app import api_v1, limiter
-from admin.app import admin
-from flask_security import Security, MongoEngineUserDatastore, \
-    UserMixin, RoleMixin, auth_required, hash_password
-from flask_mongoengine import MongoEngine
-from flask_admin import helpers as admin_helpers
-import os
+from fastapi import FastAPI, HTTPException, Depends,status
+from typing import Optional, List
+from pydantic import BaseModel, Field
+from fastapi.middleware.wsgi import WSGIMiddleware
+from admin_main import app as flask_app
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
 import secrets
+from cosine_search.top_results import GetTopNResults
+from db.mongo_connector import MongoConnector
+from db.consts import DB_SERVICES, get_lat_lon
 
-app = Flask(__name__)
-app.config['RESTX_MASK_SWAGGER'] = get_env_bool('RESTX_MASK_SWAGGER')
-app.config['FLASK_ADMIN_SWATCH'] = 'cerulean'
-app.config['SECRET_KEY'] = secrets.token_urlsafe()
-# Flask-Security config
-app.config['SECURITY_URL_PREFIX'] = "/admin"
-app.config['SECURITY_PASSWORD_SALT'] = os.environ.get("SECURITY_PASSWORD_SALT", '146585145368132386173505678016728509634')
+EXAMPLE_RESULTS = [1, 1, 0, 1, 1,
+                   0, 1, 1, 1, 0,
+                   0, 0, 0, 0, 0,
+                   0, 0, 0, 0, 1,
+                   0, 0, 0, 1, 1,
+                   1, 1, 0, 0, 1]
 
-# Flask-Security URLs, overridden because they don't put a / at the end
-app.config['SECURITY_LOGIN_URL'] = "/login/"
-app.config['SECURITY_LOGOUT_URL'] = "/logout/"
-
-app.config['SECURITY_POST_LOGIN_VIEW'] = "/admin/"
-app.config['SECURITY_POST_LOGOUT_VIEW'] = "/admin/"
-
-# Flask-Security features
-app.config['SECURITY_REGISTERABLE'] = False
-app.config['SECURITY_SEND_REGISTER_EMAIL'] = False
-
-
-username = os.getenv('MONGO_INITDB_ROOT_USERNAME')
-password = os.getenv('MONGO_INITDB_ROOT_PASSWORD')
-host = os.getenv('MONGO_HOST')
-port = os.getenv('MONGO_PORT')
-app.config['MONGODB_SETTINGS'] = {
-    'host': f'mongodb://{username}:{password}@{host}:{port}/users_login?authSource=admin'
-}
-
-db = MongoEngine(app)
-
-class Role(db.Document, RoleMixin):
-    name = db.StringField(max_length=80)
-    description = db.StringField(max_length=255)
-
-class User(db.Document, UserMixin):
-    email = db.StringField(max_length=255)
-    password = db.StringField(max_length=255)
-    active = db.BooleanField(default=True)
-    fs_uniquifier = db.StringField(max_length=255)
-    confirmed_at = db.DateTimeField()
-    roles = db.ListField(default=[])
-
-user_datastore = MongoEngineUserDatastore(db, User, Role)
-security = Security(app, user_datastore)
+description = """
+# POCAS SERVICE API
+ * Can get all services in API
+ * Post new services
+ * Get Questionnaire results
+## POCAS ADMIN PANEL: <a href="/admin">LINK</a>
+"""
+app = FastAPI(title="POCAS API",
+              version="0.0.1",
+              description=description
+              )
+security = HTTPBasic()
 
 
-# Create a user to test with
-@app.before_first_request
-def create_user():
-    if get_env_bool('CREATE_USERS'):
-        user_datastore.create_role(name='superuser', description='super user')
-        user_datastore.create_role(name='user', description='normal user')
-        user_datastore.create_user(email=os.getenv('ADMIN_USER'), password=hash_password(os.getenv('ADMIN_PASS')),
-                                   roles=['superuser'])
-
-
-# Views
-@app.route('/')
-@auth_required()
-def home():
-    return redirect(url_for('admin.index'))
-
-
-@security.context_processor
-def security_context_processor():
-    return dict(
-        admin_base_template=admin.base_template,
-        admin_view=admin.index_view,
-        h=admin_helpers,
-        get_url=url_for
+# TODO: get name from database
+# !!SECURITY RISK!!!!
+def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
+    current_username_bytes = credentials.username.encode("utf8")
+    correct_username_bytes = b"chris"
+    is_correct_username = secrets.compare_digest(
+        current_username_bytes, correct_username_bytes
     )
+    current_password_bytes = credentials.password.encode("utf8")
+    correct_password_bytes = b"duh"
+    is_correct_password = secrets.compare_digest(
+        current_password_bytes, correct_password_bytes
+    )
+    if not (is_correct_username and is_correct_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+    return credentials.username
 
 
-app.register_blueprint(api_v1)
-admin.init_app(app)
-limiter.init_app(app)
+class Service(BaseModel):
+    name: str = Field(example='Test Service')
+    phone: Optional[int] = Field(example=5559995555)
+    address: Optional[str] = Field(example='1111 S 110th Ave.')
+    general_topic: str = Field(example='Topic1')
+    tags: List[str] = Field(example=['Tag1', 'Tag2'], default=[])
+    city: Optional[str] = Field(example='Austin')
+    state: Optional[str] = Field(example='TX')
+    lat: Optional[float] = Field(example=72.34, default=None)
+    long: Optional[float] = Field(example=34.01, default=None)
+    zip_code: Optional[int] = Field(example=78724)
+    web_site: Optional[str] = Field(example="http://www.example.com")
+
+
+class FullServices(BaseModel):
+    services: List[Service] = []
+    num_of_services: int
+
+
+@app.get('/services', response_model=FullServices)
+async def get_services():
+    """
+    Get all Services for POCAS
+    """
+    m = MongoConnector(fsync=True)
+    all_services = m.query_results(db=DB_SERVICES['db'], collection=DB_SERVICES['collection'],
+                                   query={}, exclude={'loc': 0})
+    for r in all_services:
+        r['id'] = str(r['_id'])
+        r.pop('_id', None)
+    num_docs = len(all_services)
+    if num_docs > 0:
+        response = {'services': all_services, 'num_of_services': num_docs}
+        return response
+    else:
+        raise HTTPException(status_code=404, detail="Services not found")
+
+
+@app.post('/services', dependencies=[Depends(get_current_username)])
+async def post_new_service(service: Service):
+    """
+    Upload Service to MongoDB
+    """
+    m = MongoConnector()
+    payload = service.dict()
+    payload = get_lat_lon(payload)
+    mongo_id = m.upload_results(db=DB_SERVICES['db'],
+                                collection=DB_SERVICES['collection'], data=[payload])
+    return {'id': str(mongo_id[0])}
+
+
+@app.post('/top_n', dependencies=[Depends(get_current_username)])
+async def get_top_results(top_n: int, dob: int, address: str, answers: List[int] = EXAMPLE_RESULTS):
+    """
+    Send questionnaire and get Top N results
+    """
+    try:
+        assert len(answers) == 30
+        gtr = GetTopNResults(top_n=top_n, dob=dob, answers=answers, address=address)
+        top_services, user_loc = gtr.get_top_results()
+        for r in top_services:
+            r['id'] = str(r['_id'])
+            r.pop('_id', None)
+        assert len(top_services) <= int(top_n)
+        return {'services': top_services, 'num_of_services': len(top_services), 'user_loc': user_loc}
+    except Exception as e:
+        print(str(e))
+        raise HTTPException(status_code=404, detail="Results not found")
+
+app.mount("/", WSGIMiddleware(flask_app))

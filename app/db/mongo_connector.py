@@ -6,14 +6,14 @@ class MongoConnector:
     """
     General MongoDB Connector
     """
-    def __init__(self):
-        self.__host = os.getenv('MONGO_HOST')
-        self.__port = os.getenv('MONGO_PORT')
+    def __init__(self, fsync=False):
+        self.__host = os.getenv('MONGO_HOST', '0.0.0.0')
+        self.__port = os.getenv('MONGO_PORT', '27017')
         self.__pass = os.getenv('MONGO_INITDB_ROOT_PASSWORD')
         self.__user = os.getenv('MONGO_INITDB_ROOT_USERNAME')
 
         uri = "mongodb://%s:%s@%s:%s" % (self.__user, self.__pass, self.__host, self.__port)
-        self.client = MongoClient(uri)
+        self.client = MongoClient(uri, fsync=fsync)
 
     def query_results(self, db, collection, query, exclude=None):
         """
@@ -37,6 +37,16 @@ class MongoConnector:
             results.append(c)
         return results
 
+    @staticmethod
+    def check_duplicates(c, data):
+        results = []
+        for c in c.find({'name': data['name']}):
+            results.append(c)
+        if len(results) > 0:
+            print('Found Duplicates!')
+            return None
+        return data
+
     def upload_results(self, db, collection, data,  geo_index=False):
         """
         Upload Results to database, collection with data as a list of dictionaries
@@ -54,5 +64,12 @@ class MongoConnector:
         c = db[collection]
         if geo_index:
             c.create_index([("loc", GEOSPHERE)])
-        result = c.insert_many(data)
-        return result.inserted_ids
+        data_temp = []
+        for d in data:
+            duplicate_check = self.check_duplicates(c, d)
+            if duplicate_check:
+                data_temp.append(duplicate_check)
+        if len(data_temp) > 0:
+            result = c.insert_many(data_temp)
+            return result.inserted_ids
+        return ['Duplicate!']

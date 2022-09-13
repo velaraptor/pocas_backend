@@ -13,7 +13,7 @@ import uuid
 from bson.dbref import DBRef
 
 conn = MongoConnector().client
-db = conn[DB_SERVICES['db']]
+db1 = conn[DB_SERVICES['db']]
 
 
 class MyModelView(ModelView):
@@ -33,6 +33,7 @@ class MyModelView(ModelView):
             else:
                 # login
                 return redirect(url_for('security.login', next=request.url))
+
 
 class SuperUserView(MyModelView):
     def is_accessible(self):
@@ -62,6 +63,7 @@ class MyAdminIndexView(AdminIndexView):
                 # login
                 return redirect(url_for('security.login', next=request.url))
 
+
 class ServiceForm(form.Form):
     name = fields.StringField('name')
     phone = fields.IntegerField('phone')
@@ -73,8 +75,10 @@ class ServiceForm(form.Form):
     web_site = fields.StringField('web_site')
     tags = InlineFieldList(fields.StringField())
 
+
 class ServicesView(MyModelView):
-    column_list = ('name', 'phone', 'address', 'lat', 'lon', 'general_topic', 'city', 'state', 'zip_code', 'web_site', 'tags')
+    column_list = (
+    'name', 'phone', 'address', 'lat', 'lon', 'general_topic', 'city', 'state', 'zip_code', 'web_site', 'tags')
     column_sortable_list = ('name', 'phone', 'address', 'general_topic', 'city', 'state', 'zip_code')
 
     form = ServiceForm
@@ -84,10 +88,12 @@ class ServicesView(MyModelView):
 
         return model
 
+
 class UserForm(form.Form):
     email = fields.StringField('email')
     password = fields.StringField('password')
     roles = InlineFieldList(fields.StringField())
+
 
 class UsersView(SuperUserView):
     column_list = ('email', 'active', 'fs_uniquifier', 'roles')
@@ -104,18 +110,19 @@ class UsersView(SuperUserView):
             for role in model.get('roles'):
                 mongo_roles = MongoConnector().query_results(db='users_login', collection='role', query={'name': role})
                 if len(mongo_roles) > 0:
-                    valid_roles.append(DBRef(collection = "role", id =mongo_roles[0]['_id']))
+                    valid_roles.append(DBRef(collection="role", id=mongo_roles[0]['_id']))
 
         model['roles'] = valid_roles
         return model
 
+
 # TODO: ADD import csv https://blog.sneawo.com/blog/2018/02/16/export-and-import-for-mongoengine-model-in-flask-admin/
 
-VERSION = os.getenv('VERSION')
-admin = Admin(name='POCAS Admin Panel', url='/admin', index_view=MyAdminIndexView(
-        template='home.html'
-    ), base_template='my_master.html', template_mode='bootstrap3')
-admin.add_view(ServicesView(db[DB_SERVICES['collection']], 'Services Importer'))
-admin.add_view(UsersView(conn['users_login']['user'], 'User Management'))
 
-admin.add_link(MenuLink(name='POCAS API', url=f'/api/v{VERSION}/'))
+VERSION = os.getenv('VERSION', 1)
+admin = Admin(name='POCAS Admin Panel', url='/admin', index_view=MyAdminIndexView(
+    template='home.html'
+), base_template='my_master.html', template_mode='bootstrap3')
+admin.add_view(ServicesView(db1.services, 'Services Importer'))
+admin.add_view(UsersView(conn['users_login']['user'], 'User Management'))
+admin.add_link(MenuLink(name='POCAS API', url=f'/docs'))
