@@ -1,4 +1,4 @@
 #! /usr/bin/env bash
 
-# Run custom Python script before starting
+# Runs static services from csv when first start running, be sure to add to env file RERUN_SERVICES=True
 python /app/db/run_upload.py
