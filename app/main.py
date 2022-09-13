@@ -8,6 +8,7 @@ import secrets
 from cosine_search.top_results import GetTopNResults
 from db.mongo_connector import MongoConnector
 from db.consts import DB_SERVICES, get_lat_lon
+import os
 
 EXAMPLE_RESULTS = [1, 1, 0, 1, 1,
                    0, 1, 1, 1, 0,
@@ -30,16 +31,14 @@ app = FastAPI(title="POCAS API",
 security = HTTPBasic()
 
 
-# TODO: get name from database
-# !!SECURITY RISK!!!!
 def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
     current_username_bytes = credentials.username.encode("utf8")
-    correct_username_bytes = b"chris"
+    correct_username_bytes = bytes(os.getenv('API_USER'), 'utf-8')
     is_correct_username = secrets.compare_digest(
         current_username_bytes, correct_username_bytes
     )
     current_password_bytes = credentials.password.encode("utf8")
-    correct_password_bytes = b"duh"
+    correct_password_bytes = bytes(os.getenv('API_PASS'), 'utf-8')
     is_correct_password = secrets.compare_digest(
         current_password_bytes, correct_password_bytes
     )

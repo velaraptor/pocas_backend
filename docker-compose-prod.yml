@@ -1,0 +1,69 @@
+version: '3.6'
+services:
+  mongo_db:
+    container_name: pocas_mongo
+    image: mongo
+    volumes:
+      - mongo_db:/data/db
+    restart: always
+    networks:
+      - pocas_net
+    env_file:
+      - local.env
+
+  api:
+    container_name: pocas_api
+    depends_on:
+      - mongo_db
+    build:
+      context: ./
+      dockerfile: Dockerfile_API
+    volumes:
+      - ./data:/data
+    networks:
+      - pocas_net
+    ports:
+      - "9001:80"
+    env_file:
+      - local.env
+      - keys.env
+      - api.env
+
+  frontend:
+    container_name: frontend
+    restart: always
+    depends_on:
+      - postgres
+      - mongo_db
+    environment:
+      - WORKERS_PER_CORE=0.5
+    build:
+      context: ./
+      dockerfile: DockerFile_UI
+    ports:
+      - "80:80"
+    networks:
+      - pocas_net
+    env_file:
+      - .env
+      - keys.env
+      - api.env
+
+  postgres:
+    container_name: postgresdb
+    image: postgres:14.1
+    restart: always
+    env_file:
+      - .env
+    networks:
+      -   pocas_net
+    volumes:
+      - postgres_db:/var/lib/postgresql/data
+
+volumes:
+  mongo_db:
+  postgres_db:
+
+networks:
+  pocas_net:
+    driver: bridge

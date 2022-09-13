@@ -149,8 +149,7 @@ def home_page():
                    form.question_29.data, form.question_30.data]
         answers = list(map(int, answers))
         s = requests.Session()
-        # TODO: change this
-        s.auth = ('chris', 'duh')
+        s.auth = (os.getenv('API_USER'), os.getenv('API_PASS'))
         post_questions = s.post(f"http://pocas_api/top_n?top_n=15&dob={dob}&address={address}",
                                 json=answers)
         top_results = post_questions.json()
@@ -199,6 +198,4 @@ def register():
 # TODO
 # add oauth with google and captcha
 # save to pdf or send to email results
-# filter by tags
 # click on card and show on map
-

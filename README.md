@@ -5,7 +5,9 @@ Flask API, Lambda, and Mongo DB Dockerized
 
 ## before running
 Add keys.env file at top directory and add Google API Key
-
+ * API_USER
+* API_PASS
+* GOOGLE_KEY
 ## to run
 ```
 ./start_services.sh

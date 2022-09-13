@@ -137,8 +137,7 @@
   var featureGroup = L.featureGroup([
       {% for marker in markers %}
       {% if marker['lon'] %}
-          L.marker([{{ marker['lat'] }}, {{ marker['lon'] }}]).bindPopup("{{ marker['name'] }}")
-          .openPopup(),
+          L.marker([{{ marker['lat'] }}, {{ marker['lon'] }}]).bindPopup("{{ marker['name'] }}"),
 
          {% endif %}
     {% endfor %}
