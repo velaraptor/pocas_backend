@@ -12,4 +12,4 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
-        script: ./restart_service.sh
+        script: ./start_service_prod.sh
