@@ -16,7 +16,7 @@ services:
     container_name: pocas_api
     build:
       context: ./
-      dockerfile: Dockerfile_Python
+      dockerfile: Dockerfile_API
     volumes:
       - ./data:/data
     ports:

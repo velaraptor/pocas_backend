@@ -31,6 +31,7 @@ security = HTTPBasic()
 
 
 # TODO: get name from database
+# !!SECURITY RISK!!!!
 def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
     current_username_bytes = credentials.username.encode("utf8")
     correct_username_bytes = b"chris"
