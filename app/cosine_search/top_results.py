@@ -175,6 +175,9 @@ class GetTopNResults:
         df_results['pocas_score'] = sim_vals
         df_results = df_results.sort_values('pocas_score', ascending=False)
         final_results = df_results[:int(self.top_n)]
+        final_results.loc[final_results['online_service'] == 1, 'lat'] = None
+        final_results.loc[final_results['online_service'] == 1, 'lon'] = None
+
         final_results = final_results.to_dict(orient='records')
         return final_results
 

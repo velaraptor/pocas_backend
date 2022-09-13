@@ -8,7 +8,7 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_caching import Cache
 from datetime import datetime
-from forms import SignupForm, LoginForm, Questions
+from forms import SignupForm, LoginForm, Questions, Tags, get_tags
 
 RECAPTCHA_PUBLIC_KEY = os.getenv('RECAPTCHA_PUBLIC_KEY')
 RECAPTCHA_PRIVATE_KEY = os.getenv('RECAPTCHA_PRIVATE_KEY')
@@ -105,10 +105,29 @@ def unauthorized():
 @app.route('/services', methods=['GET'])
 @login_required
 def get_services():
-    # TODO: filter by services, add services cards, click on card and go to map 
+    tag_form = Tags()
     services_resp = requests.get('http://pocas_api/services')
     services = services_resp.json()
-    return render_template('services.html', markers=services['services'])
+    services = sorted(services['services'], key=lambda d: d['general_topic'])
+    return render_template('services.html', markers=services, tags=tag_form, vals=get_tags(), active=False,
+                           results=False)
+
+
+@app.route('/filter', methods=['POST'])
+@login_required
+def filter_tags():
+    if request.form['comp_select']:
+        tag_form = Tags()
+        f_val = request.form['comp_select']
+        services_resp = requests.get('http://pocas_api/services')
+        services = services_resp.json()
+        services = sorted(services['services'], key=lambda d: d['general_topic'])
+        services_g = list(filter(lambda x: x['general_topic'] == f_val, services))
+        services_t = [x for x in services if f_val in x['tags'] and f_val != x['general_topic']]
+        services = services_t + services_g
+
+        return render_template('services.html', markers=services, tags=tag_form, vals=get_tags(), active=f_val,
+                               results=False)
 
 
 @app.route('/home', methods=['GET', 'POST'])
@@ -134,8 +153,11 @@ def home_page():
         s.auth = ('chris', 'duh')
         post_questions = s.post(f"http://pocas_api/top_n?top_n=15&dob={dob}&address={address}",
                                 json=answers)
-        post_id = post_questions.json()
-        return post_id
+        top_results = post_questions.json()
+        tag_form = Tags()
+
+        return render_template('services.html', markers=top_results['services'], tags=tag_form, active=False,
+                               vals=get_tags(), results=True)
     return render_template('home.html', form=form)
 
 
@@ -149,7 +171,7 @@ def login():
         if user and user.check_password(password=form.password.data):
             remember = form.remember.data
             login_user(user, remember=remember)
-            user.last_login = datetime.datetime.now()
+            user.last_login = datetime.now()
             db.session.commit()
             return redirect(url_for('home_page'))
         flash('Invalid username/password combination')
@@ -174,7 +196,9 @@ def register():
         flash('A user already exists with that username.')
     return render_template('register.html', form=form)
 
-# TODO: https://medium.com/geekculture/how-to-make-a-web-map-with-pythons-flask-and-leaflet-9318c73c67c3
+# TODO
 # add oauth with google and captcha
 # save to pdf or send to email results
 # filter by tags
+# click on card and show on map
+

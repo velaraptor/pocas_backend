@@ -9,10 +9,11 @@ import os
 import secrets
 
 app = Flask(__name__)
-app.config['FLASK_ADMIN_SWATCH'] = 'cerulean'
+app.config['FLASK_ADMIN_SWATCH'] = 'superhero'
 app.config['SECRET_KEY'] = secrets.token_urlsafe()
 # Flask-Security config
-app.config['SECURITY_URL_PREFIX'] = "/"
+app.config['SECURITY_URL_PREFIX'] = "/admin"
+SECURITY_PASSWORD_HASH = "pbkdf2_sha512"
 app.config['SECURITY_PASSWORD_SALT'] = os.environ.get("SECURITY_PASSWORD_SALT",
                                                       '146585145368132386173505678016728509634')
 
@@ -71,7 +72,7 @@ def create_user():
 def home():
     return redirect(url_for('admin.index'))
 
-
+# TODO: flask admin check html files
 @security.context_processor
 def security_context_processor():
     return dict(

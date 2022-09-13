@@ -64,6 +64,8 @@ class Service(BaseModel):
     lon: Optional[float] = Field(example=34.01, default=None)
     zip_code: Optional[int] = Field(example=78724)
     web_site: Optional[str] = Field(example="http://www.example.com")
+    days: Optional[str]
+    hours: Optional[str]
 
 
 class FullServices(BaseModel):

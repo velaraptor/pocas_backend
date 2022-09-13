@@ -1,10 +1,25 @@
 from flask_wtf import FlaskForm
 from flask_wtf.recaptcha import RecaptchaField
-
-from wtforms import PasswordField, StringField, SubmitField, SelectField, BooleanField, IntegerField, \
-    widgets, DateField
+import requests
+from wtforms import PasswordField, StringField, SubmitField, BooleanField, DateField, SelectMultipleField
 from flask_bootstrap import SwitchField
-from wtforms.validators import DataRequired, EqualTo, Length, NumberRange
+from wtforms.validators import DataRequired, EqualTo, Length
+import pandas as pd
+
+
+def get_tags():
+    services_resp = requests.get('http://pocas_api/services')
+    services = pd.DataFrame(services_resp.json()['services'])
+    g_t = services.general_topic.dropna().unique().tolist()
+    tags = services.tags.explode().dropna().unique().tolist()
+    return set(g_t + tags)
+
+
+class Tags(FlaskForm):
+    tags = SelectMultipleField(
+        'Filter by Tags',
+        choices=get_tags()
+    )
 
 
 class SignupForm(FlaskForm):
@@ -148,5 +163,3 @@ class Questions(FlaskForm):
     )
 
     submit = SubmitField('Submit')
-
-

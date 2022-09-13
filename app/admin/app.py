@@ -122,7 +122,7 @@ class UsersView(SuperUserView):
 VERSION = os.getenv('VERSION', 1)
 admin = Admin(name='POCAS Admin Panel', url='/admin', index_view=MyAdminIndexView(
     template='home.html'
-), base_template='my_master.html', template_mode='bootstrap3')
+), base_template='master.html', template_mode='bootstrap3')
 admin.add_view(ServicesView(db1.services, 'Services Importer'))
 admin.add_view(UsersView(conn['users_login']['user'], 'User Management'))
 admin.add_link(MenuLink(name='POCAS API', url=f'/docs'))

@@ -13,7 +13,7 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">    <img src ='/static/icon.png' width="50%"></a>
+    <a class="navbar-brand" href="#">    <img src ='/static/icon.png' width="40%"></a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -29,6 +29,16 @@
           <a class="nav-link" href="/services">Services</a>
         </li>
       </ul>
+         <div class="d-flex">
+
+        <button id="myButton" class="btn btn-secondary my-2 my-sm-0" type="submit" >Logout</button>
+
+                  <script type="text/javascript">
+    document.getElementById("myButton").onclick = function () {
+        location.href = "/logout";
+    };
+</script>
+    </div>
     </div>
   </div>
 </nav>
