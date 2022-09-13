@@ -1,22 +1,14 @@
-from flask import Flask, render_template, redirect, flash, url_for, make_response, request, Response, \
-    stream_with_context
-import requests
-import json
+from flask import Flask, render_template, redirect, flash, url_for, make_response, request, Response
 import os
-from flask_wtf import FlaskForm
-from flask_wtf.recaptcha import RecaptchaField
-
-from wtforms import PasswordField, StringField, SubmitField, SelectField, BooleanField, IntegerField,\
-    widgets, SelectMultipleField
-from wtforms.validators import DataRequired, EqualTo, Length, NumberRange
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import current_user, login_user, login_required, logout_user
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-from werkzeug.datastructures import MultiDict
 from flask_caching import Cache
 import datetime
+from forms import SignupForm, LoginForm
+
 RECAPTCHA_PUBLIC_KEY = os.getenv('RECAPTCHA_PUBLIC_KEY')
 RECAPTCHA_PRIVATE_KEY = os.getenv('RECAPTCHA_PRIVATE_KEY')
 cache = Cache(config={'CACHE_TYPE': 'SimpleCache'})
@@ -81,44 +73,6 @@ class User(UserMixin, db.Model):
         return '<User {}>'.format(self.username)
 
 
-class SignupForm(FlaskForm):
-    """User Sign-up Form."""
-    user_name = StringField(
-        'User Name',
-        validators=[DataRequired()]
-    )
-    password = PasswordField(
-        'Password',
-        validators=[
-            DataRequired(),
-            Length(min=6, message='Select a stronger password.')
-        ]
-    )
-    confirm = PasswordField(
-        'Confirm Your Password',
-        validators=[
-            DataRequired(),
-            EqualTo('password', message='Passwords must match.')
-        ]
-    )
-    recaptcha = RecaptchaField()
-    submit = SubmitField('Register')
-
-
-
-class LoginForm(FlaskForm):
-    """User Log-in Form."""
-    user_name = StringField(
-        'User Name',
-        validators=[
-            DataRequired(),
-        ]
-    )
-    password = PasswordField('Password', validators=[DataRequired()])
-    remember = BooleanField()
-    submit = SubmitField('Login')
-
-
 @app.route('/', methods=['GET', 'POST'])
 def welcome():
     return render_template('flash.html')
@@ -147,10 +101,16 @@ def unauthorized():
     return redirect(url_for('login'))
 
 
+@app.route('/home', methods=['GET', 'POST'])
+@login_required
+def home_page():
+    return {'success': True}
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for('home_page'))
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(user_name=form.user_name.data.lower()).first()
@@ -159,7 +119,7 @@ def login():
             login_user(user, remember=remember)
             user.last_login = datetime.datetime.now()
             db.session.commit()
-            return redirect(url_for('home'))
+            return redirect(url_for('home_page'))
         flash('Invalid username/password combination')
         return redirect(url_for('login'))
     return render_template('index.html', form=form)
