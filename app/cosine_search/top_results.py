@@ -32,7 +32,7 @@ QUESTIONS = OrderedDict({
             'In the last year, have you worried that food would, run out before you got money to buy more?': ['Food and Nutrition', 'Family', 'Public Benefits'],
              'Is anyone scaring, threatening or hurting you or your children?': ['Domestic Violence', 'Shelter', 'Family'],
              'Every family has fights.  What are fights like in your home?': ['Domestic Violence', 'Family', 'Shelter'],
-             'Do  you  ever  skip  or  cut  the  dose  of  a  medicine  because of cost?': ['Health Insurance', 'Low Income'],
+             'Do you ever skip or cut the dose of a medicine because of cost?': ['Health Insurance', 'Low Income'],
              'Do you and your family have health insurance?  If not, have you applied for AHCCCS, KidsCare, ACA insurance or other benefits?': ['Health Insurance'],
              'Are you pregnant?  If so, have you spoken to anyone about WIC?': ['Family', 'Health Insurance', 'Public Benefits', 'Low Income'],
              'If you have applied for assistance and been denied, have you filed an appeal?': ['Pubic Benefits', 'Social Security', 'Low Income', 'Child Support'],

@@ -2,7 +2,17 @@
   <fieldset>
 
   <fieldset class="form-label mt-4">{{ field.label }}</label>
+    {% if field.type == 'SwitchField' %}
+             <div class="form-check form-switch">
+                {%- if field.errors %}
+                    {{ field(class_="custom-control-input is-invalid%s" % extra_classes)|safe }}
+                {%- else -%}
+                    {{ field(class_="form-check-input%s" % extra_classes)|safe }}
+                {%- endif %}
+    </div>
+    {% else %}
   <dd>{{ field(class_="form-control")|safe }}
+     {% endif %}
   {% if field.errors %}
     <ul class=errors>
     {% for error in field.errors %}

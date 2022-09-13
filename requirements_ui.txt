@@ -9,3 +9,4 @@ Flask-SQLAlchemy==2.5.1
 WTForms==3.0.0
 requests
 psycopg2-binary==2.9.2
+Bootstrap-Flask==2.1.0

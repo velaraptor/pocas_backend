@@ -2,9 +2,91 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="/static/icon.png">
 
+    <title>POCAS</title>
+    <link href="/static/bootstrap.css" rel="stylesheet">
+    <script src="/static/bootstrap.bundle.min.js"></script>
+
+</head>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">    <img src ='/static/icon.png' width="50%"></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarColor01">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link active" href="#">Questions
+            <span class="visually-hidden">(current)</span>
+          </a>
+        </li>
+                  <li class="nav-item">
+          <a class="nav-link" href="/services">Services</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<body>
+<div class="container">
+    {% from "_formhelpers.html" import render_field %}
+    <div class="jumbotron vertical-center">
+        <div class="row">
+            <hr>
+            <h1>Questions</h1>
+            <form method=post>
+                {{ form.csrf_token }}
+                <div class="form-group">
+                    <dl>
+                        {{ render_field(form.dob) }}
+                        {{ render_field(form.zip_code) }}
+                        {{ render_field(form.question_1) }}
+                        {{ render_field(form.question_2) }}
+                        {{ render_field(form.question_3) }}
+                        {{ render_field(form.question_4) }}
+                        {{ render_field(form.question_5) }}
+                        {{ render_field(form.question_6) }}
+                        {{ render_field(form.question_7) }}
+                        {{ render_field(form.question_8) }}
+                        {{ render_field(form.question_9) }}
+                        {{ render_field(form.question_10) }}
+                        {{ render_field(form.question_11) }}
+                        {{ render_field(form.question_12) }}
+                        {{ render_field(form.question_13) }}
+                        {{ render_field(form.question_14) }}
+                        {{ render_field(form.question_15) }}
+                        {{ render_field(form.question_16) }}
+                        {{ render_field(form.question_17) }}
+                        {{ render_field(form.question_18) }}
+                        {{ render_field(form.question_19) }}
+                        {{ render_field(form.question_20) }}
+                        {{ render_field(form.question_21) }}
+                        {{ render_field(form.question_22) }}
+                        {{ render_field(form.question_23) }}
+                        {{ render_field(form.question_24) }}
+                        {{ render_field(form.question_25) }}
+                        {{ render_field(form.question_26) }}
+                        {{ render_field(form.question_27) }}
+                        {{ render_field(form.question_28) }}
+                        {{ render_field(form.question_29) }}
+                        {{ render_field(form.question_30) }}
+
+
+                    </dl>
+                </div>
+
+                <p><input type=submit value=Submit class="btn btn-primary">
+            </form>
+
+        </div>
+    </div>
+
+
+</div>
 </body>
 </html>

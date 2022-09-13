@@ -11,8 +11,7 @@ services:
     env_file:
       - local.env
     ports:
-      - 27017:27017
-
+      - "27017:27017"
 
   api:
     container_name: pocas_api
@@ -26,7 +25,7 @@ services:
     networks:
       - pocas_net
     ports:
-      - 8002:80
+      - "8002:80"
     env_file:
       - local.env
       - keys.env

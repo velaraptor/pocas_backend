@@ -7,7 +7,7 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_caching import Cache
 import datetime
-from forms import SignupForm, LoginForm
+from forms import SignupForm, LoginForm, Questions
 
 RECAPTCHA_PUBLIC_KEY = os.getenv('RECAPTCHA_PUBLIC_KEY')
 RECAPTCHA_PRIVATE_KEY = os.getenv('RECAPTCHA_PRIVATE_KEY')
@@ -104,7 +104,8 @@ def unauthorized():
 @app.route('/home', methods=['GET', 'POST'])
 @login_required
 def home_page():
-    return {'success': True}
+    form = Questions()
+    return render_template('home.html', form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])
