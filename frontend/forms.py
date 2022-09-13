@@ -12,7 +12,9 @@ def get_tags():
     services = pd.DataFrame(services_resp.json()['services'])
     g_t = services.general_topic.dropna().unique().tolist()
     tags = services.tags.explode().dropna().unique().tolist()
-    return set(g_t + tags)
+    values = set(g_t + tags)
+    values = sorted(values)
+    return values
 
 
 class Tags(FlaskForm):
