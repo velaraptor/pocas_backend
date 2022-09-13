@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Depends,status
+from fastapi import FastAPI, HTTPException, Depends, status
 from typing import Optional, List
 from pydantic import BaseModel, Field
 from fastapi.middleware.wsgi import WSGIMiddleware
@@ -61,14 +61,25 @@ class Service(BaseModel):
     city: Optional[str] = Field(example='Austin')
     state: Optional[str] = Field(example='TX')
     lat: Optional[float] = Field(example=72.34, default=None)
-    long: Optional[float] = Field(example=34.01, default=None)
+    lon: Optional[float] = Field(example=34.01, default=None)
     zip_code: Optional[int] = Field(example=78724)
     web_site: Optional[str] = Field(example="http://www.example.com")
 
 
 class FullServices(BaseModel):
-    services: List[Service] = []
+    services: List[Service]
     num_of_services: int
+
+
+class UserLocation(BaseModel):
+    lat: float
+    lon: float
+
+
+class TopNResults(BaseModel):
+    services: List[Service]
+    num_of_services: int
+    user_loc: UserLocation
 
 
 @app.get('/services', response_model=FullServices)
@@ -103,7 +114,7 @@ async def post_new_service(service: Service):
     return {'id': str(mongo_id[0])}
 
 
-@app.post('/top_n', dependencies=[Depends(get_current_username)])
+@app.post('/top_n', dependencies=[Depends(get_current_username)], response_model=TopNResults)
 async def get_top_results(top_n: int, dob: int, address: str, answers: List[int] = EXAMPLE_RESULTS):
     """
     Send questionnaire and get Top N results
@@ -117,8 +128,8 @@ async def get_top_results(top_n: int, dob: int, address: str, answers: List[int]
             r.pop('_id', None)
         assert len(top_services) <= int(top_n)
         return {'services': top_services, 'num_of_services': len(top_services), 'user_loc': user_loc}
-    except Exception as e:
-        print(str(e))
+    except Exception:
         raise HTTPException(status_code=404, detail="Results not found")
+
 
 app.mount("/", WSGIMiddleware(flask_app))
