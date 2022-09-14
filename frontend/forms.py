@@ -8,12 +8,15 @@ import pandas as pd
 
 
 def get_tags():
-    services_resp = requests.get('http://pocas_api/services')
-    services = pd.DataFrame(services_resp.json()['services'])
-    g_t = services.general_topic.dropna().unique().tolist()
-    tags = services.tags.explode().dropna().unique().tolist()
-    values = set(g_t + tags)
-    values = sorted(values)
+    try:
+        services_resp = requests.get('http://pocas_api/services')
+        services = pd.DataFrame(services_resp.json()['services'])
+        g_t = services.general_topic.dropna().unique().tolist()
+        tags = services.tags.explode().dropna().unique().tolist()
+        values = set(g_t + tags)
+        values = sorted(values)
+    except:
+        values = []
     return values
 
 
