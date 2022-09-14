@@ -95,7 +95,7 @@ class Questions(FlaskForm):
         """If you have applied for assistance and been denied, have you filed an appeal?"""
     )
     question_8 = SwitchField(
-        """Are you working?"""
+        """Are you unemployed?"""
     )
     question_9 = SwitchField(
         """Do you always have enough food to eat?"""

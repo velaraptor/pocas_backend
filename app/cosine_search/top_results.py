@@ -22,17 +22,20 @@ AGE_MAPPER = {
 
 
 def get_all_tags():
-    m = MongoConnector(fsync=True)
-    all_services = m.query_results(db=DB_SERVICES['db'], collection=DB_SERVICES['collection'],
-                                   query={}, exclude={'loc': 0})
-    for r in all_services:
-        r['id'] = str(r['_id'])
-        r.pop('_id', None)
-    services = pd.DataFrame(all_services)
-    g_t = services.general_topic.dropna().unique().tolist()
-    tags = services.tags.explode().dropna().unique().tolist()
-    values = set(g_t + tags)
-    values = sorted(values)
+    try:
+        m = MongoConnector(fsync=True)
+        all_services = m.query_results(db=DB_SERVICES['db'], collection=DB_SERVICES['collection'],
+                                       query={}, exclude={'loc': 0})
+        for r in all_services:
+            r['id'] = str(r['_id'])
+            r.pop('_id', None)
+        services = pd.DataFrame(all_services)
+        g_t = services.general_topic.dropna().unique().tolist()
+        tags = services.tags.explode().dropna().unique().tolist()
+        values = set(g_t + tags)
+        values = sorted(values)
+    except:
+        values = []
     return values
 
 
