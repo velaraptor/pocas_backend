@@ -73,6 +73,7 @@ def main():
                  'city', 'state', 'zip_code', 'web_site', 'lat', 'lon', 'loc', 'online_service', 'hours', 'days']]
     data['zip_code'] = data.zip_code.astype("Int64")
     data = data.where(pd.notnull(data), None)
+    data = data.where(pd.isna(data), None)
     data = data.to_dict(orient='records')
     log().info(data)
     ids = m.upload_results(db=DB_SERVICES['db'], collection=DB_SERVICES['collection'], data=data, geo_index=True)
