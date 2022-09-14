@@ -20,13 +20,23 @@ AGE_MAPPER = {
     'Young Adult': [21, 35],
     'Adolescent': [0, 20]}
 
-# TODO: do this programatically
-ALL_TAGS = ['Adolescent', 'Child Support', 'Disability', 'Domestic Violence',
-            'Education', 'Elder', 'Employment', 'Family', 'Food and Nutrition',
-            'Health Insurance', 'Housing', 'Indigent', 'LGBTQ', 'Legal Services',
-            'Low Income', 'Mental Health', 'Public Benefits', 'Shelter',
-            'Social Security', 'Special Education', 'Transportation',
-            'Young Adult']
+
+def get_all_tags():
+    m = MongoConnector(fsync=True)
+    all_services = m.query_results(db=DB_SERVICES['db'], collection=DB_SERVICES['collection'],
+                                   query={}, exclude={'loc': 0})
+    for r in all_services:
+        r['id'] = str(r['_id'])
+        r.pop('_id', None)
+    services = pd.DataFrame(all_services)
+    g_t = services.general_topic.dropna().unique().tolist()
+    tags = services.tags.explode().dropna().unique().tolist()
+    values = set(g_t + tags)
+    values = sorted(values)
+    return values
+
+
+ALL_TAGS = get_all_tags()
 
 QUESTIONS = OrderedDict({
     'Is anyone scaring, threatening or hurting you or your children?': ['Domestic Violence', 'Shelter', 'Family'],
@@ -155,7 +165,6 @@ class GetTopNResults:
         """
 
         df_results = pd.DataFrame(results)
-        df_results = df_results.drop_duplicates(subset=['name'])
         df_results['tags'] = df_results.apply(lambda x: x['tags'] + [x['general_topic']], axis=1)
         dummies_tags = pd.get_dummies(df_results.tags.apply(pd.Series).stack()).sum(level=0)
         dummies_tags[dummies_tags > 1] = 1
@@ -167,8 +176,7 @@ class GetTopNResults:
         tags_unique = dummies_tags.columns.values
         overall_length = len(tags_unique)
 
-        empty_user_tags = pd.DataFrame([np.zeros(overall_length)],
-                                       columns=tags_unique)
+        empty_user_tags = pd.DataFrame([np.zeros(overall_length)], columns=tags_unique)
         for tag in self.tags:
             if tag in empty_user_tags:
                 empty_user_tags[tag] = 1
@@ -186,6 +194,7 @@ class GetTopNResults:
 
         df_results['pocas_score'] = sim_vals
         df_results = df_results.sort_values('pocas_score', ascending=False)
+        df_results = df_results.drop_duplicates(subset='name')
         final_results = df_results[:int(self.top_n)]
         final_results.loc[final_results['online_service'] == 1, 'lat'] = None
         final_results.loc[final_results['online_service'] == 1, 'lon'] = None

@@ -22,4 +22,3 @@ Add keys.env file at top directory and add Google API Key
 # TODO: 
 change secrets, put on digital ocean and buy domain, redirect to subdomains
 https://stackoverflow.com/questions/53578729/docker-compose-make-container-available-under-subdomain
-https://medium.com/geekculture/how-to-make-a-web-map-with-pythons-flask-and-leaflet-9318c73c67c3
