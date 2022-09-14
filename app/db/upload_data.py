@@ -71,7 +71,7 @@ def main():
     data = data.apply(lambda x: parse_lat_lon(x), axis=1)
     data = data[['name', 'phone', 'address', 'general_topic', 'tags',
                  'city', 'state', 'zip_code', 'web_site', 'lat', 'lon', 'loc', 'online_service', 'hours', 'days']]
-    data['zip_code'] = data.zip_code.astype(int)
+    data['zip_code'] = data.zip_code.astype("Int64")
     data = data.where(pd.notnull(data), None)
     data = data.to_dict(orient='records')
     log().info(data)
