@@ -1,6 +1,9 @@
-from flask import Flask, render_template, redirect, flash, url_for, make_response, request, Response
+import json
+
+from flask import Flask, render_template, redirect, flash, url_for, stream_with_context, request, Response
 import os
 import requests
+import ast
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import current_user, login_user, login_required, logout_user
@@ -194,6 +197,17 @@ def register():
             return redirect(url_for('login'))
         flash('A user already exists with that username.')
     return render_template('register.html', form=form)
+
+
+@app.route('/results', methods=['POST', 'GET'])
+def get_pdf():
+    services = request.form.get('services')
+    services = json.loads(services)
+    s1 = requests.Session()
+    s1.auth = (os.getenv('API_USER'), os.getenv('API_PASS'))
+    req = s1.post(f'http://pocas_api/pdf', stream=True, json=services)
+    return Response(stream_with_context(req.iter_content(chunk_size=1024 * 1)),
+                    content_type=req.headers['content-type']), 200
 
 # TODO
 # add oauth with google and captcha

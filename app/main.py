@@ -4,11 +4,14 @@ from pydantic import BaseModel, Field
 from fastapi.middleware.wsgi import WSGIMiddleware
 from admin_main import app as flask_app
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from fastapi.responses import StreamingResponse
 import secrets
 from cosine_search.top_results import GetTopNResults
 from db.mongo_connector import MongoConnector
 from db.consts import DB_SERVICES, get_lat_lon
+from pdf_gen import generate_pdf
 import os
+import io
 
 EXAMPLE_RESULTS = [1, 1, 0, 1, 1,
                    0, 1, 1, 1, 0,
@@ -131,6 +134,13 @@ async def get_top_results(top_n: int, dob: int, address: str, answers: List[int]
         return {'services': top_services, 'num_of_services': len(top_services), 'user_loc': user_loc}
     except Exception:
         raise HTTPException(status_code=404, detail="Results not found")
+
+
+@app.post('/pdf', dependencies=[Depends(get_current_username)])
+async def generate_pdf_get(services: List[Service]):
+    pdf = generate_pdf(services)
+    return StreamingResponse(content=io.BytesIO(pdf), media_type='application/pdf',
+                             headers={'Content-disposition': f'inline; filename="results.pdf'})
 
 
 app.mount("/", WSGIMiddleware(flask_app))

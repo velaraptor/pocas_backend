@@ -90,7 +90,12 @@
     <hr>
     <div class="jumbotron vertical-center" id="map-container">
         <div id="map"></div>
+
     </div>
+    <hr>
+        <div style="display: flex; justify-content: flex-end">
+    <input class="btn btn-success" type="button"  id="get-pdf" name="get-pdf" value="Download PDF">
+     </div>
     <hr>
     <div class="row">
     {% for marker in markers %}
@@ -159,5 +164,31 @@ var tileLayer = new L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner
     map.fitBounds(featureGroup.getBounds());
 
  </script>
+<script src="/static/jquery-3.5.1.js"></script>
+<script type="text/javascript">
+      $(document).on('click','#get-pdf',function(e)
+                   {
+      $.ajax({
+        type:'POST',
+        url:'/results',
+        dataType: 'json',
+        accept: "application/json",
+
+        contenttype: 'application/pdf',
+        data: {services:  '{{ markers | tojson() }}'},
+        success: function (data) {
+            if(data){
+                console.log(data)
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrow) {
+            var file = new Blob([jqXHR.responseText], { type: 'application/pdf' });
+    var fileURL = URL.createObjectURL(file);
+    window.open(fileURL);
+        }
+      })
+    });
+
+</script>
 
 </html>

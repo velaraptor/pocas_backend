@@ -48,6 +48,8 @@ services:
       - pocas_net
     env_file:
       - .env
+      - keys.env
+      - api.env
 
   postgres:
     container_name: postgresdb
