@@ -6,6 +6,13 @@
     <link rel="icon" href="/static/icon.png">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ==" crossorigin="" />
 <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ==" crossorigin=""></script>
+<link rel="stylesheet" href="http://code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css">
+<link rel="stylesheet" href="/static/leaflet.awesome-markers.css">
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v6.2.0/css/all.css"
+    />
+<script src="/static/leaflet.awesome-markers.js"></script>
 
     <title>POCAS</title>
     <link href="/static/bootstrap.css" rel="stylesheet">
@@ -140,19 +147,25 @@
 </div>
 </body>
 <script>
+      var blueMarker = L.AwesomeMarkers.icon({
+                      icon: "fa-circle-info",
+                prefix: "fa",
+            markerColor: 'blue'
+        });
   var featureGroup = L.featureGroup([
       {% for marker in markers %}
       {% if marker['lon'] %}
-          L.marker([{{ marker['lat'] }}, {{ marker['lon'] }}]).bindPopup("{{ marker['name'] }}"),
-
+          L.marker([{{ marker['lat'] }}, {{ marker['lon'] }}], {icon: blueMarker}).bindPopup("{{ marker['name'] }}"),
          {% endif %}
     {% endfor %}
     ]);
-var tileLayer = new L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}{r}.{ext}', {
+
+
+var tileLayer = new L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}{r}.{ext}', {
 	attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
 	subdomains: 'abcd',
 	minZoom: 0,
-	maxZoom: 15,
+	maxZoom: 16,
 	ext: 'png'
 });
     var map = new L.Map('map', {
@@ -162,6 +175,16 @@ var tileLayer = new L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner
         });
 
     map.fitBounds(featureGroup.getBounds());
+              {% if current_user %}
+            var userMarker = L.AwesomeMarkers.icon({
+                icon: "fa-house",
+                prefix: "fa",
+                markerColor: 'red'
+            });
+      L.marker([{{ current_user['lat'] }}, {{ current_user['lon'] }} ], { icon: userMarker }).addTo(map);
+
+              {% endif %}
+
 
  </script>
 <script src="/static/jquery-3.5.1.js"></script>

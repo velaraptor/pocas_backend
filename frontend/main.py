@@ -3,7 +3,6 @@ import json
 from flask import Flask, render_template, redirect, flash, url_for, stream_with_context, request, Response
 import os
 import requests
-import ast
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import current_user, login_user, login_required, logout_user
@@ -113,7 +112,7 @@ def get_services():
     services = services_resp.json()
     services = sorted(services['services'], key=lambda d: d['general_topic'])
     return render_template('services.html', markers=services, tags=tag_form, vals=get_tags(), active=False,
-                           results=False)
+                           results=False, current_user=None)
 
 
 @app.route('/filter', methods=['POST'])
@@ -130,7 +129,7 @@ def filter_tags():
         services = services_t + services_g
 
         return render_template('services.html', markers=services, tags=tag_form, vals=get_tags(), active=f_val,
-                               results=False)
+                               results=False, current_user=None)
 
 
 @app.route('/home', methods=['GET', 'POST'])
@@ -159,7 +158,7 @@ def home_page():
         tag_form = Tags()
 
         return render_template('services.html', markers=top_results['services'], tags=tag_form, active=False,
-                               vals=get_tags(), results=True)
+                               vals=get_tags(), results=True, current_user=top_results['user_loc'])
     return render_template('home.html', form=form)
 
 
