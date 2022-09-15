@@ -30,7 +30,9 @@ description = """
 app = FastAPI(title="POCAS API",
               version="0.0.1",
               description=description,
-                root_path='/broker/api'
+              docs_url='/api/docs',
+              redoc_url='/api/redoc',
+              openapi_url='/api/openapi.json'
               )
 security = HTTPBasic()
 
