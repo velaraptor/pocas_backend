@@ -54,7 +54,7 @@ services:
       - ./certbot/www/:/var/www/certbot/:rw
     depends_on:
       - webserver
-    command: certonly -v --keep --email info@christophvel.com --agree-tos --no-eff-email --duplicate --expand --webroot -w=/etc/letsencrypt --cert-name mhpportal.app
+    command: certonly -v --keep --email info@christophvel.com --agree-tos --no-eff-email --duplicate --expand --webroot -w=/etc/letsencrypt --cert-name mhpportal.app -d mhpportal.app
 
   frontend:
     container_name: frontend
