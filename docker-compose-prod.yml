@@ -59,6 +59,7 @@ services:
     depends_on:
       - postgres
       - mongo_db
+      - api
     environment:
       - WORKERS_PER_CORE=0.5
     build:
