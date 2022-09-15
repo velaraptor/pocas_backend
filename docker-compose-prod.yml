@@ -28,7 +28,7 @@ services:
       - local.env
       - keys.env
       - api.env
-  webserver:
+  nginx:
     image: nginx:mainline-alpine
     container_name: webserver
     restart: unless-stopped
@@ -37,10 +37,8 @@ services:
       - "443:443"
     volumes:
       - ./nginx-conf:/etc/nginx/conf.d
-      - certbot-etc:/etc/letsencrypt
-      - certbot-var:/var/lib/letsencrypt
-      - ./certbot/www:/var/www/certbot/:ro
-
+      - ./c/certbot/conf:/etc/letsencrypt
+      - ./c/certbot/www:/var/www/certbot
     depends_on:
       - frontend
     networks:
@@ -49,9 +47,8 @@ services:
     image: certbot/certbot
     container_name: certbot
     volumes:
-      - certbot-etc:/etc/letsencrypt
-      - certbot-var:/var/lib/letsencrypt
-      - ./certbot/www/:/var/www/certbot/:rw
+      - ./c/certbot/conf:/etc/letsencrypt
+      - ./c/certbot/www:/var/www/certbot
     depends_on:
       - webserver
     command: certonly -v --keep --email info@christophvel.com --agree-tos --no-eff-email --duplicate --expand --webroot -w=/etc/letsencrypt --cert-name mhpportal.app -d mhpportal.app
@@ -90,8 +87,6 @@ services:
 volumes:
   mongo_db:
   postgres_db:
-  certbot-etc:
-  certbot-var:
 
 networks:
   pocas_net:
