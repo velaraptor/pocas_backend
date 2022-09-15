@@ -30,7 +30,7 @@ services:
       - api.env
   nginx:
     image: nginx:mainline-alpine
-    container_name: webserver
+    container_name: nginx
     restart: unless-stopped
     ports:
       - "80:80"
@@ -43,6 +43,7 @@ services:
       - frontend
     networks:
       - pocas_net
+
   certbot:
     image: certbot/certbot
     container_name: certbot
