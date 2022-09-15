@@ -2,9 +2,8 @@ name: rebuild digital ocean droplet
 on:
   push:
     branches:
-      - 'master/**'
+      - master
 jobs:
-
   build:
     name: build digital ocean
     runs-on: ubuntu-latest
