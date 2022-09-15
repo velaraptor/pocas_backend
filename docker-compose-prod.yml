@@ -34,10 +34,13 @@ services:
     restart: unless-stopped
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ./nginx-conf:/etc/nginx/conf.d
       - certbot-etc:/etc/letsencrypt
       - certbot-var:/var/lib/letsencrypt
+      - ./certbot/www:/var/www/certbot/:ro
+
     depends_on:
       - frontend
     networks:
@@ -48,9 +51,10 @@ services:
     volumes:
       - certbot-etc:/etc/letsencrypt
       - certbot-var:/var/lib/letsencrypt
-    depends_on:
+      - ./certbot/www/:/var/www/certbot/:rw
+      depends_on:
       - webserver
-    command: certonly --email info@christophvel.com
+    command: certonly -v --keep --email info@christophvel.com --agree-tos --no-eff-email --duplicate --expand --webroot -w=/etc/letsencrypt --cert-name mhpportal.app -d dev.mhpportal.app
 
   frontend:
     container_name: frontend
