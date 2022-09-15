@@ -28,6 +28,29 @@ services:
       - local.env
       - keys.env
       - api.env
+  webserver:
+    image: nginx:mainline-alpine
+    container_name: webserver
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx-conf:/etc/nginx/conf.d
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+    depends_on:
+      - frontend
+    networks:
+      - pocas_net
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+    depends_on:
+      - webserver
+    command: certonly --email info@christophvel.com
 
   frontend:
     container_name: frontend
@@ -41,8 +64,7 @@ services:
       context: ./
       dockerfile: DockerFile_UI
     ports:
-      - "80:80"
-      - "443:443"
+      - "8080:80"
     networks:
       - pocas_net
     env_file:
@@ -64,6 +86,8 @@ services:
 volumes:
   mongo_db:
   postgres_db:
+  certbot-etc:
+  certbot-var:
 
 networks:
   pocas_net:
