@@ -146,4 +146,4 @@ async def generate_pdf_get(services: List[Service]):
                              headers={'Content-disposition': f'inline; filename="results.pdf'})
 
 
-app.mount("/", WSGIMiddleware(flask_app))
+app.mount("/admin", WSGIMiddleware(flask_app))
