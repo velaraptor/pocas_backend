@@ -50,6 +50,7 @@ services:
       - .env
       - keys.env
       - api.env
+      - local.env
 
   postgres:
     container_name: postgresdb
