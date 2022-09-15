@@ -50,7 +50,7 @@ services:
     container_name: certbot
     volumes:
       - certbot-etc:/etc/letsencrypt
-      - certbot-var:/var/lib/letsencryptgi
+      - certbot-var:/var/lib/letsencrypt
       - ./certbot/www/:/var/www/certbot/:rw
     depends_on:
       - webserver
