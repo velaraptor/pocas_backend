@@ -1,5 +1,8 @@
 name: rebuild digital ocean droplet
-on: [push]
+on:
+  push:
+    branches:
+      - 'master/**'
 jobs:
 
   build:
@@ -11,5 +14,6 @@ jobs:
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
-        password: ${{ secrets.PASSWORD }}
-        script: ./start_service_prod.sh
+        key: ${{ secrets.KEY }}
+        passphrase: ${{ secrets.PASSPHRASE }}
+        script: ./ssh_start_prod.sh
