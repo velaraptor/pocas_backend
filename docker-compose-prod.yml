@@ -65,7 +65,7 @@ services:
       context: ./
       dockerfile: DockerFile_UI
     ports:
-      - "8080:80"
+      - "8081:80"
     networks:
       - pocas_net
     env_file:
