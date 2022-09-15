@@ -31,11 +31,16 @@ API_PASS=xxxx
 # PRODUCTION
 * First get domain through Google Domains and change NameServers to Point to DigitalOcean
 & Add `A` to DigitalOcean Networking Command Panel
-* ssh into Droplet and get Github Personal Access Token 
+* ssh into Droplet and get Github Personal Access Token
 ```commandline
 git clone https://github.com/velaraptor/pocas_backend
 cd pocas_backend
 git config credential.helper store
+```
+In top level directory cp file `ssh_start_prod.sh` for Github Actions
+
+```commandline
+cp ssh_start_prod.sh ~/
 ```
 
 In `local.env` change the RECAPTCHA to Google one that works. the following is local testing keys
