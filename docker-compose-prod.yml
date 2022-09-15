@@ -22,8 +22,6 @@ services:
       - ./data:/data
     networks:
       - pocas_net
-    ports:
-      - "9001:80"
     env_file:
       - local.env
       - keys.env
@@ -67,8 +65,6 @@ services:
     build:
       context: ./
       dockerfile: DockerFile_UI
-    ports:
-      - "8081:80"
     networks:
       - pocas_net
     env_file:
