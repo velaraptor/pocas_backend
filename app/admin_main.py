@@ -72,7 +72,7 @@ def create_user():
 def home():
     return redirect(url_for('admin.index'))
 
-# TODO: flask admin check html files
+
 @security.context_processor
 def security_context_processor():
     return dict(

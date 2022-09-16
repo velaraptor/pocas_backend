@@ -209,7 +209,4 @@ def get_pdf():
     return Response(stream_with_context(req.iter_content(chunk_size=1024 * 1)),
                     content_type=req.headers['content-type']), 200
 
-# TODO
-# add oauth with google and captcha
-# save to pdf or send to email results
-# click on card and show on map
+# TODO: click on card and show on map

@@ -22,9 +22,10 @@ API_PASS=xxxx
 ### Ports Open for Local Dev
 
  * MongoDB: http://0.0.0.0:27017
- * API: http://0.0.0.0/docs
- * ADMIN: http://0.0.0.0
- * FRONTEND: http://0.0.0.0:8003
+ * PostGreSQL: http://0.0.0.0:5432
+ * API: http://0.0.0.0/api/v1/docs
+ * ADMIN: http://0.0.0.0/admin
+ * FRONTEND: http://0.0.0.0
 
 
 
