@@ -1,18 +1,20 @@
-from pymongo import MongoClient, GEOSPHERE
+"""Default Mongo Connector to Read/Upload"""
 import os
+from pymongo import MongoClient, GEOSPHERE
 
 
 class MongoConnector:
     """
     General MongoDB Connector
     """
-    def __init__(self, fsync=False):
-        self.__host = os.getenv('MONGO_HOST', '0.0.0.0')
-        self.__port = os.getenv('MONGO_PORT', '27017')
-        self.__pass = os.getenv('MONGO_INITDB_ROOT_PASSWORD')
-        self.__user = os.getenv('MONGO_INITDB_ROOT_USERNAME')
 
-        uri = "mongodb://%s:%s@%s:%s" % (self.__user, self.__pass, self.__host, self.__port)
+    def __init__(self, fsync=False):
+        self.__host = os.getenv("MONGO_HOST", "0.0.0.0")
+        self.__port = os.getenv("MONGO_PORT", "27017")
+        self.__pass = os.getenv("MONGO_INITDB_ROOT_PASSWORD")
+        self.__user = os.getenv("MONGO_INITDB_ROOT_USERNAME")
+
+        uri = f"mongodb://{self.__user}:{self.__pass}@{self.__host}:{self.__port}"
         self.client = MongoClient(uri, fsync=fsync)
 
     def query_results(self, db, collection, query, exclude=None):
@@ -39,15 +41,16 @@ class MongoConnector:
 
     @staticmethod
     def check_duplicates(c, data):
+        """Check Duplicates in Collection"""
         results = []
-        for c in c.find({'name': data['name']}):
-            results.append(c)
+        for d in c.find({"name": data["name"]}):
+            results.append(d)
         if len(results) > 0:
-            print('Found Duplicates!')
+            print("Found Duplicates!")
             return None
         return data
 
-    def upload_results(self, db, collection, data,  geo_index=False):
+    def upload_results(self, db, collection, data, geo_index=False):
         """
         Upload Results to database, collection with data as a list of dictionaries
 
@@ -72,4 +75,4 @@ class MongoConnector:
         if len(data_temp) > 0:
             result = c.insert_many(data_temp)
             return result.inserted_ids
-        return ['Duplicate!']
+        return ["Duplicate!"]
