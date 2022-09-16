@@ -11,6 +11,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_caching import Cache
 from datetime import datetime
 from forms import SignupForm, LoginForm, Questions, Tags, get_tags
+from consts import API_URL
 
 RECAPTCHA_PUBLIC_KEY = os.getenv('RECAPTCHA_PUBLIC_KEY')
 RECAPTCHA_PRIVATE_KEY = os.getenv('RECAPTCHA_PRIVATE_KEY')
@@ -108,7 +109,7 @@ def unauthorized():
 @login_required
 def get_services():
     tag_form = Tags()
-    services_resp = requests.get('http://pocas_api/services')
+    services_resp = requests.get(f'{API_URL}services')
     services = services_resp.json()
     services = sorted(services['services'], key=lambda d: d['general_topic'])
     return render_template('services.html', markers=services, tags=tag_form, vals=get_tags(), active=False,
@@ -121,7 +122,7 @@ def filter_tags():
     if request.form['comp_select']:
         tag_form = Tags()
         f_val = request.form['comp_select']
-        services_resp = requests.get('http://pocas_api/services')
+        services_resp = requests.get(f'{API_URL}services')
         services = services_resp.json()
         services = sorted(services['services'], key=lambda d: d['general_topic'])
         services_g = list(filter(lambda x: x['general_topic'] == f_val, services))
@@ -152,7 +153,7 @@ def home_page():
         answers = list(map(int, answers))
         s = requests.Session()
         s.auth = (os.getenv('API_USER'), os.getenv('API_PASS'))
-        post_questions = s.post(f"http://pocas_api/top_n?top_n=15&dob={dob}&address={address}",
+        post_questions = s.post(f"{API_URL}top_n?top_n=15&dob={dob}&address={address}",
                                 json=answers)
         top_results = post_questions.json()
         tag_form = Tags()
@@ -204,7 +205,7 @@ def get_pdf():
     services = json.loads(services)
     s1 = requests.Session()
     s1.auth = (os.getenv('API_USER'), os.getenv('API_PASS'))
-    req = s1.post(f'http://pocas_api/pdf', stream=True, json=services)
+    req = s1.post(f'{API_URL}pdf', stream=True, json=services)
     return Response(stream_with_context(req.iter_content(chunk_size=1024 * 1)),
                     content_type=req.headers['content-type']), 200
 

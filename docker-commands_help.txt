@@ -1,0 +1,16 @@
+# for connecting postgres
+docker exec -it postgresdb psql -U goduser -W goduser
+
+# to see tables
+\dt
+
+# to see users
+select * from "flasklogin-users";
+
+# to go into mongdodbshell
+docker exec -it pocas_mongo mongosh
+
+use results
+show services
+quit()
+

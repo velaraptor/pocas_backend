@@ -119,10 +119,9 @@ class UsersView(SuperUserView):
 # TODO: ADD import csv https://blog.sneawo.com/blog/2018/02/16/export-and-import-for-mongoengine-model-in-flask-admin/
 
 
-VERSION = os.getenv('VERSION', 1)
 admin = Admin(name='POCAS Admin Panel', url='/admin', index_view=MyAdminIndexView(
     template='home.html'
 ), base_template='master.html', template_mode='bootstrap3')
 admin.add_view(ServicesView(db1.services, 'Services Importer'))
 admin.add_view(UsersView(conn['users_login']['user'], 'User Management'))
-admin.add_link(MenuLink(name='POCAS API', url=f'/docs'))
+admin.add_link(MenuLink(name='POCAS API', url=f'/api/v1/docs'))
