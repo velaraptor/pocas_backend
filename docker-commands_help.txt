@@ -13,4 +13,3 @@ docker exec -it pocas_mongo mongosh
 use results
 show services
 quit()
-

@@ -1,37 +1,47 @@
+"""Generate PDF from Services"""
+import io
 from reportlab.lib.enums import TA_JUSTIFY
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
-import io
 
 
 def phone_format(n):
+    """Format Phone String"""
     n = str(n)
     return format(int(n[:-1]), ",").replace(",", "-") + n[-1]
 
 
 def generate_pdf(services):
+    """Generate PDF and serve as io bytes"""
     stream = io.BytesIO()
-    doc = SimpleDocTemplate(stream, pagesize=letter,
-                        rightMargin=72, leftMargin=72,
-                        topMargin=72, bottomMargin=18)
+    doc = SimpleDocTemplate(
+        stream,
+        pagesize=letter,
+        rightMargin=72,
+        leftMargin=72,
+        topMargin=72,
+        bottomMargin=18,
+    )
 
     logo = "/pics/icon.png"
     Story = []
     im = Image(logo, 1 * inch, 1 * inch)
     Story.append(im)
     styles = getSampleStyleSheet()
-    styles.add(ParagraphStyle(name='Justify', alignment=TA_JUSTIFY))
+    styles.add(ParagraphStyle(name="Justify", alignment=TA_JUSTIFY))
     Story.append(Spacer(1, 12))
-    Story.append(Paragraph('Services', styles["Heading1"]))
+    Story.append(Paragraph("Services", styles["Heading1"]))
     for service in services:
         Story.append(Spacer(1, 12))
         header = f"""
             {service.name}
             """
 
-        address = f"""{service.address} {service.city}, {service.state} {service.zip_code} """
+        address = (
+            f"""{service.address} {service.city}, {service.state} {service.zip_code} """
+        )
         web_site = f"""{service.web_site}"""
         hours = f"""
             Hours of Operation<br/>
