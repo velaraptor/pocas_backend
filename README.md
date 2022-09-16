@@ -8,6 +8,12 @@ POCAS Backend. App can be found at https://mhpportal.app
 > Flask Frontend using BootsWatch
 
 # LOCAL DEVELOPMENT
+# PRE-COMMIT HOOKS
+```commandline
+pip install -r requirements-pre-commit.txt
+pre-commit install
+```
+
 ### Before running
 Then add `keys.env` in this format
 ```dotenv
