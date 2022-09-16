@@ -13,6 +13,20 @@ services:
     ports:
       - "27017:27017"
 
+  admin:
+    container_name: pocas_admin
+    depends_on:
+      - mongo_db
+    build:
+      context: ./
+      dockerfile: DockerFile_ADMIN
+    networks:
+      - pocas_net
+    env_file:
+      - local.env
+      - keys.env
+      - api.env
+
   api:
     container_name: pocas_api
     depends_on:
@@ -24,8 +38,6 @@ services:
       - ./data:/data
     networks:
       - pocas_net
-    ports:
-      - "80:80"
     env_file:
       - local.env
       - keys.env
@@ -42,8 +54,6 @@ services:
     build:
       context: ./
       dockerfile: DockerFile_UI
-    ports:
-      - "8003:80"
     networks:
       - pocas_net
     env_file:
@@ -64,6 +74,19 @@ services:
       -   pocas_net
     volumes:
       - postgres_db:/var/lib/postgresql/data
+  nginx:
+    image: nginx:mainline-alpine
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx-conf-dev:/etc/nginx/conf.d
+    depends_on:
+      - frontend
+    networks:
+      - pocas_net
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
 
 volumes:
   mongo_db:

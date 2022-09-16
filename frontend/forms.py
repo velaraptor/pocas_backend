@@ -5,11 +5,11 @@ from wtforms import PasswordField, StringField, SubmitField, BooleanField, DateF
 from flask_bootstrap import SwitchField
 from wtforms.validators import DataRequired, EqualTo, Length
 import pandas as pd
-
+from consts import API_URL
 
 def get_tags():
     try:
-        services_resp = requests.get('http://pocas_api/services')
+        services_resp = requests.get(f'{API_URL}services')
         services = pd.DataFrame(services_resp.json()['services'])
         g_t = services.general_topic.dropna().unique().tolist()
         tags = services.tags.explode().dropna().unique().tolist()

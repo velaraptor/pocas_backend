@@ -26,6 +26,20 @@ services:
       - local.env
       - keys.env
       - api.env
+  admin:
+    container_name: pocas_admin
+    depends_on:
+      - mongo_db
+    build:
+      context: ./
+      dockerfile: DockerFile_ADMIN
+    networks:
+      - pocas_net
+    env_file:
+      - local.env
+      - keys.env
+      - api.env
+
   nginx:
     image: nginx:mainline-alpine
     container_name: nginx
