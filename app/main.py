@@ -1,19 +1,24 @@
 """FastAPI service"""
+import datetime
+
 # pylint: disable=R0902, R0912, R0913, R0914, R0915, E1101, E0611, R0903, W1309
 
 import os
 import io
 import secrets
+import uuid
 from typing import Optional, List
-from fastapi import FastAPI, HTTPException, Depends, status, APIRouter
+from fastapi import FastAPI, HTTPException, Depends, status, APIRouter, Request
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi.responses import StreamingResponse
+from fastapi_limiterx import FastAPILimiter
+from fastapi_limiterx.depends import RateLimiter
+import aioredis
 from pydantic import BaseModel, Field
 from cosine_search.top_results import GetTopNResults
 from db.mongo_connector import MongoConnector
 from db.consts import DB_SERVICES, get_lat_lon
 from pdf_gen import generate_pdf
-
 
 EXAMPLE_RESULTS = [
     1,
@@ -65,6 +70,25 @@ app = FastAPI(
 security = HTTPBasic()
 temp = APIRouter()
 app.include_router(temp, prefix="/api/v1")
+
+
+@app.on_event("startup")
+async def startup():
+    """Redis Startup for FASTAPI Limiter"""
+    REDIS_NAME = "pocas_redis"
+    redis = await aioredis.from_url(f"redis://{REDIS_NAME}", port=6379)
+    await FastAPILimiter.init(redis)
+
+
+def send_ip_address_mongo(data):
+    """Send IP address for IP Analytics"""
+    try:
+        m = MongoConnector()
+        db = "analytics"
+        collection = "ip_hits"
+        m.upload_results(db, collection, data)
+    except Exception as e:
+        print(str(e))
 
 
 def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
@@ -128,7 +152,11 @@ class TopNResults(BaseModel):
     user_loc: UserLocation
 
 
-@app.get("/api/v1/services", response_model=FullServices)
+@app.get(
+    "/api/v1/services",
+    response_model=FullServices,
+    dependencies=[Depends(RateLimiter(times=50, seconds=5))],
+)
 async def get_services():
     """
     Get all Services for POCAS
@@ -150,7 +178,13 @@ async def get_services():
     raise HTTPException(status_code=404, detail="Services not found")
 
 
-@app.post("/api/v1/services", dependencies=[Depends(get_current_username)])
+@app.post(
+    "/api/v1/services",
+    dependencies=[
+        Depends(get_current_username),
+        Depends(RateLimiter(times=1, seconds=5)),
+    ],
+)
 async def post_new_service(service: Service):
     """
     Upload Service to MongoDB
@@ -166,10 +200,14 @@ async def post_new_service(service: Service):
 
 @app.post(
     "/api/v1/top_n",
-    dependencies=[Depends(get_current_username)],
+    dependencies=[
+        Depends(get_current_username),
+        Depends(RateLimiter(times=10, seconds=60)),
+    ],
     response_model=TopNResults,
 )
 async def get_top_results(  # pylint: disable=dangerous-default-value
+    request: Request,
     top_n: int,
     dob: int,
     address: str,
@@ -186,6 +224,13 @@ async def get_top_results(  # pylint: disable=dangerous-default-value
             r["id"] = str(r["_id"])
             r.pop("_id", None)
         assert len(top_services) <= int(top_n)
+        ip_data = {
+            "ip_address": request.client.host,
+            "endpoint": "top_n",
+            "date": datetime.datetime.now(),
+            "name": uuid.uuid4().hex,
+        }
+        send_ip_address_mongo([ip_data])
         return {
             "services": top_services,
             "num_of_services": len(top_services),

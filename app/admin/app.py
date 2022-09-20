@@ -81,6 +81,22 @@ class ServiceForm(fo.Form):
     tags = InlineFieldList(fields.StringField())
 
 
+class AnalyticsForm(fo.Form):
+    """Form for IP Hits"""
+
+    ip_address = fields.StringField("ip_address")
+    endpoint = fields.StringField("endpoint")
+    date = fields.DateTimeField("Date")
+
+
+class Analytics(SuperUserView):
+    """Analytics View of hits"""
+
+    column_list = ("ip_address", "endpoint", "date")
+    column_searchable_list = ("ip_address", "endpoint")
+    form = AnalyticsForm
+
+
 class ServicesView(MyModelView):
     """POCAS Services"""
 
@@ -163,6 +179,8 @@ admin = Admin(
     base_template="master.html",
     template_mode="bootstrap3",
 )
+
 admin.add_view(ServicesView(db1.services, "Services Importer"))
+admin.add_view(Analytics(conn["analytics"].ip_hits, "API Analytics"))
 admin.add_view(UsersView(conn["users_login"]["user"], "Admin User Management"))
 admin.add_link(MenuLink(name="POCAS API", url="/api/v1/docs"))

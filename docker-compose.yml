@@ -62,6 +62,15 @@ services:
       - api.env
       - local.env
 
+  redis:
+    container_name: pocas_redis
+    image: redis
+    restart: always
+    volumes:
+      - cache:/data
+    networks:
+      - pocas_net
+
   postgres:
     container_name: postgresdb
     image: postgres:14.1
@@ -71,7 +80,7 @@ services:
     env_file:
       - .env
     networks:
-      -   pocas_net
+      - pocas_net
     volumes:
       - postgres_db:/var/lib/postgresql/data
   nginx:
@@ -89,6 +98,7 @@ services:
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
 
 volumes:
+  cache:
   mongo_db:
   postgres_db:
 
