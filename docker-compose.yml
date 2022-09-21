@@ -31,6 +31,7 @@ services:
     container_name: pocas_api
     depends_on:
       - mongo_db
+      - redis
     build:
       context: ./
       dockerfile: Dockerfile_API
@@ -66,9 +67,6 @@ services:
     container_name: pocas_redis
     image: redis
     restart: always
-    depends_on:
-      - api
-      - admin
     volumes:
       - cache:/data
     networks:
