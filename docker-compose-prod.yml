@@ -102,6 +102,9 @@ services:
     container_name: pocas_redis
     image: redis
     restart: always
+    depends_on:
+      - api
+      - admin
     volumes:
       - cache:/data
     networks:

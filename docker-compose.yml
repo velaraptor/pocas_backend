@@ -66,6 +66,9 @@ services:
     container_name: pocas_redis
     image: redis
     restart: always
+    depends_on:
+      - api
+      - admin
     volumes:
       - cache:/data
     networks:
@@ -83,6 +86,7 @@ services:
       - pocas_net
     volumes:
       - postgres_db:/var/lib/postgresql/data
+
   nginx:
     image: nginx:mainline-alpine
     container_name: nginx
