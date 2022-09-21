@@ -15,7 +15,7 @@ from fastapi_limiterx import FastAPILimiter
 from fastapi_limiterx.depends import RateLimiter
 import aioredis
 from pydantic import BaseModel, Field
-from cosine_search.top_results import GetTopNResults
+from cosine_search.top_results import GetTopNResults, get_all_services
 from db.mongo_connector import MongoConnector
 from db.consts import DB_SERVICES, get_lat_lon
 from pdf_gen import generate_pdf
@@ -161,16 +161,7 @@ async def get_services():
     """
     Get all Services for POCAS
     """
-    m = MongoConnector(fsync=True)
-    all_services = m.query_results(
-        db=DB_SERVICES["db"],
-        collection=DB_SERVICES["collection"],
-        query={},
-        exclude={"loc": 0},
-    )
-    for r in all_services:
-        r["id"] = str(r["_id"])
-        r.pop("_id", None)
+    all_services = get_all_services()
     num_docs = len(all_services)
     if num_docs > 0:
         response = {"services": all_services, "num_of_services": num_docs}
