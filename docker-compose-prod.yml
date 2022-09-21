@@ -98,7 +98,20 @@ services:
     volumes:
       - postgres_db:/var/lib/postgresql/data
 
+  redis:
+    container_name: pocas_redis
+    image: redis
+    restart: always
+    depends_on:
+      - api
+      - admin
+    volumes:
+      - cache:/data
+    networks:
+      - pocas_net
+
 volumes:
+  cache:
   mongo_db:
   postgres_db:
 
