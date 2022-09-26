@@ -80,7 +80,7 @@ class User(UserMixin, db.Model):
         return f"<User {self.username}>"
 
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/", methods=["GET"])
 def welcome():
     """Flash Page"""
     return render_template("flash.html")
