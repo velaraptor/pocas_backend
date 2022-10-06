@@ -55,6 +55,7 @@ def get_all_tags():
 
 
 ALL_TAGS = get_all_tags()
+# TODO: fix this for ISSUE 20
 
 QUESTIONS = OrderedDict(
     {

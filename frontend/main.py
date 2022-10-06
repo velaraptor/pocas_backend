@@ -161,11 +161,13 @@ def filter_tags():
 def home_page():
     """Home Page with Questions"""
     form = Questions()
+    # TODO: mapper based on questions for ISSUE 20
     if form.validate_on_submit():
         dob = form.dob.data
         # change dob to int style
         dob = int(datetime.strftime(dob, "%m%d%Y"))
         address = form.zip_code.data
+        # TODO: fix this for ISSUE 20
         answers = [
             form.question_2.data,
             form.question_3.data,

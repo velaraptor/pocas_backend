@@ -80,6 +80,8 @@ class LoginForm(FlaskForm):
 class Questions(FlaskForm):
     """Questions for POCAS"""
 
+    # TODO: fix this for ISSUE 20
+
     dob = DateField("DOB", validators=[DataRequired()])
     zip_code = StringField(
         "Zip Code", validators=[DataRequired(), Length(min=5, max=5)]
