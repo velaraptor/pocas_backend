@@ -170,7 +170,6 @@ class UsersView(SuperUserView):
 
 # TODO: ADD import csv https://blog.sneawo.com/blog/2018/02/16/export-and-import-for-mongoengine-model-in-flask-admin/
 # TODO: add user management from frontend
-# TODO: add to postgres number of hits of api
 
 admin = Admin(
     name="POCAS Admin Panel",
