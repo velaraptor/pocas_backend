@@ -39,13 +39,13 @@ API_PASS=xxxx
 # PRODUCTION
 * First get domain through Google Domains and change NameServers to Point to DigitalOcean
 & Add `A` to DigitalOcean Networking Command Panel
-* ssh into Droplet and get Github Personal Access Token
+* ssh into Droplet and get GitHub Personal Access Token
 ```commandline
 git clone https://github.com/velaraptor/pocas_backend
 cd pocas_backend
 git config credential.helper store
 ```
-In top level directory cp file `ssh_start_prod.sh` for Github Actions
+In top level directory cp file `ssh_start_prod.sh` for GitHub Actions
 
 ```commandline
 cp ssh_start_prod.sh ~/
@@ -73,7 +73,7 @@ FIRST_QUESTIONS=True
 ```
 
 First Time Run this and then wait 10 minutes
-```commandline
+```bash
 ./start_services.sh
 sleep 300
 docker-compose down 
