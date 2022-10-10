@@ -50,6 +50,7 @@ EXAMPLE_RESULTS = [
     1,
     0,
     0,
+    0,
 ]
 
 description = """
@@ -208,7 +209,7 @@ async def get_top_results(  # pylint: disable=dangerous-default-value
     Send questionnaire and get Top N results
     """
     try:
-        assert len(answers) == 29
+        assert len(answers) == 30
         gtr = GetTopNResults(top_n=top_n, dob=dob, answers=answers, address=address)
         top_services, user_loc = gtr.get_top_results()
         for r in top_services:
