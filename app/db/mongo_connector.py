@@ -40,17 +40,17 @@ class MongoConnector:
         return results
 
     @staticmethod
-    def check_duplicates(c, data):
+    def check_duplicates(c, data, key):
         """Check Duplicates in Collection"""
         results = []
-        for d in c.find({"name": data["name"]}):
+        for d in c.find({key: data[key]}):
             results.append(d)
         if len(results) > 0:
             print("Found Duplicates!")
             return None
         return data
 
-    def upload_results(self, db, collection, data, geo_index=False):
+    def upload_results(self, db, collection, data, geo_index=False, key="name"):
         """
         Upload Results to database, collection with data as a list of dictionaries
 
@@ -62,6 +62,7 @@ class MongoConnector:
         :type data: list[dict]
         :param geo_index: create geo_index
         :return: list of meta ids of inserted documents
+        :param key: key to check for duplicates
         """
         db = self.client[db]
         c = db[collection]
@@ -69,7 +70,7 @@ class MongoConnector:
             c.create_index([("loc", GEOSPHERE)])
         data_temp = []
         for d in data:
-            duplicate_check = self.check_duplicates(c, d)
+            duplicate_check = self.check_duplicates(c, d, key)
             if duplicate_check:
                 data_temp.append(duplicate_check)
         if len(data_temp) > 0:

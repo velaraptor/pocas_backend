@@ -81,6 +81,15 @@ class ServiceForm(fo.Form):
     tags = InlineFieldList(fields.StringField())
 
 
+class QuestionForm(fo.Form):
+    """Question Form"""
+
+    question = fields.StringField("name")
+    id = fields.IntegerField("id")
+    main_tag = fields.StringField("main_tag")
+    tags = InlineFieldList(fields.StringField())
+
+
 class AnalyticsForm(fo.Form):
     """Form for IP Hits"""
 
@@ -97,7 +106,13 @@ class Analytics(SuperUserView):
     form = AnalyticsForm
 
 
-# TODO: fix this for ISSUE 20 add questions VIEW
+class QuestionsView(MyModelView):
+    """Questions Services"""
+
+    column_list = ("id", "question", "tags", "main_tag")
+    column_sortable_list = "id"
+
+    form = QuestionForm
 
 
 class ServicesView(MyModelView):
@@ -185,4 +200,5 @@ admin = Admin(
 admin.add_view(ServicesView(db1.services, "Services Importer"))
 admin.add_view(Analytics(conn["analytics"].ip_hits, "API Analytics"))
 admin.add_view(UsersView(conn["users_login"]["user"], "Admin User Management"))
+admin.add_view(QuestionsView(db1.questions, "Questions Editor"))
 admin.add_link(MenuLink(name="POCAS API", url="/api/v1/docs"))
