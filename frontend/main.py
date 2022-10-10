@@ -25,6 +25,7 @@ from flask_login import (
     current_user,
     UserMixin,
 )
+from flask_bootstrap import SwitchField
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_caching import Cache
 from forms import (  # pylint: disable=import-error
@@ -160,44 +161,21 @@ def filter_tags():
 @login_required
 def home_page():
     """Home Page with Questions"""
+    # get questions
+    questions = requests.get(f"{API_URL}questions", timeout=3).json()
+
+    for q in questions["questions"]:
+        setattr(Questions, "question_" + str(q["id"]), SwitchField(q["question"]))
     form = Questions()
-    # TODO: mapper based on questions for ISSUE 20
+
     if form.validate_on_submit():
         dob = form.dob.data
         # change dob to int style
         dob = int(datetime.strftime(dob, "%m%d%Y"))
         address = form.zip_code.data
-        # TODO: fix this for ISSUE 20
         answers = [
-            form.question_2.data,
-            form.question_3.data,
-            form.question_4.data,
-            form.question_5.data,
-            form.question_6.data,
-            form.question_7.data,
-            form.question_8.data,
-            form.question_9.data,
-            form.question_10.data,
-            form.question_11.data,
-            form.question_12.data,
-            form.question_13.data,
-            form.question_14.data,
-            form.question_15.data,
-            form.question_16.data,
-            form.question_17.data,
-            form.question_18.data,
-            form.question_19.data,
-            form.question_20.data,
-            form.question_21.data,
-            form.question_22.data,
-            form.question_23.data,
-            form.question_24.data,
-            form.question_25.data,
-            form.question_26.data,
-            form.question_27.data,
-            form.question_28.data,
-            form.question_29.data,
-            form.question_30.data,
+            getattr(form, "question_" + str(question.get("id"))).data
+            for question in questions["questions"]
         ]
         answers = list(map(int, answers))
         s = requests.Session()
@@ -217,7 +195,29 @@ def home_page():
             results=True,
             current_user=top_results["user_loc"],
         )
-    return render_template("home.html", form=form)
+    # get unique questions
+    question_tags = []
+    for question in questions["questions"]:
+        question_tags.append(question["main_tag"])
+    question_tags = sorted(set(question_tags))
+
+    # make a questions list with dict in each element with main_tag, safe_html_name and all questions from form
+    questions_payload = []
+    for question_tag in question_tags:
+        payload = {
+            "name": question_tag,
+            "safe_html_name": question_tag.replace(" ", ""),
+            "questions": [],
+        }
+        for question in questions["questions"]:
+            if question["main_tag"] == question_tag:
+                form_question_temp = getattr(
+                    form, "question_" + str(question.get("id"))
+                )
+                payload["questions"].append(form_question_temp)
+        questions_payload.append(payload)
+
+    return render_template("home.html", form=form, questions=questions_payload)
 
 
 @app.route("/login", methods=["GET", "POST"])
