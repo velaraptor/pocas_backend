@@ -203,7 +203,7 @@ class GetTopNResults:
         """
         Get Questions from MongoDB
         """
-        db = mongo_connector.client[DB_SERVICES]
+        db = mongo_connector.client[DB_SERVICES["db"]]
         c = db[collection]
         results = []
         for c in c.find().sort("id"):

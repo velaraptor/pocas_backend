@@ -138,6 +138,21 @@ class FullServices(BaseModel):
     num_of_services: int
 
 
+class Question(BaseModel):
+    """Questions Model"""
+
+    id: int
+    question: str
+    tags: List[str]
+    main_tag: Optional[str]
+
+
+class QuestionList(BaseModel):
+    """Questions Model"""
+
+    questions: List[Question]
+
+
 class UserLocation(BaseModel):
     """User Location Model"""
 
@@ -168,6 +183,24 @@ async def get_services():
         response = {"services": all_services, "num_of_services": num_docs}
         return response
     raise HTTPException(status_code=404, detail="Services not found")
+
+
+@app.get(
+    "/api/v1/questions",
+    response_model=QuestionList,
+    dependencies=[Depends(RateLimiter(times=50, seconds=5))],
+)
+async def get_questions():
+    """
+    Get all Questions for POCAS
+    """
+    m = MongoConnector()
+    questions = GetTopNResults(1, 1205970, None, None).get_questions(m)
+    num_docs = len(questions)
+    if num_docs > 0:
+        response = {"questions": questions}
+        return response
+    raise HTTPException(status_code=404, detail="Questions not found")
 
 
 @app.post(
