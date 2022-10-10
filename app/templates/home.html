@@ -4,9 +4,20 @@
 {% block body %}
 {{ super() }}
 
-<h1>Welcome to POCAS Admin View</h1>
+<h2>Welcome to POCAS Admin View!</h2>
+<h2>This is the Admin Panel for MHP Portal</h2>
 <br>
-<b>Services Importer</b> allows you the administrator to add services to be used for the app.
+<h3><a href="/admin/servicesview">Services Editor</a></h3>
+Allows you the administrator to add services to be used for the app.
 <br>
-<b>POCAS API</b> gets you to the API used to get top services and list of services. This is mainly used for the mobile/web app. Ask the admin for an API-KEY to be used.
+<h3><a href="/admin/ip_hitsview">API Analytics</a></h3>
+API Hits on Questionnaire with IP address and date
+<br>
+
+<h3><a href="/admin/questionsview">Questions Editor</a></h3>
+Edit Questions for Frontend Application
+<br>
+<hr>
+<h3>POCAS API</h3>
+Gets you to the API used to get top services and list of services. This is mainly used for the mobile/web app. Ask the admin for an API-KEY to be used.
 {% endblock %}

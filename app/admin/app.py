@@ -197,8 +197,8 @@ admin = Admin(
     template_mode="bootstrap3",
 )
 
-admin.add_view(ServicesView(db1.services, "Services Importer"))
+admin.add_view(ServicesView(db1.services, "Services Editor"))
 admin.add_view(Analytics(conn["analytics"].ip_hits, "API Analytics"))
-admin.add_view(UsersView(conn["users_login"]["user"], "Admin User Management"))
 admin.add_view(QuestionsView(db1.questions, "Questions Editor"))
+admin.add_view(UsersView(conn["users_login"]["user"], "Admin User Management"))
 admin.add_link(MenuLink(name="POCAS API", url="/api/v1/docs"))
