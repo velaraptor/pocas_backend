@@ -69,6 +69,7 @@ In `local.env` change the following to this:
 SERVICES_CSV=/data/tfap_5.csv
 RERUN_SERVICES=True
 CREATE_USERS=True
+FIRST_QUESTIONS=True
 ```
 
 First Time Run this and then wait 10 minutes
@@ -85,6 +86,7 @@ In `local.env` change the following to this:
 ```dotenv
 RERUN_SERVICES=False
 CREATE_USERS=False
+FIRST_QUESTIONS=False
 ```
 `./init-letsencrypt.sh`
 

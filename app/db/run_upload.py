@@ -14,4 +14,7 @@ rerun_upload_services = get_env_bool("RERUN_SERVICES")
 if rerun_upload_services:
     logging.getLogger("top_n_results").info("Upload services from CSV")
     upload_data()
-upload_questions()
+
+first_quest = get_env_bool("FIRST_QUESTIONS")
+if first_quest:
+    upload_questions()
