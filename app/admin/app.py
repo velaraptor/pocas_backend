@@ -81,6 +81,15 @@ class ServiceForm(fo.Form):
     tags = InlineFieldList(fields.StringField())
 
 
+class QuestionForm(fo.Form):
+    """Question Form"""
+
+    question = fields.StringField("name")
+    id = fields.IntegerField("id")
+    main_tag = fields.StringField("main_tag")
+    tags = InlineFieldList(fields.StringField())
+
+
 class AnalyticsForm(fo.Form):
     """Form for IP Hits"""
 
@@ -95,6 +104,15 @@ class Analytics(SuperUserView):
     column_list = ("ip_address", "endpoint", "date")
     column_searchable_list = ("ip_address", "endpoint")
     form = AnalyticsForm
+
+
+class QuestionsView(MyModelView):
+    """Questions Services"""
+
+    column_list = ("id", "question", "tags", "main_tag")
+    column_sortable_list = "id"
+
+    form = QuestionForm
 
 
 class ServicesView(MyModelView):
@@ -170,7 +188,6 @@ class UsersView(SuperUserView):
 
 # TODO: ADD import csv https://blog.sneawo.com/blog/2018/02/16/export-and-import-for-mongoengine-model-in-flask-admin/
 # TODO: add user management from frontend
-# TODO: add to postgres number of hits of api
 
 admin = Admin(
     name="POCAS Admin Panel",
@@ -180,7 +197,8 @@ admin = Admin(
     template_mode="bootstrap3",
 )
 
-admin.add_view(ServicesView(db1.services, "Services Importer"))
+admin.add_view(ServicesView(db1.services, "Services Editor"))
 admin.add_view(Analytics(conn["analytics"].ip_hits, "API Analytics"))
+admin.add_view(QuestionsView(db1.questions, "Questions Editor"))
 admin.add_view(UsersView(conn["users_login"]["user"], "Admin User Management"))
 admin.add_link(MenuLink(name="POCAS API", url="/api/v1/docs"))

@@ -50,6 +50,7 @@ services:
     depends_on:
       - postgres
       - mongo_db
+      - api
     environment:
       - WORKERS_PER_CORE=0.5
     build:
@@ -95,6 +96,7 @@ services:
       - ./nginx-conf-dev:/etc/nginx/conf.d
     depends_on:
       - frontend
+      - api
     networks:
       - pocas_net
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
