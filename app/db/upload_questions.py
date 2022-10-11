@@ -292,14 +292,13 @@ def main():
             {"id": d[0], "question": d[1], "tags": d[2], "main_tag": d[3]}
         )
     log().info(clean_data)
-    ids = m.upload_results(
+    m.upload_results(
         db=DB_SERVICES["db"],
         collection="questions",
         data=clean_data,
         geo_index=False,
         key="id",
     )
-    log().info(ids)
 
 
 if __name__ == "__main__":
