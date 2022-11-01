@@ -1,4 +1,4 @@
-name: rebuild digital ocean droplet
+name: Deploy-DO-PROD
 on:
   push:
     branches:
