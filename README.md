@@ -1,4 +1,5 @@
-# pocas_backend
+# <img src="frontend/static/icon.png" height="60" width="60" > MHP Portal
+
 POCAS Backend. App can be found at https://mhpportal.app
 
 ![Code Coverage](https://github.com/velaraptor/pocas_backend/workflows/Code%20Coverage/badge.svg)
