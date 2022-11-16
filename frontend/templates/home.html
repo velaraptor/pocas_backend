@@ -69,7 +69,30 @@
                                         <button class="accordion-button collapsed" type="button"
                                                 data-bs-toggle="collapse" data-bs-target="#collapse{{question.safe_html_name}}"
                                                 aria-expanded="false" aria-controls="collapse{{question.safe_html_name}}">
-                                            <h4 class="text-warning" id="heading{{question.safe_html_name}}">{{question.name}}</h4>
+                                            <h4 class="text-warning" id="heading{{question.safe_html_name}}">{{question.name}}
+                                            {% if question.name == "Children" %}
+                                                <i class="fa-solid fa-baby"></i>
+                                            {% endif %}
+                                                {% if question.name == "Family"%}
+                                                <i class="fa-solid fa-people-roof"></i>
+                                            {% endif %}
+                                                {% if question.name == "Food Insecurity"%}
+                                                <i class="fa-solid fa-utensils"></i>
+                                            {% endif %}
+                                                {% if question.name == "Home"%}
+                                                <i class="fa-solid fa-house-chimney"></i>
+                                            {% endif %}
+                                                {% if question.name == "Income"%}
+                                                <i class="fa-solid fa-sack-dollar"></i>
+                                            {% endif %}
+                                                {% if question.name == "Women Health"%}
+                                                <i class="fa-solid fa-venus"></i>
+                                            {% endif %}
+                                                {% if question.name == "Identity"%}
+                                              <i class="fa-solid fa-people-group"></i>
+                                            {% endif %}
+
+                                            </h4>
                                         </button>
                                     <div id="collapse{{question.safe_html_name}}" class="accordion-collapse collapse"
                                          aria-labelledby="heading{{question.safe_html_name}}" style="">
