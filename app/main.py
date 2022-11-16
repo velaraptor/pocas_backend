@@ -8,7 +8,7 @@ import io
 import secrets
 import uuid
 from typing import Optional, List
-from fastapi import FastAPI, HTTPException, Depends, status, APIRouter, Request
+from fastapi import FastAPI, HTTPException, Depends, status, APIRouter, Request, Response
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi.responses import StreamingResponse
 from fastapi_limiterx import FastAPILimiter
@@ -266,7 +266,11 @@ async def get_top_results(  # pylint: disable=dangerous-default-value
         raise HTTPException(status_code=404, detail="Results not found") from exc
 
 
-@app.post("/api/v1/pdf", dependencies=[Depends(get_current_username)])
+class PDFResponse(Response):
+    media_type = "application/pdf"
+
+
+@app.post("/api/v1/pdf", dependencies=[Depends(get_current_username)], response_class=PDFResponse)
 async def generate_pdf_get(services: List[Service]):
     """Generate PDF from Array of Services"""
     pdf = generate_pdf(services)
