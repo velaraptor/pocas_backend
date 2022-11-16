@@ -67,7 +67,7 @@
     <form method="POST" id="filters" action="/filter">
                 {{ tags.csrf_token }}
   <div class="form-group">
-        <div class="form-label mt-4"><small>{{ tags.tags.label }}</small></div>
+        <div class="form-label mt-4 text-muted"><small>{{ tags.tags.label }}</small></div>
       <div class="row">
           <div class="col">
             <select name="comp_select" class="selectpicker form-control">
@@ -109,27 +109,33 @@
                 <div class="card-body">
                     <p class="card-text">
                         {% if marker['phone'] %}
-                        Phone: <a href="tel:+{{ marker['phone'] }}">{{ marker['phone'] }}</a>
+                    <p class="text-success"><i class="fa-solid fa-phone"></i>  <a href="tel:+{{ marker['phone'] }}">{{ marker['phone'] }}</a></p>
                         {% endif %}
                         {% if marker['address'] %}
-                        <br><small>
+                        <p class="text-muted"><small>
+                    <i class="fa-solid fa-location-dot"></i>
                             {{ marker['address'] }}
-                        <br>{{ marker['city'] }}, {{ marker['state'] }} {{ marker['zip_code'] }}</small>
+                    <br>{{ marker['city'] }}, {{ marker['state'] }} {{ marker['zip_code'] }}</small></p>
                         {% endif %}
                         {% if marker['days'] %}
-                        <br>Days: {{ marker['days'] }}
+                        <p class="text-info"><i class="fa-solid fa-calendar-days"></i> {{ marker['days'] }}</p>
                         {% endif %}
                         {% if marker['hours'] %}
-                        <br>Hours: {{ marker['hours'] }}
+                        <p class="text-info"><i class="fa-solid fa-clock"></i> {{ marker['hours'] }}</p>
                         {% endif %}
                         {% if marker['web_site'] %}
-                        <br><a href="{{ marker['web_site'] }}" class="card-link">Website</a>
+                    <p class="text-info"><a href="{{ marker['web_site'] }}" class="card-link"><i class="fa-solid fa-link"></i> {{ marker['web_site'] }}</a></p>
                         {% endif %}
                         {% if marker['general_topic'] %}
+
                                 <ul class="list-group bg-secondary">
-                                    <li class="list-group-item list-group-item-action active">{{ marker['general_topic'] }}</li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center active">{{ marker['general_topic'] }}
+                                    <span class="badge bg-light rounded-pill"><i class="fa-solid fa-tag"></i></span>
+                                    </li>
                                     {% for tags in marker['tags'] %}
-                                        <li class="list-group-item list-group-item-action active">{{ tags }}</li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">{{ tags }}
+                                        <span class="badge bg-light rounded-pill"> <i class="fa-solid fa-tag"></i></span>
+                                        </li>
                                     {% endfor %}
                                 </ul>
                     {% endif %}
