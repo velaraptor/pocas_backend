@@ -34,11 +34,8 @@
 </head>
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">
-        <img src ='/static/icon.png' width="40%"></a>
-    <button class="navbar-toggler" type="button"
-            data-bs-toggle="collapse" data-bs-target="#navbarColor01"
-            aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+    <a class="navbar-brand" href="#"><img src ='/static/icon.png' width="20%"></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -53,7 +50,7 @@
           </li>
       </ul>
         <div class="d-flex">
-            <button id="myButton" class="btn btn-secondary my-2 my-sm-0" type="submit" >Logout</button>
+            <button id="myButton" class="btn btn-success my-2 my-sm-0" type="submit" >Logout</button>
 
             <script type="text/javascript">
                     document.getElementById("myButton").onclick = function () {
@@ -70,7 +67,7 @@
     <form method="POST" id="filters" action="/filter">
                 {{ tags.csrf_token }}
   <div class="form-group">
-        <div class="form-label mt-4">{{ tags.tags.label }}</div>
+        <div class="form-label mt-4"><small>{{ tags.tags.label }}</small></div>
       <div class="row">
           <div class="col">
             <select name="comp_select" class="selectpicker form-control">
@@ -101,42 +98,40 @@
     </div>
     <hr>
         <div style="display: flex; justify-content: flex-end">
-    <input class="btn btn-success" type="button"  id="get-pdf" name="get-pdf" value="Download PDF">
+    <input class="btn btn-success" type="button"  style="width:100%" id="get-pdf" name="get-pdf" value="Download PDF">
      </div>
     <hr>
     <div class="row">
     {% for marker in markers %}
         <div class="col">
-            <div class="card text-white bg-primary mb-3" style="width: 22rem;">
-                <div class="card-header">{{ marker['name'] }}</div>
+            <div class="card border-info mb-3" style="width: 32rem;">
+                <div class="card-header text-info"><strong>{{ marker['name'] }}</strong></div>
                 <div class="card-body">
                     <p class="card-text">
                         {% if marker['phone'] %}
-                        Phone: <a href="tel:+{{ marker['phone'] }}">{{ marker['phone'] }}</a><br>
+                        Phone: <a href="tel:+{{ marker['phone'] }}">{{ marker['phone'] }}</a>
                         {% endif %}
                         {% if marker['address'] %}
-                        <small>
-                            {{ marker['address'] }} , {{ marker['city'] }} , {{ marker['state'] }} {{ marker['zip_code'] }}</small><br>
+                        <br><small>
+                            {{ marker['address'] }}
+                        <br>{{ marker['city'] }}, {{ marker['state'] }} {{ marker['zip_code'] }}</small>
                         {% endif %}
                         {% if marker['days'] %}
-                        <br>DAYS: {{ marker['days'] }}
+                        <br>Days: {{ marker['days'] }}
                         {% endif %}
                         {% if marker['hours'] %}
-                        <br>HOURS: {{ marker['hours'] }}
+                        <br>Hours: {{ marker['hours'] }}
                         {% endif %}
                         {% if marker['web_site'] %}
-                        <br><a href="{{ marker['web_site'] }}" class="card-link">WEBSITE</a>
+                        <br><a href="{{ marker['web_site'] }}" class="card-link">Website</a>
                         {% endif %}
                         {% if marker['general_topic'] %}
-                            <div class="list-group">
-                                <ul class="list-group list-group-flush bg-light">
-                                    <li class="list-group-item bg-light">{{ marker['general_topic'] }}</li>
+                                <ul class="list-group bg-secondary">
+                                    <li class="list-group-item list-group-item-action active">{{ marker['general_topic'] }}</li>
                                     {% for tags in marker['tags'] %}
-                                        <li class="list-group-item bg-light">{{ tags }}</li>
+                                        <li class="list-group-item list-group-item-action active">{{ tags }}</li>
                                     {% endfor %}
                                 </ul>
-                            </div>
-                    <br>
                     {% endif %}
                     </p>
                 </div>
@@ -144,6 +139,9 @@
         </div>
         {% endfor %}
     </div>
+    <footer>
+        <p class="text-muted"><small>Copyright 2022: MHP Portal, Inc.</small></p>
+</footer>
 </div>
 </body>
 <script>
@@ -213,5 +211,4 @@ var tileLayer = new L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terra
     });
 
 </script>
-
 </html>
