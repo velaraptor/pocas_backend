@@ -130,11 +130,11 @@
 
                                 <ul class="list-group bg-secondary">
                                     <li class="list-group-item d-flex justify-content-between align-items-center active">{{ marker['general_topic'] }}
-                                    <span class="badge bg-light rounded-pill"><i class="fa-solid fa-tag"></i></span>
+                                    <span class="badge bg-secondary rounded-pill"><i class="fa-solid fa-tag"></i></span>
                                     </li>
                                     {% for tags in marker['tags'] %}
                                         <li class="list-group-item d-flex justify-content-between align-items-center">{{ tags }}
-                                        <span class="badge bg-light rounded-pill"> <i class="fa-solid fa-tag"></i></span>
+                                        <span class="badge bg-secondary rounded-pill"> <i class="fa-solid fa-tag"></i></span>
                                         </li>
                                     {% endfor %}
                                 </ul>
@@ -146,6 +146,7 @@
         {% endfor %}
     </div>
     <footer>
+        <hr>
         <p class="text-muted"><small>Copyright 2022: MHP Portal, Inc.</small></p>
 </footer>
 </div>

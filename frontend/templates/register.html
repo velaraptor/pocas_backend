@@ -21,12 +21,12 @@
     <div class="collapse navbar-collapse" id="navbarColor01">
       <ul class="navbar-nav me-auto">
         <li class="nav-item">
-          <a class="nav-link active" href="/login">Login
+          <a class="nav-link" href="/login">Login
 
           </a>
         </li>
                   <li class="nav-item">
-          <a class="nav-link" href="/register">Register
+          <a class="nav-link active" href="/register">Register
           <span class="visually-hidden">(current)</span></a>
         </li>
 
@@ -45,7 +45,7 @@
   <div class="jumbotron vertical-center">
 {% from "_formhelpers.html" import render_field %}
         <div class="row">
-
+    <hr>
 <form method=post width="50%">
         {{ form.csrf_token }}
 
@@ -71,6 +71,7 @@
         </div>
 </div>
     <footer>
+        <hr>
         <p class="text-muted"><small>Copyright 2022: MHP Portal, Inc.</small></p>
 </footer>
 </div>
