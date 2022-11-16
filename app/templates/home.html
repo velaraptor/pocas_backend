@@ -5,19 +5,23 @@
 {{ super() }}
 
 <h2>Welcome to POCAS Admin View!</h2>
-<h2>This is the Admin Panel for MHP Portal</h2>
+<h6 class="card-subtitle text-muted">This is the Admin Panel for MHP Portal</h6>
 <br>
-<h3><a href="/admin/servicesview">Services Editor</a></h3>
-Allows you the administrator to add services to be used for the app.
-<br>
-<h3><a href="/admin/ip_hitsview">API Analytics</a></h3>
-API Hits on Questionnaire with IP address and date
-<br>
-
-<h3><a href="/admin/questionsview">Questions Editor</a></h3>
-Edit Questions for Frontend Application
-<br>
+<div class="list-group">
+    <a href="/admin/servicesview" class="list-group-item list-group-item-action flex-column align-items-start">
+        <h3 class="mb-1">Services Editor</h3>
+        Allows you the administrator to add services to be used for the app.
+    </a>
+    <a href="/admin/ip_hitsview" class="list-group-item list-group-item-action flex-column align-items-start">
+        <h3 class="mb-1">API Analytics</h3>
+        API Hits on Questionnaire with IP address and date
+        </a>
+    <a href="/admin/questionsview" class="list-group-item list-group-item-action flex-column align-items-start">
+        <h3 class="mb-1">Questions Editor</h3>
+        Edit Questions for Frontend Application
+    </a>
+</div>
 <hr>
-<h3>POCAS API</h3>
+<h3><a href="/api/v1/docs" target="_blank">POCAS API</a></h3>
 Gets you to the API used to get top services and list of services. This is mainly used for the mobile/web app. Ask the admin for an API-KEY to be used.
 {% endblock %}

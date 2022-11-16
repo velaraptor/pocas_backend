@@ -70,31 +70,31 @@ class MyAdminIndexView(AdminIndexView):
 class ServiceForm(fo.Form):
     """Service Form"""
 
-    name = fields.StringField("name")
-    phone = fields.IntegerField("phone")
-    address = fields.StringField("address")
-    general_topic = fields.StringField("general_topic")
-    city = fields.StringField("city")
-    state = fields.StringField("state")
-    zip_code = fields.IntegerField("zip_code")
-    web_site = fields.StringField("web_site")
+    name = fields.StringField("Name")
+    phone = fields.IntegerField("Phone")
+    address = fields.StringField("Address")
+    general_topic = fields.StringField("General Topic")
+    city = fields.StringField("City")
+    state = fields.StringField("State")
+    zip_code = fields.IntegerField("Zip Code")
+    web_site = fields.StringField("Web Site")
     tags = InlineFieldList(fields.StringField())
 
 
 class QuestionForm(fo.Form):
     """Question Form"""
 
-    question = fields.StringField("name")
+    question = fields.StringField("Name")
     id = fields.IntegerField("id")
-    main_tag = fields.StringField("main_tag")
+    main_tag = fields.StringField("Main Tag")
     tags = InlineFieldList(fields.StringField())
 
 
 class AnalyticsForm(fo.Form):
     """Form for IP Hits"""
 
-    ip_address = fields.StringField("ip_address")
-    endpoint = fields.StringField("endpoint")
+    ip_address = fields.StringField("IP ADDRESS")
+    endpoint = fields.StringField("Endpoint")
     date = fields.DateTimeField("Date")
 
 
@@ -190,15 +190,15 @@ class UsersView(SuperUserView):
 # TODO: add user management from frontend
 
 admin = Admin(
-    name="POCAS Admin Panel",
+    name="MHP Admin",
     url="/admin",
     index_view=MyAdminIndexView(template="home.html"),
     base_template="master.html",
-    template_mode="bootstrap3",
+    template_mode="bootstrap4",
 )
 
-admin.add_view(ServicesView(db1.services, "Services Editor"))
-admin.add_view(Analytics(conn["analytics"].ip_hits, "API Analytics"))
-admin.add_view(QuestionsView(db1.questions, "Questions Editor"))
-admin.add_view(UsersView(conn["users_login"]["user"], "Admin User Management"))
-admin.add_link(MenuLink(name="POCAS API", url="/api/v1/docs"))
+admin.add_view(ServicesView(db1.services, "Services"))
+admin.add_view(Analytics(conn["analytics"].ip_hits, "Analytics"))
+admin.add_view(QuestionsView(db1.questions, "Questions"))
+admin.add_view(UsersView(conn["users_login"]["user"], "User Management"))
+admin.add_link(MenuLink(name="POCAS API", url="/api/v1/docs", target="_blank"))
