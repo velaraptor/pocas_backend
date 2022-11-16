@@ -8,7 +8,15 @@ import io
 import secrets
 import uuid
 from typing import Optional, List
-from fastapi import FastAPI, HTTPException, Depends, status, APIRouter, Request, Response
+from fastapi import (
+    FastAPI,
+    HTTPException,
+    Depends,
+    status,
+    APIRouter,
+    Request,
+    Response,
+)
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi.responses import StreamingResponse
 from fastapi_limiterx import FastAPILimiter
@@ -223,6 +231,30 @@ async def post_new_service(service: Service):
     return {"id": str(mongo_id[0])}
 
 
+def send_user_data(dob, address, answers, services):
+    """Send data for Platform Analytics"""
+    try:
+        service_ids = [service["id"] for service in services]
+
+        data = [
+            {
+                "dob": int(str(dob[-4:])),
+                "zip_code": address,
+                "answers": answers,
+                "top_services": service_ids,
+                "time": datetime.datetime.now(),
+                "name": uuid.uuid4().hex,
+            }
+        ]
+        print(data)
+        m = MongoConnector()
+        db = "platform"
+        collection = "user_data"
+        m.upload_results(db, collection, data)
+    except Exception as e:
+        print(str(e))
+
+
 @app.post(
     "/api/v1/top_n",
     dependencies=[
@@ -250,6 +282,7 @@ async def get_top_results(  # pylint: disable=dangerous-default-value
             r["id"] = str(r["_id"])
             r.pop("_id", None)
         assert len(top_services) <= int(top_n)
+        send_user_data(dob, address, answers, top_services)
         ip_data = {
             "ip_address": request.client.host,
             "endpoint": "top_n",
@@ -267,10 +300,16 @@ async def get_top_results(  # pylint: disable=dangerous-default-value
 
 
 class PDFResponse(Response):
+    """Response Type for PDF"""
+
     media_type = "application/pdf"
 
 
-@app.post("/api/v1/pdf", dependencies=[Depends(get_current_username)], response_class=PDFResponse)
+@app.post(
+    "/api/v1/pdf",
+    dependencies=[Depends(get_current_username)],
+    response_class=PDFResponse,
+)
 async def generate_pdf_get(services: List[Service]):
     """Generate PDF from Array of Services"""
     pdf = generate_pdf(services)

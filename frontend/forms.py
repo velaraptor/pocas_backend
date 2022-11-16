@@ -24,6 +24,7 @@ def get_tags():
         services = pd.DataFrame(services_resp.json()["services"])
         g_t = services.general_topic.dropna().unique().tolist()
         tags = services.tags.explode().dropna().unique().tolist()
+        tags = tags + [" "]
         values = set(g_t + tags)
         values = sorted(values)
     except requests.exceptions.RequestException as e:

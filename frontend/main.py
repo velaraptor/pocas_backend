@@ -135,10 +135,21 @@ def filter_tags():
     """Filter by Tag and show services"""
     if request.form["comp_select"]:
         tag_form = Tags()
+        print(tag_form.tags.data)
         f_val = request.form["comp_select"]
         services_resp = requests.get(f"{API_URL}services", timeout=20)
         services = services_resp.json()
         services = sorted(services["services"], key=lambda d: d["general_topic"])
+        if f_val == " ":
+            return render_template(
+                "services.html",
+                markers=list(services),
+                tags=tag_form,
+                vals=get_tags(),
+                active=f_val,
+                results=False,
+                current_user=None,
+            )
         services_g = list(filter(lambda x: x["general_topic"] == f_val, services))
         services_t = [
             x for x in services if f_val in x["tags"] and f_val != x["general_topic"]

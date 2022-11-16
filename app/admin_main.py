@@ -19,7 +19,7 @@ from flask_admin import helpers as admin_helpers
 # pylint: disable=R0902, R0912, R0913, R0914, R0915, E1101, E0611
 
 app = Flask(__name__)
-app.config["FLASK_ADMIN_SWATCH"] = "superhero"
+app.config["FLASK_ADMIN_SWATCH"] = "litera"
 app.config["SECRET_KEY"] = secrets.token_urlsafe()
 # Flask-Security config
 app.config["SECURITY_URL_PREFIX"] = "/admin/"
