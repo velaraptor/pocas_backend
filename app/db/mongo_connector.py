@@ -17,6 +17,44 @@ class MongoConnector:
         uri = f"mongodb://{self.__user}:{self.__pass}@{self.__host}:{self.__port}"
         self.client = MongoClient(uri, fsync=fsync)
 
+    def aggregate(self, db, collection, query):
+        """
+        Use Pymongo Aggregate
+        :param db: database to look at
+        :type db: str
+        :param collection: collection to look at
+        :type collection: str
+        :param query: query to run on collection
+        :type query: dict
+        :return: list[dict]
+        """
+        db = self.client[db]
+        c = db[collection]
+
+        pipeline = [
+            query,
+        ]
+        results = c.aggregate(pipeline)
+        agg_results = []
+        for r in results:
+            z = r
+            z["id"] = str(z["_id"])
+            z.pop("_id", None)
+            agg_results.append(z)
+        return agg_results
+
+    def query_results_api(self, db, collection, query, exclude=None):
+        """
+        Safe Mongo Query for FastAPI response.
+
+        The FastAPI response does not allow a field with `_id`. This changes it to 'id'.
+        """
+        results = self.query_results(db, collection, query, exclude)
+        for r in results:
+            r["id"] = str(r["_id"])
+            r.pop("_id", None)
+        return results
+
     def query_results(self, db, collection, query, exclude=None):
         """
         Query Mongo DB with database, collection and query

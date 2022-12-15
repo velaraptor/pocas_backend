@@ -239,7 +239,7 @@ def send_user_data(dob, address, answers, services):
         data = [
             {
                 "dob": int(str(dob[-4:])),
-                "zip_code": address,
+                "zip_code": int(address),
                 "answers": answers,
                 "top_services": service_ids,
                 "time": datetime.datetime.now(),
@@ -318,3 +318,45 @@ async def generate_pdf_get(services: List[Service]):
         media_type="application/pdf",
         headers={"Content-disposition": f'inline; filename="results.pdf'},  # noqa: F541
     )
+
+
+@app.get("/api/v1/platform/zip_codes", tags=["platform"])
+async def get_zip_codes():
+    """
+    Get Group By of all Zip Codes in User Data
+    """
+    m = MongoConnector()
+    zip_code_group = m.aggregate(
+        db="platform",
+        collection="user_data",
+        query={
+            "$group": {
+                "_id": "$zip_code",
+                "count": {"$sum": 1},
+            }
+        },
+    )
+    return zip_code_group
+
+
+@app.get("/api/v1/platform/data/{zip_code}", tags=["platform"])
+async def get_user_data(
+    zip_code: int,
+    start: Optional[datetime.datetime] = None,
+    end: Optional[datetime.datetime] = None,
+):
+    """
+    Get User Data with zip code and optional start-end time. Note time must be in following str format:
+
+    `2022-11-16T19:00:44.173000`
+    """
+    # tie answers to tags
+    m = MongoConnector()
+    query = {"zip_code": str(zip_code)}
+
+    if start:
+        date_query = {"$gte": start, "$lt": end}
+        query["time"] = date_query
+
+    results = m.query_results_api(db="platform", collection="user_data", query=query)
+    return results

@@ -6,7 +6,7 @@ keys.env
 google_github.txt
 
 .ipynb_checkpoints/
-
+c/*
 *.icloud
 **/__pycache__/**
 test_notebook.ipynb

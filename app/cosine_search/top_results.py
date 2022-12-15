@@ -27,15 +27,12 @@ AGE_MAPPER = {
 def get_all_services():
     """Get all Services"""
     m = MongoConnector(fsync=True)
-    all_services = m.query_results(
+    all_services = m.query_results_api(
         db=DB_SERVICES["db"],
         collection=DB_SERVICES["collection"],
         query={},
         exclude={"loc": 0},
     )
-    for r in all_services:
-        r["id"] = str(r["_id"])
-        r.pop("_id", None)
     return all_services
 
 
