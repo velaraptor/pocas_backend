@@ -1,6 +1,6 @@
 *.DS_Store
 .idea/
-
+migrations/versions/*
 keys.env
 
 google_github.txt
