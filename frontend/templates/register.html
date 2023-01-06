@@ -56,6 +56,8 @@
 
   <dl>
     {{ render_field(form.user_name) }}
+    {{ render_field(form.city) }}
+    {{ render_field(form.affiliation) }}
     {{ render_field(form.password) }}
     {{ render_field(form.confirm) }}
                 {% for error in form.recaptcha.errors %}

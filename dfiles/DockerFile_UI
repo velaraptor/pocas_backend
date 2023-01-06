@@ -1,4 +1,7 @@
 FROM tiangolo/uwsgi-nginx-flask:python3.8
 COPY ../requirements_ui.txt /app/requirements.txt
 RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
-COPY ../frontend /app
+COPY ../frontend /app/frontend
+COPY ../frontend/uwsgi.ini /app
+COPY ../frontend/prestart.sh /app
+ENV STATIC_PATH /app/frontend/static

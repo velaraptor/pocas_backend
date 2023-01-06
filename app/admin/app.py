@@ -2,7 +2,7 @@
 import uuid
 from flask_admin import Admin, AdminIndexView
 from flask_admin.menu import MenuLink
-from flask_admin.contrib.pymongo import ModelView
+from flask_admin.contrib.pymongo import ModelView, filters
 from flask_admin.model.fields import InlineFieldList
 from wtforms import fields, form as fo
 from db.mongo_connector import MongoConnector
@@ -111,7 +111,12 @@ class QuestionsView(MyModelView):
 
     column_list = ("id", "question", "tags", "main_tag")
     column_sortable_list = "id"
+    column_filters = (
+        filters.FilterLike("tags", "Tags"),
+        filters.FilterLike("main_tag", "Main Tag"),
+    )
 
+    column_searchable_list = ("main_tag", "tags", "question")
     form = QuestionForm
 
 
@@ -140,7 +145,12 @@ class ServicesView(MyModelView):
         "state",
         "zip_code",
     )
+    column_filters = (
+        filters.FilterLike("tags", "Tags"),
+        filters.FilterLike("general_topic", "Main Tag"),
+    )
 
+    column_searchable_list = ("general_topic", "name", "tags", "city")
     form = ServiceForm
 
     def on_model_change(self, form, model, is_created):

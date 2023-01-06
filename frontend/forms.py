@@ -14,7 +14,7 @@ from wtforms import (
 )
 from wtforms.validators import DataRequired, EqualTo, Length
 import pandas as pd
-from consts import API_URL  # pylint: disable=import-error
+from frontend.consts import API_URL  # pylint: disable=import-error
 
 
 def get_tags():
@@ -52,6 +52,8 @@ class SignupForm(FlaskForm):
             Length(min=6, message="Select a stronger password."),
         ],
     )
+    city = StringField("City", validators=[DataRequired()])
+    affiliation = StringField("Affiliation")
     confirm = PasswordField(
         "Confirm Your Password",
         validators=[

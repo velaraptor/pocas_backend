@@ -58,6 +58,8 @@ services:
       dockerfile: dfiles/DockerFile_UI
     networks:
       - pocas_net
+    volumes:
+      - ./migrations:/app/migrations
     env_file:
       - .env
       - keys.env
