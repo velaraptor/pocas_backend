@@ -12,11 +12,14 @@ from flask_security import current_user
 from bson.dbref import DBRef
 from werkzeug.security import generate_password_hash
 from admin.admin_forms import ServiceForm, QuestionForm, AnalyticsForm, UserForm
+from cosine_search.top_results import get_all_tags
 
-# pylint: disable=R0902, R0912, R0913, R0914, R0915, E1101, E0611, W0223
+# pylint: disable=R0902, R0912, R0913, R0914, R0915, E1101, E0611, W0223. R1725, W0221
 
 conn = MongoConnector().client
 db1 = conn[DB_SERVICES["db"]]
+
+TAGS = get_all_tags()
 
 
 class MyModelView(ModelView):
@@ -112,6 +115,29 @@ class QuestionsView(MyModelView):
     column_searchable_list = ("main_tag", "tags", "question")
     form = QuestionForm
 
+    # Contribute list of user choices to the forms
+    def _feed_tag_choices(self, form):
+        form.main_tag.choices = [(str(x), x) for x in TAGS]
+        return form
+
+    def create_form(self):
+        form = super(QuestionsView, self).create_form()
+        return self._feed_tag_choices(form)
+
+    def edit_form(self, obj):
+        form = super(QuestionsView, self).edit_form(obj)
+        return self._feed_tag_choices(form)
+
+    def on_model_change(self, form, model, is_created):
+        """On model change get id number"""
+        collection = "questions"
+        c = db1[collection]
+        # TODO: this needs to be fixed
+        max_value = c.find().sort("id", -1).limit(1)
+        model["id"] = max_value
+
+        return model
+
 
 class ServicesView(MyModelView):
     """POCAS Services"""
@@ -151,6 +177,18 @@ class ServicesView(MyModelView):
         model = get_lat_lon(model)
 
         return model
+
+    def _feed_tag_choices(self, form):
+        form.general_topic.choices = [(str(x), x) for x in TAGS]
+        return form
+
+    def create_form(self):
+        form = super(ServicesView, self).create_form()
+        return self._feed_tag_choices(form)
+
+    def edit_form(self, obj):
+        form = super(ServicesView, self).edit_form(obj)
+        return self._feed_tag_choices(form)
 
 
 class MHPUsersView(SuperSQLUserView):
