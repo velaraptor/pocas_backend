@@ -31,7 +31,7 @@ from frontend.forms import (  # pylint: disable=import-error
 )  # pylint: disable=import-error
 from frontend.consts import API_URL  # pylint: disable=import-error
 from frontend.models.user import User
-from frontend import db, login_manager
+from frontend.models.flask_models import db, login_manager
 
 main_blueprint = Blueprint("main", __name__, template_folder="templates")
 

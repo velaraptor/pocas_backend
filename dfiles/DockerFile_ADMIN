@@ -1,12 +1,12 @@
 FROM tiangolo/uwsgi-nginx-flask:python3.8
 
-COPY ../requirements.txt /app/
+COPY requirements.txt /app/
 WORKDIR /app
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-COPY ../app/admin_main.py /app/main.py
-COPY ../frontend/static/icon.png /pics/icon.png
-COPY ../app/db /app/db
+COPY /app/admin_main.py /app/main.py
+COPY /frontend/static/icon.png /pics/icon.png
+COPY /app/db /app/db
 COPY /app/admin  /app/admin
 COPY /app/templates  /app/templates

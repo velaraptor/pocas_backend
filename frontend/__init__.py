@@ -1,16 +1,8 @@
 """Flask App"""
 import os
-from flask_sqlalchemy import SQLAlchemy
-from flask_caching import Cache
-from flask_migrate import Migrate
 from flask import Flask
-from flask_login import LoginManager
 from frontend.views.main_view import main_blueprint
-
-db = SQLAlchemy()
-migrate = Migrate()
-cache = Cache(config={"CACHE_TYPE": "SimpleCache"})
-login_manager = LoginManager()
+from frontend.models.flask_models import db, migrate, login_manager, cache
 
 
 def create_app():

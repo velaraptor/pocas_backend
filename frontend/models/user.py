@@ -1,7 +1,7 @@
 """Postgres Models"""
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
-from frontend import db
+from frontend.models.flask_models import db
 
 
 class User(UserMixin, db.Model):

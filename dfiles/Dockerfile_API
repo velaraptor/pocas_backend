@@ -1,9 +1,9 @@
 FROM tiangolo/uvicorn-gunicorn-starlette:python3.8
 
-COPY ../requirements.txt /app/
+COPY requirements.txt /app/
 WORKDIR /app
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-COPY ../app /app
-COPY ../frontend/static/icon.png /pics/icon.png
+COPY /app /app
+COPY /frontend/static/icon.png /pics/icon.png
