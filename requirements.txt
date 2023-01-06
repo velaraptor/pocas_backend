@@ -20,3 +20,4 @@ fastapi==0.83.0
 reportlab==3.6.11
 fastapi-limiterx
 aioredis
+psycopg2-binary==2.9.2

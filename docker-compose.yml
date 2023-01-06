@@ -26,6 +26,7 @@ services:
       - local.env
       - keys.env
       - api.env
+      - .env
 
   api:
     container_name: pocas_api
