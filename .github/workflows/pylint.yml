@@ -23,4 +23,4 @@ jobs:
         pip install -r requirements_ui.txt
     - name: Analysing the code with pylint
       run: |
-        pylint $(git ls-files '*.py') --load-plugins pylint-flask-sqlalchemy
+        pylint $(git ls-files '*.py') --load-plugins pylint_flask_sqlalchemy
