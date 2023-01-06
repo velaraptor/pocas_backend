@@ -127,7 +127,6 @@ def filter_tags():
 @login_required
 def home_page():
     """Home Page with Questions"""
-    # get questions
     questions = requests.get(f"{API_URL}questions", timeout=3).json()
 
     for q in questions["questions"]:
@@ -147,11 +146,13 @@ def home_page():
         s = requests.Session()
         s.auth = (os.getenv("API_USER"), os.getenv("API_PASS"))
         post_questions = s.post(
-            f"{API_URL}top_n?top_n=15&dob={dob}&address={address}", json=answers
+            f"{API_URL}top_n?top_n=15&dob={dob}&address={address}&user_name={current_user.user_name}",
+            json=answers,
         )
         top_results = post_questions.json()
         tag_form = Tags()
 
+        # TODO: check if location is nowhere near and emit a dimissable alert, if len is zero
         return render_template(
             "services.html",
             markers=top_results["services"],

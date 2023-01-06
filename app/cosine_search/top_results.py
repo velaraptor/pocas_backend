@@ -222,6 +222,7 @@ class GetTopNResults:
         if len(self.tags) <= 1:
             self.tags = ["Public Benefits"]
 
+        # TODO: check if user location is within radius
         top_results = m.query_results(
             db=DB_SERVICES["db"],
             collection=DB_SERVICES["collection"],
