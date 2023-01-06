@@ -19,7 +19,7 @@ services:
       - mongo_db
     build:
       context: ./
-      dockerfile: DockerFile_ADMIN
+      dockerfile: dfiles/DockerFile_ADMIN
     networks:
       - pocas_net
     env_file:
@@ -34,7 +34,7 @@ services:
       - redis
     build:
       context: ./
-      dockerfile: Dockerfile_API
+      dockerfile: dfiles/Dockerfile_API
     volumes:
       - ./data:/data
     networks:
@@ -55,7 +55,7 @@ services:
       - WORKERS_PER_CORE=0.5
     build:
       context: ./
-      dockerfile: DockerFile_UI
+      dockerfile: dfiles/DockerFile_UI
     networks:
       - pocas_net
     env_file:
