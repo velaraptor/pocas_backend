@@ -26,6 +26,7 @@ services:
       - local.env
       - keys.env
       - api.env
+      - .env
 
   api:
     container_name: pocas_api
@@ -58,6 +59,8 @@ services:
       dockerfile: dfiles/DockerFile_UI
     networks:
       - pocas_net
+    volumes:
+      - ./migrations:/app/migrations
     env_file:
       - .env
       - keys.env

@@ -238,7 +238,7 @@ def send_user_data(dob, address, answers, services):
 
         data = [
             {
-                "dob": int(str(dob[-4:])),
+                "dob": int(str(dob)[-4:]),
                 "zip_code": int(address),
                 "answers": answers,
                 "top_services": service_ids,
@@ -252,6 +252,8 @@ def send_user_data(dob, address, answers, services):
         collection = "user_data"
         m.upload_results(db, collection, data)
     except Exception as e:
+        print("Send User data did not send!")
+        print(dob)
         print(str(e))
 
 
@@ -268,6 +270,7 @@ async def get_top_results(  # pylint: disable=dangerous-default-value
     top_n: int,
     dob: int,
     address: str,
+    user_name: str = None,
     answers: List[int] = EXAMPLE_RESULTS,
 ):
     """
@@ -289,6 +292,8 @@ async def get_top_results(  # pylint: disable=dangerous-default-value
             "date": datetime.datetime.now(),
             "name": uuid.uuid4().hex,
         }
+        if user_name:
+            ip_data["ip_address"] = user_name
         send_ip_address_mongo([ip_data])
         return {
             "services": top_services,
@@ -352,7 +357,7 @@ async def get_user_data(
     """
     # tie answers to tags
     m = MongoConnector()
-    query = {"zip_code": str(zip_code)}
+    query = {"zip_code": int(zip_code)}
 
     if start:
         date_query = {"$gte": start, "$lt": end}

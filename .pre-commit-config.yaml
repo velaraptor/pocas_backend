@@ -15,4 +15,8 @@ repos:
       entry: pylint
       language: system
       types: [python]
+      args:
+        [
+          "--load-plugins=pylint_flask_sqlalchemy,pylint_flask", # Load an extension
+        ]
 

@@ -1,8 +1,7 @@
 *.DS_Store
 .idea/
-
 keys.env
-
+migrations/versions/*.py
 google_github.txt
 
 .ipynb_checkpoints/

@@ -3,7 +3,9 @@ import os
 import secrets
 from db.consts import get_env_bool
 from flask import Flask, url_for, redirect
-from admin.app import admin
+from flask_sqlalchemy import SQLAlchemy
+
+from admin.app import admin, MHPUsersView
 from flask_security import (
     Security,
     MongoEngineUserDatastore,
@@ -16,7 +18,7 @@ from flask_mongoengine import MongoEngine
 from flask_admin import helpers as admin_helpers
 
 
-# pylint: disable=R0902, R0912, R0913, R0914, R0915, E1101, E0611
+# pylint: disable=R0902, R0912, R0913, R0914, R0915, E1101, E0611, R0903
 
 app = Flask(__name__)
 app.config["FLASK_ADMIN_SWATCH"] = "litera"
@@ -48,7 +50,13 @@ app.config["MONGODB_SETTINGS"] = {
         f"mongodb://{username}:{password}@{host}:{port}/users_login?authSource=admin"
     )
 }
+POSTGRES_URI = (
+    f"postgresql://{os.getenv('POSTGRES_USER')}:{os.getenv('POSTGRES_PASSWORD')}"
+    f"@{os.getenv('POSTGRES_HOST')}:{os.getenv('POSTGRES_PORT')}/{os.getenv('POSTGRES_DBNAME')}"
+)
+app.config["SQLALCHEMY_DATABASE_URI"] = POSTGRES_URI
 db = MongoEngine(app)
+db_postgres = SQLAlchemy(app)
 
 
 class Role(db.Document, RoleMixin):
@@ -56,6 +64,31 @@ class Role(db.Document, RoleMixin):
 
     name = db.StringField(max_length=80)
     description = db.StringField(max_length=255)
+
+
+class MHPUser(db_postgres.Model):
+    """User account model."""
+
+    __tablename__ = "flasklogin-users"
+    id = db_postgres.Column(db_postgres.Integer, primary_key=True)
+    user_name = db_postgres.Column(
+        db_postgres.String(100), nullable=False, unique=False
+    )
+    password = db_postgres.Column(
+        db_postgres.String(200), primary_key=False, unique=False, nullable=False
+    )
+    created_on = db_postgres.Column(
+        db_postgres.DateTime, index=False, unique=False, nullable=True
+    )
+    last_login = db_postgres.Column(
+        db_postgres.DateTime, index=False, unique=False, nullable=True
+    )
+    city = db_postgres.Column(
+        db_postgres.String(200), index=False, unique=False, nullable=True
+    )
+    affiliation = db_postgres.Column(
+        db_postgres.String(200), index=False, unique=False, nullable=True
+    )
 
 
 class User(db.Document, UserMixin):
@@ -106,6 +139,7 @@ def security_context_processor():
     )
 
 
+admin.add_view(MHPUsersView(MHPUser, db_postgres.session, name="MHP Users"))
 admin.init_app(app)
 
 if __name__ == "__main__":

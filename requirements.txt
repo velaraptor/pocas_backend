@@ -7,9 +7,10 @@ pytz
 pymongo==4.2.0
 scikit-learn==1.1.2
 pytest==7.1.3
-git+https://github.com/flask-admin/flask-admin.git@73febb13a18b48ebb21d5927de944cd5edbae068#egg=flask-admin
+git+https://github.com/flask-admin/flask-admin.git@c91b0c487ae965adc9c11824871ee9e6daa46116#egg=flask-admin
 flask-mongoengine==1.0.0
 Flask-Login==0.6.2
+Flask-Migrate==4.0.1
 flask-security-too==5.0.1
 email_validator==1.2.1
 bcrypt==4.0.0
@@ -19,3 +20,4 @@ fastapi==0.83.0
 reportlab==3.6.11
 fastapi-limiterx
 aioredis
+psycopg2-binary==2.9.2
