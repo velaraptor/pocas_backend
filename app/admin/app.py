@@ -132,9 +132,8 @@ class QuestionsView(MyModelView):
         """On model change get id number"""
         collection = "questions"
         c = db1[collection]
-        # TODO: this needs to be fixed
-        max_value = c.find().sort("id", -1).limit(1)
-        model["id"] = max_value
+        max_value = c.find().sort("id", -1).limit(1).next()
+        model["id"] = max_value["id"] + 1
 
         return model
 
