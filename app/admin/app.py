@@ -253,7 +253,8 @@ admin = Admin(
 )
 
 admin.add_view(ServicesView(db1.services, "Services"))
-admin.add_view(Analytics(conn["analytics"].ip_hits, "Analytics"))
 admin.add_view(QuestionsView(db1.questions, "Questions"))
+admin.add_view(Analytics(conn["analytics"].ip_hits, "Analytics"))
 admin.add_view(UsersView(conn["users_login"]["user"], "Admin User Management"))
 admin.add_link(MenuLink(name="POCAS API", url="/api/v1/docs", target="_blank"))
+admin.add_link(MenuLink(name="MHP Portal", url="/login", target="_blank"))
