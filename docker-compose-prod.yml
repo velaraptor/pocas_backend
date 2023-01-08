@@ -80,6 +80,8 @@ services:
     build:
       context: ./
       dockerfile: dfiles/DockerFile_UI
+    volumes:
+      - ./migrations:/app/migrations
     networks:
       - pocas_net
     env_file:
