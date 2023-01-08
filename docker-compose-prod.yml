@@ -40,6 +40,7 @@ services:
       - local.env
       - keys.env
       - api.env
+      - .env
 
   nginx:
     image: nginx:mainline-alpine
