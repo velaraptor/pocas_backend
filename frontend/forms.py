@@ -41,6 +41,40 @@ class Tags(FlaskForm):
     tags = SelectMultipleField("Filter by Tags", choices=get_tags())
 
 
+class EditForm(FlaskForm):
+    """Edit User Profile"""
+
+    city = StringField("City", validators=[DataRequired()])
+    affiliation = StringField("Affiliation")
+    submit = SubmitField("Save Changes")
+
+
+class ChangePassForm(FlaskForm):
+    """Change Password Form"""
+
+    old_password = PasswordField(
+        "Old Password",
+        validators=[
+            DataRequired(),
+            Length(min=6, message="Select a stronger password."),
+        ],
+    )
+    password = PasswordField(
+        "Password",
+        validators=[
+            DataRequired(),
+            Length(min=6, message="Select a stronger password."),
+        ],
+    )
+    confirm = PasswordField(
+        "Confirm Your Password",
+        validators=[
+            DataRequired(),
+            EqualTo("password", message="Passwords must match."),
+        ],
+    )
+
+
 class SignupForm(FlaskForm):
     """User Sign-up Form."""
 
