@@ -25,7 +25,9 @@ from flask_bootstrap import SwitchField
 from frontend.forms import (  # pylint: disable=import-error
     SignupForm,
     LoginForm,
+    EditForm,
     Questions,
+    ChangePassForm,
     Tags,
     get_tags,
 )  # pylint: disable=import-error
@@ -204,6 +206,42 @@ def login():
         flash("Invalid username/password combination")
         return redirect(url_for("main.login"))
     return render_template("index.html", form=form)
+
+
+@main_blueprint.route("/password_change", methods=["GET", "POST"])
+def change_password():
+    """Change Password"""
+    pass_form = ChangePassForm()
+    user_name = current_user.user_name
+
+    if pass_form.validate_on_submit():
+        user = User.query.filter_by(user_name=user_name.lower()).first()
+        if user.check_password(pass_form.old_password.data):
+            user.set_password(pass_form.password.data)
+            flash("Password Changed!")
+            return render_template("password_change.html", form=pass_form)
+        flash("Current Password is incorrect!")
+    return render_template("password_change.html", form=pass_form)
+
+
+@main_blueprint.route("/account", methods=["GET", "POST"])
+def user_account():
+    """
+    User Account, change city or affiliation
+    """
+    form = EditForm(city=current_user.city, affiliation=current_user.affiliation)
+    city = current_user.city
+    affiliation = current_user.affiliation
+    user_name = current_user.user_name
+    user_data = {"city": city, "affiliation": affiliation, "user_name": user_name}
+    if form.validate_on_submit():
+        existing_user = User.query.filter_by(user_name=user_name.lower()).first()
+        existing_user.city = form.city.data
+        existing_user.affiliation = form.affiliation.data
+        db.session.commit()
+        flash("Updated Profile!")
+        return render_template("user_account.html", form=form, user_data=user_data)
+    return render_template("user_account.html", form=form, user_data=user_data)
 
 
 @main_blueprint.route("/register", methods=["GET", "POST"])
