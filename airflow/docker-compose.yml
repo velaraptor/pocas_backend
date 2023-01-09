@@ -24,35 +24,51 @@ services:
       - pocas_net
 
   airflow-scheduler:
+    container_name: airflow_scheduler
     image: docker.io/bitnami/airflow-scheduler:2
     environment:
+      - AIRFLOW_FERNET_KEY=46BKJoQYlPPOexq0OhDZnIlNepKFf87WFwLbfzqDDho=
+      - AIRFLOW_SECRET_KEY=a25mQ1FHTUh3MnFRSk5KMEIyVVU2YmN0VGRyYTVXY08=
+      - AIRFLOW_EXECUTOR=CeleryExecutor
       - AIRFLOW_DATABASE_NAME=bitnami_airflow
       - AIRFLOW_DATABASE_USERNAME=bn_airflow
       - AIRFLOW_DATABASE_PASSWORD=bitnami1
-      - AIRFLOW_EXECUTOR=CeleryExecutor
       - AIRFLOW_WEBSERVER_HOST=airflow
+      - AIRFLOW_WEBSERVER_PORT_NUMBER=8080
+      - AIRFLOW_LOAD_EXAMPLES=yes
     networks:
       - pocas_net
 
 
   airflow-worker:
     image: docker.io/bitnami/airflow-worker:2
+    container_name: airflow_worker
     environment:
+      - AIRFLOW_FERNET_KEY=46BKJoQYlPPOexq0OhDZnIlNepKFf87WFwLbfzqDDho=
+      - AIRFLOW_SECRET_KEY=a25mQ1FHTUh3MnFRSk5KMEIyVVU2YmN0VGRyYTVXY08=
+      - AIRFLOW_EXECUTOR=CeleryExecutor
       - AIRFLOW_DATABASE_NAME=bitnami_airflow
       - AIRFLOW_DATABASE_USERNAME=bn_airflow
-      - AIRFLOW_DATABASE_PASSWORD=bitnami1
-      - AIRFLOW_EXECUTOR=CeleryExecutor
       - AIRFLOW_WEBSERVER_HOST=airflow
+      - AIRFLOW_WEBSERVER_PORT_NUMBER=8080
+      - AIRFLOW_DATABASE_PASSWORD=bitnami1
+      - AIRFLOW_LOAD_EXAMPLES=yes
     networks:
       - pocas_net
 
   airflow:
     image: docker.io/bitnami/airflow:2
+    container_name: airflow
     environment:
+      - AIRFLOW_FERNET_KEY=46BKJoQYlPPOexq0OhDZnIlNepKFf87WFwLbfzqDDho=
+      - AIRFLOW_SECRET_KEY=a25mQ1FHTUh3MnFRSk5KMEIyVVU2YmN0VGRyYTVXY08=
+      - AIRFLOW_EXECUTOR=CeleryExecutor
       - AIRFLOW_DATABASE_NAME=bitnami_airflow
       - AIRFLOW_DATABASE_USERNAME=bn_airflow
       - AIRFLOW_DATABASE_PASSWORD=bitnami1
-      - AIRFLOW_EXECUTOR=CeleryExecutor
+      - AIRFLOW_PASSWORD=bitnami123
+      - AIRFLOW_USERNAME=user
+      - AIRFLOW_EMAIL=user@example.com
     networks:
       - pocas_net
     ports:
