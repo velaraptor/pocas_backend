@@ -38,7 +38,6 @@ class User(UserMixin, db.Model):
             username = jwt.decode(
                 token, key=os.getenv("FLASK_SECRET_KEY"), algorithms="HS256"
             )["reset_password"]
-            print(username)
         except Exception:
             print(traceback.format_exc())
             return None
