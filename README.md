@@ -64,6 +64,9 @@ Then add `keys.env` in this format
 GOOGLE_KEY=xxxx
 API_USER=xxxx
 API_PASS=xxxx
+FLASK_SECRET_KEY=xxxx
+MAIL_USERNAME=xxxx@mhpportal.app
+MAIL_PASSWORD=xxxx
 ```
 In `local.env` change the following to this:
 > `SERVICES_CSV` to data file to be used to import services
