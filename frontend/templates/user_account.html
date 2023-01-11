@@ -73,6 +73,7 @@
             <form method=post width="50%">
 
                     {{ form.csrf_token }}
+                {{ render_field(form.email) }}
 
                 {{ render_field(form.city) }}
                 {{ render_field(form.affiliation) }}

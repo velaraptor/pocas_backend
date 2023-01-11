@@ -13,3 +13,6 @@ psycopg2-binary==2.9.2
 Bootstrap-Flask==2.1.0
 pandas==1.4.4
 numpy==1.23.3
+Flask-Mail==0.9.1
+PyJWT==2.6.0
+Flask-JWT-Extended==4.4.4
