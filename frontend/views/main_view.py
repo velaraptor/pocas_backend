@@ -32,9 +32,12 @@ from frontend.forms import (  # pylint: disable=import-error
     get_tags,
 )  # pylint: disable=import-error
 from frontend.consts import API_URL  # pylint: disable=import-error
-from frontend.models.user import User
-from frontend.models.flask_models import db, login_manager
-from frontend.email_function import send_email
+from frontend.models.user import User  # pylint: disable=import-error
+from frontend.models.flask_models import (  # pylint: disable=import-error
+    db,
+    login_manager,
+)
+from frontend.email_function import send_email  # pylint: disable=import-error
 
 main_blueprint = Blueprint("main", __name__, template_folder="templates")
 
@@ -286,6 +289,12 @@ def reset():
             flash("Found Email! Check your email for link to reset password!")
         return redirect(url_for("main.login"))
     return render_template("reset.html")
+
+
+@main_blueprint.route("/about", methods=["GET"])
+def get_about():
+    """Get About Page"""
+    return render_template("about.html")
 
 
 @main_blueprint.route("/password_reset_verified/<token>", methods=["GET", "POST"])
