@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="icon" href="static/icon.png">
+<link rel="icon" href="/static/icon.png">
 
     <title>MHP Portal</title>
-    <link href="static/bootstrap.css" rel="stylesheet">
+    <link href="/static/bootstrap.css" rel="stylesheet">
     <script src="/static/bootstrap.bundle.min.js"></script>
 
 </head>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
   <div class="container-fluid">
-    <a class="navbar-brand" href="/login">    <img src ='static/icon.png' width="40%"></a>
+    <a class="navbar-brand" href="/login">    <img src ='/static/icon.png' width="40%"></a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -39,6 +39,8 @@
 </nav>
 <body>
 <div class="container">
+        <div class="container px-5 my-5">
+
     {% for message in get_flashed_messages() %}
 <div class="alert alert-dismissible alert-warning">
         <button type="button" class="btn-close" data-dismiss="alert"></button>
@@ -48,7 +50,6 @@
   <div class="jumbotron vertical-center">
 {% from "_formhelpers.html" import render_field %}
         <div class="row">
-    <hr>
 <form method=post width="50%">
         {{ form.csrf_token }}
 
@@ -64,15 +65,12 @@
     {{ render_field(form.affiliation) }}
     {{ render_field(form.password) }}
     {{ render_field(form.confirm) }}
-                {% for error in form.recaptcha.errors %}
-                    {{ error }}
-                {% endfor %}
-                {{ form.recaptcha }}
   </dl>
   <p>
 <input id="submit" name="submit" type="submit"  style="width:100%" value="Register" class="btn btn-primary">
               </div>
 </div>
+    </div>
 </form>
         </div>
 </div>

@@ -2,7 +2,6 @@
 # pylint: disable=R0902, R0912, R0913, R0914, R0915, E1101, E0611
 
 from flask_wtf import FlaskForm
-from flask_wtf.recaptcha import RecaptchaField
 import requests
 from wtforms import (
     PasswordField,
@@ -97,7 +96,6 @@ class SignupForm(FlaskForm):
             EqualTo("password", message="Passwords must match."),
         ],
     )
-    recaptcha = RecaptchaField()
     submit = SubmitField("Register")
 
 
