@@ -57,7 +57,7 @@
                             <div class="my-5 text-center text-xl-start">
                                 <h1 class="display-5 fw-bolder text-primary mb-2">The Future of SDOH is with MHP Portal!</h1>
                                 <p class="lead fw-normal text-info mb-4">MHP Portal integrates a validated/evidence-based social determinants of health (SDOH) screening questionnaire with a city wide database of social services.</p>
-                                <p class="lead fw-normal text-muted-50 mb-3">Currently servicing the Tucson, AZ area.</p>
+                                <p class="lead fw-normal text-muted-50 mb-3"><small>Currently servicing the Tucson, AZ area.</small></p>
 
                                 <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start">
                                     <a class="btn btn-primary btn-lg px-4 me-sm-3" href="#login-container">Login</a>
@@ -80,12 +80,12 @@
                                 <div class="col mb-5 h-100">
                                     <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="fa-solid fa-bolt"></i></div>
                                     <h2 class="h5">Ease of Use</h2>
-                                    <p class="mb-0">Get Services to tied to a patient based on location and SDOH questions through the speed of a click!</p>
+                                    <p class="mb-0">Get Services tied to a patient based on location and SDOH questions at blazing speeds!</p>
                                 </div>
                                 <div class="col mb-5 h-100">
-                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="fa-solid fa-mobile"></i></div>
+                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="fa-solid fa-truck-medical"></i></div>
                                     <h2 class="h5">Mobile and Desktop Friendly</h2>
-                                    <p class="mb-0">Whether you have a laptop, mobile phone, or tablet, MHP Portal will work for you!.</p>
+                                    <p class="mb-0">Whether you have a laptop, mobile phone, or tablet, MHP Portal will work for you!</p>
                                 </div>
                                 <div class="col mb-5 mb-md-0 h-100">
                                     <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="fa-solid fa-user-doctor"></i></div>
@@ -117,12 +117,12 @@
                     <form method=post>
                         {{ form.csrf_token }}
                         <div class="col">
-                            <h1 class="text-primary">Login</h1>
+                            <h1 class="display-5 fw-bolder text-primary mb-2">Login</h1>
                             <div class="form-group">
                                 <dl>
                                     {{ render_field(form.user_name) }}
                                     {{ render_field(form.password) }}
-                                    <p class="text-muted">Remember Me:<input type="checkbox" id="remember" name="remember" value="False"></p>
+                                    <p class="text-muted">Remember Me: <input type="checkbox" id="remember" name="remember" value="False"></p>
                                 </dl>
                                 <p><input type=submit value=Login style="width:100%" class="btn btn-primary"></p>
                             </div>
@@ -145,9 +145,10 @@
 
                 <a href="https://www.digitalocean.com/?refcode=70e93ffa8b88&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge"><img src="https://web-platforms.sfo2.digitaloceanspaces.com/WWW/Badge%202.svg" alt="DigitalOcean Referral Badge" /></a>
                 <hr>
-                        <p class="text-info"><small>Contact Us: <a href="mailto:chris@mhpportal.app">chris@mhpportal.app</a></small></p>
+                        <p class="text-info"><small> <i class="fa-regular fa-envelope"></i> Contact Us: <a href="mailto:chris@mhpportal.app">chris@mhpportal.app</a></small></p>
 
-                <p class="text-muted"><small>Copyright 2022: MHP Portal, Inc.</small></p>
+                        <p class="text-primary"><a href="https://twitter.com/MHPPortal"><i class="fa-brands fa-twitter"></i></a></p>
+                <p class="text-muted"><small>Copyright 2023: MHP Portal, Inc.</small></p>
                     </div>
             </footer>
 </div>
