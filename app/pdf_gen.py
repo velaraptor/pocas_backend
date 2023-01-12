@@ -55,7 +55,13 @@ def generate_pdf(services):
             phone = f"""Phone Number: {phone_format(service.phone)} """
             Story.append(Paragraph(phone, styles["Justify"]))
         if service.web_site:
-            Story.append(Paragraph(web_site, styles["Justify"]))
+            Story.append(
+                Paragraph(
+                    '<font color="blue"><link'
+                    f' href="{web_site}">{web_site}</link></font>',
+                    styles["Justify"],
+                )
+            )
         if service.hours:
             Story.append(Paragraph(hours, styles["Justify"]))
 

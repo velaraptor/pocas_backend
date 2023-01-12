@@ -1,9 +1,0 @@
-version: '3.6'
-services:
-
-
-volumes:
-
-networks:
-  pocas_net:
-    driver: bridge

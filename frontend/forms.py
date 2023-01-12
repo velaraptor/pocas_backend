@@ -12,7 +12,7 @@ from wtforms import (
     DateField,
     SelectMultipleField,
 )
-from wtforms.validators import DataRequired, EqualTo, Length
+from wtforms.validators import DataRequired, EqualTo, Length, Email
 import pandas as pd
 from frontend.consts import API_URL  # pylint: disable=import-error
 
@@ -46,6 +46,7 @@ class EditForm(FlaskForm):
 
     city = StringField("City", validators=[DataRequired()])
     affiliation = StringField("Affiliation")
+    email = StringField("Email", validators=[DataRequired(), Email()])
     submit = SubmitField("Save Changes")
 
 
@@ -86,6 +87,7 @@ class SignupForm(FlaskForm):
             Length(min=6, message="Select a stronger password."),
         ],
     )
+    email = StringField("Email", validators=[DataRequired(), Email()])
     city = StringField("City", validators=[DataRequired()])
     affiliation = StringField("Affiliation")
     confirm = PasswordField(

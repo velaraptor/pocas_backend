@@ -8,7 +8,20 @@
     <title>MHP Portal</title>
     <link href="/static/bootstrap.css" rel="stylesheet">
     <script src="/static/bootstrap.bundle.min.js"></script>
-
+            <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v6.2.0/css/all.css"
+    />
+    <style>
+        .feature {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 3rem;
+    width: 3rem;
+    font-size: 1.5rem;
+}
+    </style>
 </head>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -21,9 +34,12 @@
     <div class="collapse navbar-collapse" id="navbarColor01">
       <ul class="navbar-nav me-auto">
         <li class="nav-item">
-          <a class="nav-link active" href="#">Login
+          <a class="nav-link active" href="#">Home
             <span class="visually-hidden">(current)</span>
           </a>
+        </li>
+          <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
         </li>
                   <li class="nav-item">
           <a class="nav-link" href="/register">Register</a>
@@ -35,43 +51,105 @@
 </nav>
 <body>
 <div class="container">
-    {% for message in get_flashed_messages() %}
-<div class="alert alert-dismissible alert-warning">
-        <button type="button" class="btn-close" data-dismiss="alert"></button>
-        {{ message }}
-      </div>
-    {% endfor %}
-  <div class="jumbotron vertical-center">
-{% from "_formhelpers.html" import render_field %}
-        <div class="row">
-            <hr>
-      <form method=post>
-                  {{ form.csrf_token }}
+     <div class="container px-5">
+                    <div class="row gx-5 align-items-center justify-content-center">
+                        <div class="col-lg-8 col-xl-7 col-xxl-6">
+                            <div class="my-5 text-center text-xl-start">
+                                <h1 class="display-5 fw-bolder text-primary mb-2">The Future of SDOH is with MHP Portal!</h1>
+                                <p class="lead fw-normal text-info mb-4">MHP Portal integrates a validated/evidence-based social determinants of health (SDOH) screening questionnaire with a city wide database of social services.</p>
+                                <p class="lead fw-normal text-muted-50 mb-3">Currently servicing the Tucson, AZ area.</p>
 
-            <div class="col">
+                                <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start">
+                                    <a class="btn btn-primary btn-lg px-4 me-sm-3" href="#login-container">Login</a>
+                                    <a class="btn btn-outline-dark btn-lg px-4" href="/about">About Us</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-5 col-xxl-6 d-none d-xl-block text-center"><img class="img-fluid rounded-3 my-5" src="/static/banner.png" alt="..." /></div>
+                    </div>
+                </div>
 
-        <h1 class="text-primary">Login</h1>
-
-        <div class="form-group">
-
-  <dl>
-    {{ render_field(form.user_name) }}
-    {{ render_field(form.password) }}
-      <p class="text-muted">Remember Me: <input type="checkbox" id="remember" name="remember" value="False"></p>
-  </dl>
-  <p><input type=submit value=Login style="width:100%" class="btn btn-primary">
-              </div>
+         <!-- Features section-->
+    <hr>
+            <section class="py-5" id="features">
+                <div class="container px-5 my-5">
+                    <div class="row gx-5">
+                        <div class="col-lg-4 mb-5 mb-lg-0"><h2 class="fw-bolder mb-0">A better way to get services into the hands of patients.</h2></div>
+                        <div class="col-lg-8">
+                            <div class="row gx-5 row-cols-1 row-cols-md-2">
+                                <div class="col mb-5 h-100">
+                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="fa-solid fa-bolt"></i></div>
+                                    <h2 class="h5">Ease of Use</h2>
+                                    <p class="mb-0">Get Services to tied to a patient based on location and SDOH questions through the speed of a click!</p>
+                                </div>
+                                <div class="col mb-5 h-100">
+                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="fa-solid fa-mobile"></i></div>
+                                    <h2 class="h5">Mobile and Desktop Friendly</h2>
+                                    <p class="mb-0">Whether you have a laptop, mobile phone, or tablet, MHP Portal will work for you!.</p>
+                                </div>
+                                <div class="col mb-5 mb-md-0 h-100">
+                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="fa-solid fa-user-doctor"></i></div>
+                                    <h2 class="h5">Made for Doctors</h2>
+                                    <p class="mb-0">Make your time more efficient to give the best services to patients.</p>
+                                </div>
+                                <div class="col h-100">
+                                    <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3"><i class="fa-solid fa-file-medical"></i></div>
+                                    <h2 class="h5">Export Easily!</h2>
+                                    <p class="mb-0">Easily download a PDF of the results of the Questionnaire to a patient!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+    <div class="container px-5 my-5">
+    <div class="row gx-5 align-items-center justify-content-center">
+        <div class="col-sm bg-light rounded-3" id="login-container">
+            {% for message in get_flashed_messages() %}
+            <div class="alert alert-dismissible alert-warning">
+                <button type="button" class="btn-close" data-dismiss="alert"></button>
+                {{ message }}
             </div>
-</form>
-        </div>
-      <hr>
-      <a href="https://www.digitalocean.com/?refcode=70e93ffa8b88&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge"><img src="https://web-platforms.sfo2.digitaloceanspaces.com/WWW/Badge%202.svg" alt="DigitalOcean Referral Badge" /></a>
+            {% endfor %}
+            <div class="jumbotron vertical-center">
+                {% from "_formhelpers.html" import render_field %}
+                <div class="row">
+                    <form method=post>
+                        {{ form.csrf_token }}
+                        <div class="col">
+                            <h1 class="text-primary">Login</h1>
+                            <div class="form-group">
+                                <dl>
+                                    {{ render_field(form.user_name) }}
+                                    {{ render_field(form.password) }}
+                                    <p class="text-muted">Remember Me:<input type="checkbox" id="remember" name="remember" value="False"></p>
+                                </dl>
+                                <p><input type=submit value=Login style="width:100%" class="btn btn-primary"></p>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start">
 
-</div>
-    <footer>
-        <hr>
-        <p class="text-muted"><small>Copyright 2022: MHP Portal, Inc.</small></p>
-</footer>
+                     <a class="btn btn-outline-dark px-4" href="/password_reset">Forgot Password</a>
+                     <a class="btn btn-outline-dark px-4" href="/register">Register</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    </div>
+
+    <footer class="bg-white py-4 mt-auto">
+                    <div class="container px-5">
+
+                <a href="https://www.digitalocean.com/?refcode=70e93ffa8b88&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge"><img src="https://web-platforms.sfo2.digitaloceanspaces.com/WWW/Badge%202.svg" alt="DigitalOcean Referral Badge" /></a>
+                <hr>
+                        <p class="text-info"><small>Contact Us: <a href="mailto:chris@mhpportal.app">chris@mhpportal.app</a></small></p>
+
+                <p class="text-muted"><small>Copyright 2022: MHP Portal, Inc.</small></p>
+                    </div>
+            </footer>
 </div>
 </body>
 </html>

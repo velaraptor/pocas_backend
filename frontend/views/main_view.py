@@ -32,8 +32,12 @@ from frontend.forms import (  # pylint: disable=import-error
     get_tags,
 )  # pylint: disable=import-error
 from frontend.consts import API_URL  # pylint: disable=import-error
-from frontend.models.user import User
-from frontend.models.flask_models import db, login_manager
+from frontend.models.user import User  # pylint: disable=import-error
+from frontend.models.flask_models import (  # pylint: disable=import-error
+    db,
+    login_manager,
+)
+from frontend.email_function import send_email  # pylint: disable=import-error
 
 main_blueprint = Blueprint("main", __name__, template_folder="templates")
 
@@ -229,7 +233,11 @@ def user_account():
     """
     User Account, change city or affiliation
     """
-    form = EditForm(city=current_user.city, affiliation=current_user.affiliation)
+    form = EditForm(
+        city=current_user.city,
+        affiliation=current_user.affiliation,
+        email=current_user.email,
+    )
     city = current_user.city
     affiliation = current_user.affiliation
     user_name = current_user.user_name
@@ -238,6 +246,7 @@ def user_account():
         existing_user = User.query.filter_by(user_name=user_name.lower()).first()
         existing_user.city = form.city.data
         existing_user.affiliation = form.affiliation.data
+        existing_user.email = form.email.data
         db.session.commit()
         flash("Updated Profile!")
         return render_template("user_account.html", form=form, user_data=user_data)
@@ -256,6 +265,7 @@ def register():
             user = User(
                 user_name=form.user_name.data,
                 city=form.city.data,
+                email=form.email.data,
                 affiliation=form.affiliation.data,
                 created_on=datetime.now(),
             )
@@ -266,6 +276,42 @@ def register():
             return redirect(url_for("main.login"))
         flash("A user already exists with that username.")
     return render_template("register.html", form=form)
+
+
+@main_blueprint.route("/password_reset", methods=["GET", "POST"])
+def reset():
+    """Reset Password email if Email is valid in db"""
+    if request.method == "POST":
+        email = request.form.get("email")
+        user = User.verify_email(email)
+        if user:
+            send_email(user)
+            flash("Found Email! Check your email for link to reset password!")
+        return redirect(url_for("main.login"))
+    return render_template("reset.html")
+
+
+@main_blueprint.route("/about", methods=["GET"])
+def get_about():
+    """Get About Page"""
+    return render_template("about.html")
+
+
+@main_blueprint.route("/password_reset_verified/<token>", methods=["GET", "POST"])
+def reset_verified(token):
+    """Reset Verified based on JWT token"""
+    user = User.verify_reset_token(token)
+    if not user:
+        flash("no user found")
+        return redirect(url_for("main.login"))
+
+    password = request.form.get("password")
+    if password:
+        user.set_password(password)
+        db.session.commit()
+        return redirect(url_for("main.login"))
+
+    return render_template("reset_verfied.html")
 
 
 @main_blueprint.route("/results", methods=["POST", "GET"])
