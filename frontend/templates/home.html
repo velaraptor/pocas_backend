@@ -58,11 +58,10 @@
   </div>
 </nav>
 <body>
-<div class="container">
+<div class="container my-2">
     {% from "_formhelpers.html" import render_field %}
     <div class="jumbotron vertical-center">
         <div class="row">
-            <hr>
             <h1 class="text-primary"><i class="fa-solid fa-clipboard-question"></i> Questions</h1>
             <form method=post>
                 {{ form.csrf_token }}
@@ -139,7 +138,7 @@
     </div>
 
     <footer class="bg-white py-4 mt-auto">
-                    <div class="container px-5">
+                    <div class="container px-2">
                 <hr>
                         <h6 class="text-info"><small> <i class="fa-regular fa-envelope"></i> Contact Us: <a href="mailto:chris@mhpportal.app">chris@mhpportal.app</a></small></h6>
                         <h4 class="text-primary">
