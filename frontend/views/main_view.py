@@ -213,6 +213,7 @@ def login():
 
 
 @main_blueprint.route("/password_change", methods=["GET", "POST"])
+@login_required
 def change_password():
     """Change Password"""
     pass_form = ChangePassForm()
@@ -229,6 +230,7 @@ def change_password():
 
 
 @main_blueprint.route("/account", methods=["GET", "POST"])
+@login_required
 def user_account():
     """
     User Account, change city or affiliation
@@ -315,6 +317,7 @@ def reset_verified(token):
 
 
 @main_blueprint.route("/results", methods=["POST", "GET"])
+@login_required
 def get_pdf():
     """Get PDF from POCAS API"""
     services = request.form.get("services")
