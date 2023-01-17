@@ -70,6 +70,8 @@ class GetTopNResults:
         self.lon = None
         self.age = self.get_age()
         self.tags = []
+        self.meter_to_mile = 1609
+        self.miles = 200
 
     def get_lat_lon(self):
         """
@@ -129,6 +131,24 @@ class GetTopNResults:
         # remove dups
         answer_tags = list(set(answer_tags))
         return answer_tags
+
+    def find_radius(self):
+        """Find within 200 miles of services"""
+        m = MongoConnector()
+        db = DB_SERVICES["db"]
+        collection = DB_SERVICES["collection"]
+        query = {
+            "$geoNear": {
+                "near": {"type": "Point", "coordinates": [self.lon, self.lat]},
+                "distanceField": "dist.calculated",
+                "maxDistance": int(self.miles * self.meter_to_mile),  # in meteres
+                "spherical": True,
+            }
+        }
+        results = m.aggregate(db, collection, query=query)
+        if len(results) > 0:
+            return True
+        return False
 
     def run_similarity(self, results):
         """
@@ -222,15 +242,24 @@ class GetTopNResults:
         if len(self.tags) <= 1:
             self.tags = ["Public Benefits"]
 
-        # TODO: check if user location is within radius
+        # https://stackoverflow.com/questions/23188875/mongodb-unable-to-find-index-for-geonear-query
         top_results = m.query_results(
             db=DB_SERVICES["db"],
             collection=DB_SERVICES["collection"],
             query={
+                "loc": {
+                    "$near": {
+                        "$geometry": {
+                            "type": "Point",
+                            "coordinates": [self.lon, self.lat],
+                        },
+                        "$maxDistance": int(self.miles * self.meter_to_mile),
+                    }
+                },
                 "$or": [
                     {"tags": {"$in": self.tags}},
                     {"general_topic": {"$in": self.tags}},
-                ]
+                ],
             },
             exclude={"loc": 0},
         )

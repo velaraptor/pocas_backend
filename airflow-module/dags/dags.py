@@ -1,6 +1,8 @@
 """Dags for Backups of MongoDb and PostgresDB to S3 like object storage"""
 import airflow.operators.bash
 import boto3
+import botocore
+import os
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 import logging
@@ -17,12 +19,26 @@ from airflow.providers.mongo.hooks.mongo import MongoHook
 # https://docs.digitalocean.com/reference/api/spaces-api/
 # https://www.educba.com/postgres-dump-database/
 # https://github.com/bitnami/containers/tree/main/bitnami/airflow
-
+# https://airflow.apache.org/docs/apache-airflow/stable/howto/run-behind-proxy.html
+# https://gist.github.com/ugnb/2b2121e74344139e56f6784ce6449916
 logger = logging.getLogger("airflow.task")
 
 
 # TODO: DAG for postgresdb user db to DigitalOcean Spaces
-session = boto3.session.Session()
+
+
+def get_s3_client():
+    session = boto3.session.Session()
+    client = session.client(
+        "s3",
+        endpoint_url=os.getenv("SPACES_ENDPOINT"),
+        region_name="sfo3",  # Use the region in your endpoint.
+        aws_access_key_id=os.getenv("SPACES_KEY_ID"),
+        # Access key pair. You can create access key pairs using the control panel or API.
+        aws_secret_access_key=os.getenv("SPACES_SECRET"),
+    )
+
+
 DATABASES = ["analytics", "users_login", "platform", "results"]
 args = {"start_date": None, "owner": "airflow", "depends_on_past": False}
 

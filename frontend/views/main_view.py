@@ -151,14 +151,19 @@ def home_page():
         answers = list(map(int, answers))
         s = requests.Session()
         s.auth = (os.getenv("API_USER"), os.getenv("API_PASS"))
+
+        post_radius_check = s.post(f"{API_URL}radius_check?address={address}")
+        radius_check = post_radius_check.json()
         post_questions = s.post(
             f"{API_URL}top_n?top_n=15&dob={dob}&address={address}&user_name={current_user.user_name}",
             json=answers,
         )
         top_results = post_questions.json()
+        print(top_results)
+        if not radius_check["radius_status"]:
+            flash("Patient not within 200 miles of any services in MHP Database!")
         tag_form = Tags()
 
-        # TODO: check if location is nowhere near and emit a dimissable alert, if len is zero
         return render_template(
             "services.html",
             markers=top_results["services"],
