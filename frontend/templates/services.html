@@ -75,6 +75,12 @@
 </nav>
 <body>
 <div class="container my-2">
+        {% for message in get_flashed_messages() %}
+<div class="alert alert-dismissible alert-warning">
+        <button type="button" class="btn-close" data-dismiss="alert" aria-hidden="true"></button>
+        {{ message }}
+      </div>
+    {% endfor %}
      {% if not results %}
     <form method="POST" id="filters" action="/filter">
                 {{ tags.csrf_token }}
@@ -191,7 +197,7 @@
 var tileLayer = new L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}{r}.{ext}', {
 	attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
 	subdomains: 'abcd',
-	minZoom: 0,
+	minZoom: 5,
 	maxZoom: 15,
 	ext: 'png'
 });
@@ -201,16 +207,24 @@ var tileLayer = new L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terra
           'layers': [tileLayer, featureGroup]
         });
 
-    map.fitBounds(featureGroup.getBounds());
-              {% if current_user %}
-            var userMarker = L.AwesomeMarkers.icon({
+
+    {% if current_user %}
+        var userMarker = L.AwesomeMarkers.icon({
                 icon: "fa-house",
                 prefix: "fa",
                 markerColor: 'red'
             });
-      L.marker([{{ current_user['lat'] }}, {{ current_user['lon'] }} ], { icon: userMarker }).addTo(map);
+        user_marker = new L.marker([{{ current_user['lat'] }}, {{ current_user['lon'] }} ], { icon: userMarker });
+        map.addLayer(user_marker);
 
-              {% endif %}
+    {% endif %}
+    {% if markers %}
+     map.fitBounds(featureGroup.getBounds());
+     {% else %}
+      var latLngs = [ user_marker.getLatLng() ];
+      var markerBounds = L.latLngBounds(latLngs);
+      map.fitBounds(markerBounds);
+     {% endif %}
 
 
  </script>

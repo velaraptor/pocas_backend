@@ -176,6 +176,12 @@ class TopNResults(BaseModel):
     user_loc: UserLocation
 
 
+class RadiusZone(BaseModel):
+    """Radius Model"""
+
+    radius_status: bool
+
+
 @app.get(
     "/api/v1/services",
     response_model=FullServices,
@@ -258,6 +264,22 @@ def send_user_data(dob, address, answers, services):
 
 
 @app.post(
+    "/api/v1/radius_check",
+    dependencies=[
+        Depends(get_current_username),
+        Depends(RateLimiter(times=10, seconds=60)),
+    ],
+    response_model=RadiusZone,
+)
+async def check_zone(address: str):
+    """Check if User is within zone of results"""
+    gtr = GetTopNResults(top_n=1, dob="03011900", answers=[], address=address)
+    gtr.get_lat_lon()
+    check = gtr.find_radius()
+    return {"radius_status": check}
+
+
+@app.post(
     "/api/v1/top_n",
     dependencies=[
         Depends(get_current_username),
@@ -301,6 +323,7 @@ async def get_top_results(  # pylint: disable=dangerous-default-value
             "user_loc": user_loc,
         }
     except Exception as exc:
+        print(exc)
         raise HTTPException(status_code=404, detail="Results not found") from exc
 
 
