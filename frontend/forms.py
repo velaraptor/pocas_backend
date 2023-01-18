@@ -8,7 +8,7 @@ from wtforms import (
     StringField,
     SubmitField,
     BooleanField,
-    DateField,
+    IntegerField,
     SelectMultipleField,
 )
 from wtforms.validators import DataRequired, EqualTo, Length, Email
@@ -116,7 +116,7 @@ class LoginForm(FlaskForm):
 class Questions(FlaskForm):
     """Questions for POCAS"""
 
-    dob = DateField("DOB", validators=[DataRequired()])
+    age = IntegerField("Age", validators=[DataRequired()])
     zip_code = StringField(
         "Zip Code", validators=[DataRequired(), Length(min=5, max=5)]
     )

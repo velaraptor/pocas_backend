@@ -252,7 +252,6 @@ def send_user_data(dob, address, answers, services):
                 "name": uuid.uuid4().hex,
             }
         ]
-        print(data)
         m = MongoConnector()
         db = "platform"
         collection = "user_data"

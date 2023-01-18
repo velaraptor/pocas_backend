@@ -31,4 +31,9 @@ def get_lat_lon(model):
         model["loc"] = loc
         model["lat"] = lat
         model["lon"] = lon
+    else:
+        model["lat"] = None
+        model["lon"] = None
+        model["loc"] = None
+        model["online_service"] = 1
     return model
