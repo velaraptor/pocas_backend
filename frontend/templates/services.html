@@ -114,11 +114,14 @@
         <div id="map"></div>
 
     </div>
+    {% if markers %}
     <hr>
         <div style="display: flex; justify-content: flex-end">
                       <button type="submit" class="btn btn-success"style="width:100%" id="get-pdf" name="get-pdf"> Download <i class="fa-regular fa-file-pdf"></i></button>
 
      </div>
+    {% endif %}
+
     <hr>
     <div class="row">
     {% for marker in markers %}

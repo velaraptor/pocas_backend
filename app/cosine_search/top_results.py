@@ -19,7 +19,7 @@ from sklearn.preprocessing import Normalizer
 AGE_MAPPER = {
     "Elder": [51, 120],
     "Adult": [36, 50],
-    "Young Adult": [21, 35],
+    "Young Adult Resources": [21, 35],
     "Adolescent": [0, 20],
 }
 
@@ -96,9 +96,7 @@ class GetTopNResults:
         """
         today = datetime.today()
         years = today.year - self.dob.year
-        if today.month < self.dob.month or (
-            today.month == self.dob.month and today.day < self.dob.day
-        ):
+        if today.month == self.dob.month and today.day < self.dob.day:
             years -= 1
         return years
 
@@ -110,7 +108,8 @@ class GetTopNResults:
         """
         answers = self.answers
         age_df = pd.DataFrame(AGE_MAPPER)
-        vals = np.abs(np.sum(age_df - self.age))
+        vals = np.min(np.abs(age_df - self.age), axis=0)
+        self.log().debug(vals)
 
         age_tags = vals[vals == np.min(vals)].index.values[0]
 
@@ -161,8 +160,10 @@ class GetTopNResults:
         df_results["tags"] = df_results.apply(
             lambda x: x["tags"] + [x["general_topic"]], axis=1
         )
-        dummies_tags = pd.get_dummies(df_results.tags.apply(pd.Series).stack()).sum(
-            level=0
+        dummies_tags = (
+            pd.get_dummies(df_results.tags.apply(pd.Series).stack())
+            .groupby(level=0)
+            .sum()
         )
         dummies_tags[dummies_tags > 1] = 1
         # if null it is online service, put same lat/lon as user
@@ -238,9 +239,9 @@ class GetTopNResults:
         questions = self.get_questions(m)
 
         self.tags = self.map_answers_tags(questions)
-
         if len(self.tags) <= 1:
-            self.tags = ["Public Benefits"]
+            self.tags.append("Public Benefits")
+        self.log().debug(self.tags)
 
         # https://stackoverflow.com/questions/23188875/mongodb-unable-to-find-index-for-geonear-query
         top_results = m.query_results(
@@ -261,9 +262,22 @@ class GetTopNResults:
                     {"general_topic": {"$in": self.tags}},
                 ],
             },
-            exclude={"loc": 0},
+        )
+        online_results = m.query_results(
+            db=DB_SERVICES["db"],
+            collection=DB_SERVICES["collection"],
+            query={
+                "loc": None,
+                "$or": [
+                    {"tags": {"$in": self.tags}},
+                    {"general_topic": {"$in": self.tags}},
+                ],
+            },
         )
         self.log().debug(self.__dict__)
+        self.log().debug(online_results)
+        self.log().debug(top_results)
+        top_results = online_results + top_results
         try:
             final_results = self.run_similarity(top_results)
         except Exception:
@@ -276,6 +290,6 @@ class GetTopNResults:
         final = []
         for final_result in final_results:
             final.append(self.del_none(final_result))
-        self.log().info(final)
+        self.log().debug(final)
 
         return final, {"lat": self.lat, "lon": self.lon}

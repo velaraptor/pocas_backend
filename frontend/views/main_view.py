@@ -3,7 +3,8 @@
 
 import os
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
 from flask import (
     render_template,
     redirect,
@@ -140,7 +141,10 @@ def home_page():
     form = Questions()
 
     if form.validate_on_submit():
-        dob = form.dob.data
+        age = form.age.data
+        # convert to date
+        # TODO: this should be using python-dateutil library
+        dob = datetime.now() - timedelta(days=1) - relativedelta(years=age)
         # change dob to int style
         dob = int(datetime.strftime(dob, "%m%d%Y"))
         address = form.zip_code.data
