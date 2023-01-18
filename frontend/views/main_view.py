@@ -166,6 +166,7 @@ def home_page():
         print(top_results)
         if not radius_check["radius_status"]:
             flash("Patient not within 200 miles of any services in MHP Database!")
+            top_results["services"] = []
         tag_form = Tags()
 
         return render_template(
