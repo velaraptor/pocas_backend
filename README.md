@@ -5,7 +5,7 @@ POCAS Backend. App can be found at https://mhpportal.app
 ![Code Coverage](https://github.com/velaraptor/pocas_backend/workflows/Code%20Coverage/badge.svg)
 [![Pylint](https://github.com/velaraptor/pocas_backend/actions/workflows/pylint.yml/badge.svg)](https://github.com/velaraptor/pocas_backend/actions/workflows/pylint.yml)
 [![Deploy-DO-PROD](https://github.com/velaraptor/pocas_backend/actions/workflows/main.yml/badge.svg)](https://github.com/velaraptor/pocas_backend/actions/workflows/main.yml)
-![version](https://img.shields.io/badge/version-1.0.1-blue)
+![version](https://img.shields.io/badge/version-1.1-blue)
 > Flask API, Lambda, and Mongo DB Dockerized
 
 > Flask Frontend using BootsWatch
