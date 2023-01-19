@@ -17,6 +17,6 @@ repos:
       types: [python]
       args:
         [
-          "--load-plugins=pylint_flask_sqlalchemy,pylint_flask", # Load an extension
+          "--load-plugins=pylint_flask_sqlalchemy,pylint_flask,pylint_airflow", # Load an extension
         ]
 

@@ -9,3 +9,4 @@ c/*
 *.icloud
 **/__pycache__/**
 test_notebook.ipynb
+airflow-module/.env
