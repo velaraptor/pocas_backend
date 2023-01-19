@@ -22,6 +22,7 @@ jobs:
         pip install pylint-airflow
         pip install -r requirements.txt
         pip install -r requirements_ui.txt
+        pip install airflow
     - name: Analysing the code with pylint
       run: |
         pylint $(git ls-files '*.py') --load-plugins=pylint_flask_sqlalchemy,pylint_airflow
