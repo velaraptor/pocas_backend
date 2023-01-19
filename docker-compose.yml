@@ -111,4 +111,5 @@ volumes:
 
 networks:
   pocas_net:
+    name: pocas_net
     driver: bridge
