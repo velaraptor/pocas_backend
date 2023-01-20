@@ -1,5 +1,5 @@
 """Forms for Admin page"""
-from wtforms import fields, form as fo
+from wtforms import fields, validators, form as fo
 from flask_admin.model.fields import InlineFieldList
 from flask_admin.form import Select2Widget
 from cosine_search.top_results import get_all_tags
@@ -13,13 +13,13 @@ class ServiceForm(fo.Form):
     """Service Form"""
 
     name = fields.StringField("Name")
-    phone = fields.IntegerField("Phone")
-    address = fields.StringField("Address")
+    phone = fields.IntegerField("Phone", validators=[validators.Optional()])
+    address = fields.StringField("Address", validators=[validators.Optional()])
     general_topic = fields.SelectField("General Topic", widget=Select2Widget())
-    city = fields.StringField("City")
-    state = fields.StringField("State")
-    zip_code = fields.IntegerField("Zip Code")
-    web_site = fields.StringField("Web Site")
+    city = fields.StringField("City", validators=[validators.Optional()])
+    state = fields.StringField("State", validators=[validators.Optional()])
+    zip_code = fields.IntegerField("Zip Code", validators=[validators.Optional()])
+    web_site = fields.StringField("Web Site", validators=[validators.Optional()])
     tags = InlineFieldList(fields.SelectField(choices=CHOICES, widget=Select2Widget()))
 
 
