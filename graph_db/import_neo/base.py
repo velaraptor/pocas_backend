@@ -10,7 +10,7 @@ from s3_client import S3Importer
 class BaseNeoImporter:
     """Base Neo4j Importer"""
 
-    def __init__(self, node_type="Services"):
+    def __init__(self, node_type="Services", space="mongodb"):
         self.__host = os.getenv("NEO_HOST", "0.0.0.0")
         self.__port = os.getenv("NEO_PORT", "7687")
         self.__user = os.getenv("NEO_USER", "neo4j")
@@ -20,6 +20,7 @@ class BaseNeoImporter:
         )
         self.data = []
         self.tags = []
+        self.space_type = space
         if node_type not in ["Services", "Questions", "User"]:
             raise ValueError(
                 "Value of node_type should be either: Services, Users, or Questions!"
@@ -30,12 +31,28 @@ class BaseNeoImporter:
         """Close Neo4j Driver"""
         self.driver.close()
 
+    def get_api_data(self):
+        """Get API backup data from S3 Bucket"""
+        space = S3Importer()
+        date_max = space.find_recent("api")
+        data = space.get_object(
+            f"{date_max}/{self.node_type.lower()}/data.json.gzip", space="api"
+        )
+        for d_dict in data:
+            d_dict["mongo_id"] = str(d_dict["_id"])
+            if "general_topic" in d_dict:
+                d_dict["main_tag"] = d_dict["general_topic"]
+            if "question" in d_dict:
+                d_dict["name"] = d_dict["question"]
+
+            self.data.append(d_dict)
+
     def get_mongo_data(self):
         """Get MongoDB backup data from S3 Bucket"""
         # get recent space
         # download data from pickle
         space = S3Importer()
-        date_max = space.find_recent_mongo()
+        date_max = space.find_recent("mongodb")
         data = space.get_object(
             f"{date_max}/results/{self.node_type.lower()}.json.gzip"
         )
@@ -132,7 +149,10 @@ class BaseNeoImporter:
 
     def run(self):
         """Run Neo4j Importer"""
-        self.get_mongo_data()
+        if self.space_type == "mongo":
+            self.get_mongo_data()
+        elif self.space_type == "api":
+            self.get_api_data()
         self.get_tags()
         self.import_graph()
         self.close()

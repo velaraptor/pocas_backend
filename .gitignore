@@ -9,5 +9,5 @@ c/*
 *.icloud
 **/__pycache__/**
 test_notebook.ipynb
-airflow-module/.env
+function_backup/.env
 graph_db/.env

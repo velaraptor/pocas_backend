@@ -22,23 +22,23 @@ class S3Importer:
             aws_secret_access_key=os.getenv("SPACES_SECRET"),
         )
 
-    def get_object(self, path):
+    def get_object(self, path, space="mongodb"):
         """Get Object from path"""
         payload = self.client.get_object(
             Bucket=os.getenv("SPACES_BUCKET", "mhpportal"),
-            Key=f"{self.env_pocas}/mongodb/{path}",
+            Key=f"{self.env_pocas}/{space}/{path}",
         )
         data = pickle.loads(payload["Body"].read())
         return data
 
-    def find_recent_mongo(self):
+    def find_recent(self, space="mongodb"):
         """Find most recent directory in bucket"""
         paginator = self.client.get_paginator("list_objects")
         dates = []
         result = paginator.paginate(
             Bucket=os.getenv("SPACES_BUCKET", "mhpportal"),
             Delimiter="/",
-            Prefix=f"{self.env_pocas}/mongodb/",
+            Prefix=f"{self.env_pocas}/{space}/",
         )
         for prefix in result.search("CommonPrefixes"):
             folder = datetime.strptime(prefix.get("Prefix").split("/")[-2], "%m_%d_%Y")
