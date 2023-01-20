@@ -1,4 +1,5 @@
 """S3 Client"""
+# pylint: disable=C0209
 import os
 import pickle
 from datetime import datetime
@@ -11,10 +12,11 @@ class S3Importer:
     def __init__(self):
         self.session = boto3.session.Session()
         self.env_pocas = os.getenv("POCAS_ENV", "prod")
+        self.region = os.getenv("SPACES_REGION")
         self.client = self.session.client(
             "s3",
-            endpoint_url="https://sfo3.digitaloceanspaces.com",
-            region_name="sfo3",  # Use the region in your endpoint.
+            endpoint_url=f"https://{self.region}.digitaloceanspaces.com",
+            region_name=self.region,  # Use the region in your endpoint.
             aws_access_key_id=os.getenv("SPACES_KEY_ID"),
             # Access key pair. You can create access key pairs using the control panel or API.
             aws_secret_access_key=os.getenv("SPACES_SECRET"),

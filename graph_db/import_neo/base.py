@@ -108,7 +108,6 @@ class BaseNeoImporter:
               (t:Tags {name: $tag})
             MERGE (a)-[r:TAGGED]->(t)
             RETURN a
-
             """
             % self.node_type,
             tag=tag,
