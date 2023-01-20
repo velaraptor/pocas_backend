@@ -1,0 +1,22 @@
+# https://docs.digitalocean.com/products/functions/reference/project-configuration/
+environment:
+  # ENV is statically defined as "production" in this example:
+  ENV: production
+packages:
+  - name: store
+    environment:
+      # DATABASE_URL will be substituted to the DATABASE_URL_READ_ONLY value
+      # defined in App Platform's environment variable configuration.
+      # NOTE: The receiving variable name does not need to match the name as
+      # defined in the app / component config. This facilitates narrowly
+      # scoped or overlapping values.
+      DATABASE_URL: "${DATABASE_URL_READ_ONLY}"
+    functions:
+      - name: buy
+        environment:
+          # PAYMENT_API_KEY will substitute the PAYMENT_API_KEY variable
+          # from App Platform's runtime variable configuration.
+          PAYMENT_API_KEY: "${PAYMENT_API_KEY}"
+          # DATABASE_URL will be substituted with the DATABASE_URL_WRITE
+          # value defined in App Platform's environment variable config.
+          DATABASE_URL: "${DATABASE_URL_WRITE}"

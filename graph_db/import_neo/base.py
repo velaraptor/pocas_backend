@@ -38,8 +38,9 @@ class BaseNeoImporter:
         data = space.get_object(
             f"{date_max}/{self.node_type.lower()}/data.json.gzip", space="api"
         )
-        for d_dict in data:
-            d_dict["mongo_id"] = str(d_dict["_id"])
+        for d_dict in data[self.node_type.lower()]:
+            print(d_dict)
+            d_dict["mongo_id"] = d_dict["id"]
             if "general_topic" in d_dict:
                 d_dict["main_tag"] = d_dict["general_topic"]
             if "question" in d_dict:
