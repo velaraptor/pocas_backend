@@ -137,6 +137,7 @@ class Service(BaseModel):
     web_site: Optional[str] = Field(example="http://www.example.com")
     days: Optional[str]
     hours: Optional[str]
+    id: Optional[str]
 
 
 class FullServices(BaseModel):
