@@ -97,3 +97,11 @@ FIRST_QUESTIONS=False
 
 ## Rerun Services
 `./start_service_prod.sh`
+
+
+# Additional Modules
+* [Airflow](/airflow-module)
+  * Currently, can back up MongoDB to Digital Oceans Spaces
+* [Neo4j](/graph_db) 
+  * For adding MHP Services and Questions in graph database, currently an EDA project.
+    * Future uses for predicting tags and similar questions, nearest neighbors as additional algorithm, services/tags not tied to question alarm.
