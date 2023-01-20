@@ -10,3 +10,4 @@ c/*
 **/__pycache__/**
 test_notebook.ipynb
 airflow-module/.env
+graph_db/.env
