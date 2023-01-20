@@ -10,11 +10,13 @@ class API2NeoImporter(BaseNeoImporter):
         super().__init__(node_type)
         self.api_path = api_path
 
-    def get_api_data(self, path):
+    def get_api_data(self):
         """Get API data"""
-        resp = requests.get(f"{self.api_path}/api/v1/{path}", timeout=10)
+        resp = requests.get(
+            f"{self.api_path}/api/v1/{self.node_type.lower()}", timeout=10
+        )
         data = resp.json()
-        for d in data[path]:
+        for d in data[self.node_type.lower()]:
             if "id" in d:
                 d["mongo_id"] = d["id"]
             if "general_topic" in d:
@@ -23,9 +25,9 @@ class API2NeoImporter(BaseNeoImporter):
                 d["name"] = d["question"]
             self.data.append(d)
 
-    def run(self, path=None):
+    def run(self):
         """Run Neo4j Importer"""
-        self.get_api_data(path=path)
+        self.get_api_data()
         self.get_tags()
         self.import_graph()
         self.close()

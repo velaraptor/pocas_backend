@@ -10,7 +10,7 @@ from s3_client import S3Importer
 class BaseNeoImporter:
     """Base Neo4j Importer"""
 
-    def __init__(self, node_type="Service"):
+    def __init__(self, node_type="Services"):
         self.__host = os.getenv("NEO_HOST", "0.0.0.0")
         self.__port = os.getenv("NEO_PORT", "7687")
         self.__user = os.getenv("NEO_USER", "neo4j")
@@ -20,19 +20,25 @@ class BaseNeoImporter:
         )
         self.data = []
         self.tags = []
+        if node_type not in ["Services", "Questions"]:
+            raise ValueError(
+                "Value of node_type should be either: Services or Questions!"
+            )
         self.node_type = node_type
 
     def close(self):
         """Close Neo4j Driver"""
         self.driver.close()
 
-    def get_mongo_data(self, path=None):
+    def get_mongo_data(self):
         """Get MongoDB backup data from S3 Bucket"""
         # get recent space
         # download data from pickle
         space = S3Importer()
         date_max = space.find_recent_mongo()
-        data = space.get_object(f"{date_max}/{path}")
+        data = space.get_object(
+            f"{date_max}/results/{self.node_type.lower()}.json.gzip"
+        )
         for d in data:
             d_dict = json_util.loads(d.decode("utf-8"))
             d_dict["mongo_id"] = str(d_dict["_id"])
@@ -54,20 +60,28 @@ class BaseNeoImporter:
 
     def import_graph(self):
         """Import Data to Neo4j"""
+        tags_written = 0
+        nodes_written = 0
+        tagged_rels = 0
         with self.driver.session() as session:
             for tag in self.tags:
                 session.execute_write(self._merge_tags, tag)
+                tags_written += 1
             for d in self.data:
                 session.execute_write(
                     self._create_node, name=d["name"], mongo_id=d["mongo_id"]
                 )
+                nodes_written += 1
                 for tag in d["tags"]:
                     session.execute_write(
                         self._create_node_tag_rel, tag=tag, mongo_id=d["mongo_id"]
                     )
+                    tagged_rels += 1
                 session.execute_write(
                     self._create_node_tag_rel, tag=d["main_tag"], mongo_id=d["mongo_id"]
                 )
+                tagged_rels += 1
+        print({"tag_nodes": tags_written, "nodes": nodes_written, "rel": tagged_rels})
 
     @staticmethod
     def _merge_tags(tx, tag):
@@ -115,9 +129,9 @@ class BaseNeoImporter:
         )
         return result
 
-    def run(self, path=None):
+    def run(self):
         """Run Neo4j Importer"""
-        self.get_mongo_data(path=path)
+        self.get_mongo_data()
         self.get_tags()
         self.import_graph()
         self.close()
