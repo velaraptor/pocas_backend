@@ -20,7 +20,7 @@ pip install -r requirements.txt
 # to run jupyter lab
 jupyter lab
 ```
-Run `Spaces_2_Neo.ipynb` to import MHP data to Local Neo4j Database.
+Run `MHP_2_Neo.ipynb` to import MHP data to Local Neo4j Database.
 
 ## Start Neo4j Docker Container
 ```shell
