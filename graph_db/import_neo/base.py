@@ -20,9 +20,9 @@ class BaseNeoImporter:
         )
         self.data = []
         self.tags = []
-        if node_type not in ["Services", "Questions"]:
+        if node_type not in ["Services", "Questions", "User"]:
             raise ValueError(
-                "Value of node_type should be either: Services or Questions!"
+                "Value of node_type should be either: Services, Users, or Questions!"
             )
         self.node_type = node_type
 
@@ -68,9 +68,7 @@ class BaseNeoImporter:
                 session.execute_write(self._merge_tags, tag)
                 tags_written += 1
             for d in self.data:
-                session.execute_write(
-                    self._create_node, name=d["name"], mongo_id=d["mongo_id"]
-                )
+                session.execute_write(self._create_node, message=d)
                 nodes_written += 1
                 for tag in d["tags"]:
                     session.execute_write(
@@ -97,19 +95,22 @@ class BaseNeoImporter:
         )
         return result
 
-    def _create_node(self, tx, name, mongo_id):
+    def _create_node(self, tx, message):
         """Create a standard Node"""
         result = tx.run(
             """
-            MERGE (t:%s {id: $mongo_id})
+            MERGE (t:%s {id: $message.mongo_id})
             ON CREATE
                   SET t.created = timestamp()
-                  SET t.name = $name
+                  SET t.name = $message.name
+                  SET t.lat = $message.lat
+                  SET t.lon = $message.lon
+                  SET t.zip_code = $message.zip_code
+                  SET t.city = $message.city
             RETURN t.name, t.created
             """
             % self.node_type,
-            name=name,
-            mongo_id=mongo_id,
+            message=message,
         )
         return result.single()[0]
 
