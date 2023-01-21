@@ -34,3 +34,9 @@ Go to `localhost:7474` to see Neo4j Desktop.
 ## Next Steps
 * Add Scores based on Location
 * Add Analytics on How many times question is asked
+
+## Deploy Serverless Function to Neo4j
+```shell
+cd function
+doctl serverless deploy . -v
+```
