@@ -23,6 +23,7 @@ from fastapi_limiterx import FastAPILimiter
 from fastapi_limiterx.depends import RateLimiter
 import aioredis
 from pydantic import BaseModel, Field
+from neo4j import GraphDatabase
 from cosine_search.top_results import GetTopNResults, get_all_services
 from db.mongo_connector import MongoConnector
 from db.consts import DB_SERVICES, get_lat_lon
@@ -388,3 +389,93 @@ async def get_user_data(
 
     results = m.query_results_api(db="platform", collection="user_data", query=query)
     return results
+
+
+class BaseNeo:
+    """Base Neo4j API"""
+
+    def __init__(self):
+        self.__host = os.getenv("NEO_HOST", "0.0.0.0")
+        self.__port = os.getenv("NEO_PORT", "7687")
+        self.__user = os.getenv("NEO_USER", "neo4j")
+        self.__pwd = os.getenv("NEO_PWD")
+        self.driver = GraphDatabase.driver(
+            f"bolt://{self.__host}:{self.__port}", auth=(self.__user, self.__pwd)
+        )
+
+    def run_services_disconnected(self):
+        """Get Tags disconnected to Questions"""
+        with self.driver.session() as session:
+            data = session.run(
+                """
+                    MATCH (n:Services)-[:TAGGED]->(n1:Tags)
+                WHERE NOT (n1)-[:TAGGED]-(:Questions)
+                // Young Adult Resources is tied by Age Question
+                      AND n1.name <> 'Young Adult Resources'
+                      AND NOT (n)-[:TAGGED]-(n1)-[:TAGGED]-(:Questions)
+                RETURN n.id as service_id, n.name as service, COLLECT(n1.name) as tags
+                ORDER BY tags;
+                """
+            )
+            df = data.to_df().to_dict(orient="records")
+            return df
+
+    def run_tags_disconnected(self):
+        """Get Services disconnected to Questions"""
+        with self.driver.session() as session:
+            data = session.run(
+                """
+                MATCH (n:Services)-[:TAGGED]->(n1:Tags)
+                WHERE NOT (n1)-[:TAGGED]-(:Questions)
+                // Young Adult Resources is tied by Age Question
+                      AND n1.name <> 'Young Adult Resources'
+                WITH n1.name as tags
+                RETURN DISTINCT tags as tag
+                ORDER BY tag;
+                """
+            )
+            tag = data.values()
+            return [elem for sublist in tag for elem in sublist]
+
+
+class ServiceNeo(BaseModel):
+    """Disconnected Service Model"""
+
+    service_id: str = Field(example=uuid.uuid4().hex)
+    service: str = Field(example="Test Center Service")
+    tags: List[str] = Field(example=["Tag1", "Tag2"])
+
+
+class Stats(BaseModel):
+    """Disconnected Stats Model"""
+
+    tags: int
+    services: int
+
+
+class Disconnected(BaseModel):
+    """Disconnected Services Model"""
+
+    services: List[ServiceNeo]
+    tags: List[str] = Field(example=["Tag1", "Tag2"])
+    stats: Stats
+
+
+@app.get(
+    "/api/v1/alarms/disconnected",
+    response_model=Disconnected,
+    dependencies=[Depends(get_current_username)],
+    tags=["alarms"],
+)
+async def check_disconnected():
+    """Check Disconnected Services from Questions"""
+    neo = BaseNeo()
+    services = neo.run_services_disconnected()
+    tags = neo.run_tags_disconnected()
+    print(services)
+    response = {
+        "services": services,
+        "tags": tags,
+        "stats": {"tags": len(tags), "services": len(services)},
+    }
+    return response

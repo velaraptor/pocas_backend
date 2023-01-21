@@ -11,3 +11,6 @@ c/*
 test_notebook.ipynb
 function_backup/.env
 graph_db/.env
+**/.deployed/**
+**/__deployer__.zip
+graph_db/function/.env

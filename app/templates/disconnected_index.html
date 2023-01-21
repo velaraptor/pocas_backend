@@ -1,0 +1,47 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+
+<h2>Alarms Dashboard</h2>
+<h3 class="text-warning">Services Disconnected: {{ data.stats.services }} </h3>
+<div class="row">
+    <div class="col-md-6">
+        <h4>Unique Tags</h4>
+        <ul class="list-group">
+            {% for tag in data.tags %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ tag }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="col-md-6">
+        <h4>Services NOT Connected to Questions</h4>
+        <table class="table table-striped table-bordered table-hover model-list">
+          <thead class="table-warning">
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Tags</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for service in data.services %}
+            <tr>
+            <tr>
+
+              <th scope="row">
+                  <a class="icon" href="/admin/servicesview/edit/?id={{ service.service_id }}" title="Edit Service">
+                      <span class="fa fa-pencil glyphicon glyphicon-pencil"></span>
+                  </a>
+                  {{ service.service }}
+              </th>
+              <td>{{ service.tags }}</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

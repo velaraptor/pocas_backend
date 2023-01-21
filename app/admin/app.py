@@ -1,6 +1,8 @@
 """Admin for Flask-Admin, includes Views"""
+import os
 import uuid
-from flask_admin import Admin, AdminIndexView
+import requests
+from flask_admin import Admin, AdminIndexView, BaseView, expose
 from flask_admin.menu import MenuLink
 from flask_admin.contrib.pymongo import ModelView, filters
 from flask_admin.contrib import sqla
@@ -241,8 +243,6 @@ class UsersView(SuperUserView):
         return model
 
 
-# TODO: ADD import csv https://blog.sneawo.com/blog/2018/02/16/export-and-import-for-mongoengine-model-in-flask-admin/
-
 admin = Admin(
     name="MHP Admin",
     url="/admin",
@@ -251,9 +251,53 @@ admin = Admin(
     template_mode="bootstrap4",
 )
 
+
+class SuperUserBaseView(BaseView):
+    """Super User Base View"""
+
+    def is_accessible(self):
+        return (
+            current_user.is_active
+            and current_user.is_authenticated
+            and current_user.has_role("superuser")
+        )
+
+    def _handle_view(self, name, **kwargs):  # pylint: disable=R1710
+        """
+        Override builtin _handle_view in order to redirect users when a view is not accessible.
+        """
+        if not self.is_accessible():
+            if current_user.is_authenticated:
+                # permission denied
+                abort(403)
+            else:
+                # login
+                return redirect(url_for("security.login", next=request.url))
+
+
+class DisconnectedServicesView(SuperUserBaseView):
+    """Disconnected Services View"""
+
+    @expose("/")
+    def index(self):
+        """Get Disconnected Services View"""
+        api_url = "http://pocas_api/api/v1/"
+        s = requests.Session()
+        s.auth = (os.getenv("API_USER"), os.getenv("API_PASS"))
+        data = s.get(f"{api_url}alarms/disconnected", timeout=10).json()
+        return self.render("disconnected_index.html", data=data)
+
+
 admin.add_view(ServicesView(db1.services, "Services"))
 admin.add_view(QuestionsView(db1.questions, "Questions"))
-admin.add_view(Analytics(conn["analytics"].ip_hits, "Analytics"))
-admin.add_view(UsersView(conn["users_login"]["user"], "Admin User Management"))
+admin.add_view(Analytics(conn["analytics"].ip_hits, "Analytics", category="Tools"))
+admin.add_view(
+    UsersView(conn["users_login"]["user"], "Admin User Management", category="Tools")
+)
+admin.add_view(
+    DisconnectedServicesView(name="Alarms", endpoint="alarms", category="Tools")
+)
+admin.add_sub_category(name="Tools", parent_name="Tools")
+
 admin.add_link(MenuLink(name="POCAS API", url="/api/v1/docs", target="_blank"))
 admin.add_link(MenuLink(name="MHP Portal", url="/login", target="_blank"))
