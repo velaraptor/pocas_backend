@@ -1,0 +1,28 @@
+environment:
+  NEO_HOST: "${NEO_HOST}"
+  NEO_PWD: "${NEO_PWD}"
+  SPACES_KEY_ID: "${SPACES_KEY_ID}"
+  SPACES_SECRET: "${SPACES_SECRET}"
+  SPACES_REGION: "${SPACES_REGION}"
+  SPACES_BUCKET: "${SPACES_BUCKET}"
+parameters: {}
+packages:
+  - name: neo4j-database
+    parameters: {}
+    annotations: {}
+    functions:
+      - name: generate-neo4j-database
+        binary: false
+        main: ''
+        runtime: 'python:3.9'
+        web: true
+        triggers:
+          - name: neo4j-scheduler
+            sourceType: scheduler
+            sourceDetails:
+              cron: "0 1/12 * * *"
+        parameters: {}
+        annotations: {}
+        limits:
+          timeout: 500000
+          memory: 1024

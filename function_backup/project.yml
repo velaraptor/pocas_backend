@@ -1,0 +1,28 @@
+environment:
+  API_URL: "${API_URL}"
+  ENV_POCAS: "${ENV_POCAS}"
+  SPACES_KEY_ID: "${SPACES_KEY_ID}"
+  SPACES_SECRET: "${SPACES_SECRET}"
+  SPACES_REGION: "${SPACES_REGION}"
+  SPACES_BUCKET: "${SPACES_BUCKET}"
+parameters: {}
+packages:
+  - name: backup-mongo
+    parameters: {}
+    annotations: {}
+    functions:
+      - name: create-backup
+        binary: false
+        main: ''
+        runtime: 'python:3.9'
+        web: true
+        triggers:
+          - name: mongodb-scheduler
+            sourceType: scheduler
+            sourceDetails:
+              cron: "0 * * * *"
+        parameters: {}
+        annotations: {}
+        limits:
+          timeout: 12000
+          memory: 256

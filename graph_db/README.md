@@ -20,7 +20,7 @@ pip install -r requirements.txt
 # to run jupyter lab
 jupyter lab
 ```
-Run `Spaces_2_Neo.ipynb` to import MHP data to Local Neo4j Database.
+Run `MHP_2_Neo.ipynb` to import MHP data to Local Neo4j Database.
 
 ## Start Neo4j Docker Container
 ```shell
@@ -34,3 +34,13 @@ Go to `localhost:7474` to see Neo4j Desktop.
 ## Next Steps
 * Add Scores based on Location
 * Add Analytics on How many times question is asked
+
+## Deploy Serverless Function to Neo4j
+### Prerequisites
+* `doctl` https://docs.digitalocean.com/reference/doctl/how-to/install/
+* Digital Ocean Personal Access Token
+
+```shell
+cd function
+doctl serverless deploy . -v
+```

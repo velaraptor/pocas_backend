@@ -2,9 +2,9 @@
 
 POCAS Backend. App can be found at https://mhpportal.app
 
-![Code Coverage](https://github.com/velaraptor/pocas_backend/workflows/Code%20Coverage/badge.svg)
+![Code Coverage Flake8](https://github.com/velaraptor/pocas_backend/workflows/Code%20Coverage/badge.svg)
 [![Pylint](https://github.com/velaraptor/pocas_backend/actions/workflows/pylint.yml/badge.svg)](https://github.com/velaraptor/pocas_backend/actions/workflows/pylint.yml)
-[![Deploy-DO-PROD](https://github.com/velaraptor/pocas_backend/actions/workflows/main.yml/badge.svg)](https://github.com/velaraptor/pocas_backend/actions/workflows/main.yml)
+[![Digital Ocean Droplet](https://github.com/velaraptor/pocas_backend/actions/workflows/main.yml/badge.svg)](https://github.com/velaraptor/pocas_backend/actions/workflows/main.yml)
 ![version](https://img.shields.io/badge/version-1.1-blue)
 > Flask API, Lambda, and Mongo DB Dockerized
 
@@ -100,7 +100,7 @@ FIRST_QUESTIONS=False
 
 
 # Additional Modules
-* [Airflow](/airflow-module)
+* [Serverless Backup](/function_backup)
   * Currently, can back up MongoDB to Digital Oceans Spaces
 * [Neo4j](/graph_db) 
   * For adding MHP Services and Questions in graph database, currently an EDA project.

@@ -139,7 +139,9 @@ def security_context_processor():
     )
 
 
-admin.add_view(MHPUsersView(MHPUser, db_postgres.session, name="MHP Users"))
+admin.add_view(
+    MHPUsersView(MHPUser, db_postgres.session, name="MHP Users", category="Tools")
+)
 admin.init_app(app)
 
 if __name__ == "__main__":

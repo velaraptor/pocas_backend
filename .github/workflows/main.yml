@@ -1,4 +1,4 @@
-name: Deploy-DO-PROD
+name: Deploy Digital Ocean Droplet
 on:
   push:
     branches:
