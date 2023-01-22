@@ -1,22 +1,28 @@
-# https://docs.digitalocean.com/products/functions/reference/project-configuration/
 environment:
-  # ENV is statically defined as "production" in this example:
-  ENV: production
+  API_URL: "${API_URL}"
+  ENV_POCAS: "${ENV_POCAS}"
+  SPACES_KEY_ID: "${SPACES_KEY_ID}"
+  SPACES_SECRET: "${SPACES_SECRET}"
+  SPACES_REGION: "${SPACES_REGION}"
+  SPACES_BUCKET: "${SPACES_BUCKET}"
+parameters: {}
 packages:
-  - name: store
-    environment:
-      # DATABASE_URL will be substituted to the DATABASE_URL_READ_ONLY value
-      # defined in App Platform's environment variable configuration.
-      # NOTE: The receiving variable name does not need to match the name as
-      # defined in the app / component config. This facilitates narrowly
-      # scoped or overlapping values.
-      DATABASE_URL: "${DATABASE_URL_READ_ONLY}"
+  - name: backup-mongo
+    parameters: {}
+    annotations: {}
     functions:
-      - name: buy
-        environment:
-          # PAYMENT_API_KEY will substitute the PAYMENT_API_KEY variable
-          # from App Platform's runtime variable configuration.
-          PAYMENT_API_KEY: "${PAYMENT_API_KEY}"
-          # DATABASE_URL will be substituted with the DATABASE_URL_WRITE
-          # value defined in App Platform's environment variable config.
-          DATABASE_URL: "${DATABASE_URL_WRITE}"
+      - name: create-backup
+        binary: false
+        main: ''
+        runtime: 'python:3.9'
+        web: true
+        triggers:
+          - name: mongodb-scheduler
+            sourceType: scheduler
+            sourceDetails:
+              cron: "0 * * * *"
+        parameters: {}
+        annotations: {}
+        limits:
+          timeout: 12000
+          memory: 256

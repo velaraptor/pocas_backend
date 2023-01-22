@@ -36,6 +36,10 @@ Go to `localhost:7474` to see Neo4j Desktop.
 * Add Analytics on How many times question is asked
 
 ## Deploy Serverless Function to Neo4j
+### Prerequisites
+* `doctl` https://docs.digitalocean.com/reference/doctl/how-to/install/
+* Digital Ocean Personal Access Token
+
 ```shell
 cd function
 doctl serverless deploy . -v
