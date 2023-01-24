@@ -1,19 +1,20 @@
 {% extends 'admin/master.html' %}
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+
+{% endblock %}
+
 
 {% block body %}
-
 <h2>Alarms Dashboard</h2>
 <h3 class="text-warning">Services Disconnected: {{ data.stats.services }} </h3>
+<hr>
 <div class="row">
     <div class="col-md-6">
         <h4>Unique Tags</h4>
-        <ul class="list-group">
-            {% for tag in data.tags %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    {{ tag }}
-                </li>
-            {% endfor %}
-        </ul>
+        <canvas id="pieChart"></canvas>
+
     </div>
 
     <div class="col-md-6">
@@ -36,12 +37,55 @@
                   </a>
                   {{ service.service }}
               </th>
-              <td>{{ service.tags }}</td>
+              <td>
+                  {% for tag in service.tags %}
+                  {{ tag }}
+              {% endfor %}
+              </td>
             </tr>
           {% endfor %}
           </tbody>
         </table>
     </div>
 </div>
+
+<script>
+      const ctx = document.getElementById('pieChart');
+      const data = {
+      labels: [
+        {% for tag in data.tags %}
+            '{{ tag.name }}',
+            {% endfor %}
+      ],
+      datasets: [{
+        label: 'Services',
+        data:
+        [
+        {% for tag in data.tags %}
+            {{ tag.value }},
+            {% endfor %}
+        ]
+        ,
+        hoverOffset: 4
+      }]
+    };
+
+
+      new Chart(ctx, {
+        type: 'doughnut',
+        data: data,
+        options: {
+            plugins: {
+              datalabels: {
+                color: '#fff',
+                display: true,
+                formatter: function (value, ctx) {
+                    return value;
+                    },
+              },
+            },
+        }
+        });
+</script>
 
 {% endblock %}

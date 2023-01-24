@@ -44,4 +44,6 @@ class UserForm(fo.Form):
 
     email = fields.StringField("email")
     password = fields.StringField("password")
-    roles = InlineFieldList(fields.StringField())
+    roles = InlineFieldList(
+        fields.SelectField(choices=["user", "superuser"], widget=Select2Widget())
+    )

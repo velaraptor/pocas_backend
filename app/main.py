@@ -230,6 +230,7 @@ async def post_new_service(service: Service):
     """
     Upload Service to MongoDB
     """
+    # https://github.com/uriyyo/fastapi-pagination/blob/main/fastapi_pagination/ext/pymongo.py
     m = MongoConnector()
     payload = service.dict()
     payload = get_lat_lon(payload)
@@ -430,12 +431,12 @@ class BaseNeo:
                 // Young Adult Resources is tied by Age Question
                       AND n1.name <> 'Young Adult Resources'
                 WITH n1.name as tags
-                RETURN DISTINCT tags as tag
-                ORDER BY tag;
+                RETURN tags as name, COUNT(*) as value
+                ORDER BY name;
                 """
             )
-            tag = data.values()
-            return [elem for sublist in tag for elem in sublist]
+            tag = data.to_df().to_dict(orient="records")
+            return tag
 
 
 class ServiceNeo(BaseModel):
@@ -453,11 +454,18 @@ class Stats(BaseModel):
     services: int
 
 
+class Tag(BaseModel):
+    """Tags Disconnected"""
+
+    name: str = Field(example="Tag1")
+    value: int = Field(example=15)
+
+
 class Disconnected(BaseModel):
     """Disconnected Services Model"""
 
     services: List[ServiceNeo]
-    tags: List[str] = Field(example=["Tag1", "Tag2"])
+    tags: List[Tag]
     stats: Stats
 
 
@@ -472,7 +480,6 @@ async def check_disconnected():
     neo = BaseNeo()
     services = neo.run_services_disconnected()
     tags = neo.run_tags_disconnected()
-    print(services)
     response = {
         "services": services,
         "tags": tags,
