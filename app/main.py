@@ -523,6 +523,7 @@ class Disconnected(BaseModel):
 async def check_disconnected():
     """Check Disconnected Services from Questions"""
     neo = BaseNeo()
+    neo.find_max_date()
     services = neo.run_services_disconnected()
     tags = neo.run_tags_disconnected()
     response = {
@@ -541,5 +542,6 @@ async def check_disconnected():
 async def get_network():
     """Check Neo4j Network"""
     neo = BaseNeo()
+    neo.find_max_date()
     response = neo.get_network()
     return response
