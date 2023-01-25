@@ -3,6 +3,7 @@
 keys.env
 migrations/versions/*.py
 google_github.txt
+Untitled.ipynb
 
 .ipynb_checkpoints/
 c/*
