@@ -285,7 +285,8 @@ class DisconnectedServicesView(SuperUserBaseView):
         s = requests.Session()
         s.auth = (os.getenv("API_USER"), os.getenv("API_PASS"))
         data = s.get(f"{api_url}alarms/disconnected", timeout=10).json()
-        return self.render("disconnected_index.html", data=data)
+        network = s.get(f"{api_url}alarms/disconnected/network", timeout=10).json()
+        return self.render("disconnected_index.html", data=data, network=network)
 
 
 admin.add_view(ServicesView(db1.services, "Services"))

@@ -2,13 +2,41 @@
 {% block head %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+<style>
+       .circle text {
+      font-size: 10px;
+      font-family: "Helvetica";
+      stroke: none;
+          fill: grey;
+      }
 
+    .link {
+      stroke: #999;
+      stroke-opacity: .6;
+    }
+      .legend {
+    font-size: 20px;
+  }
+  rect {
+    stroke-width: 2;
+  }
+
+</style>
 {% endblock %}
 
 
 {% block body %}
 <h2>Alarms Dashboard</h2>
 <h3 class="text-warning">Services Disconnected: {{ data.stats.services }} </h3>
+<hr>
+<div class="row">
+        <div class="col-md-12">
+
+    <div id="network" class="main" ></div>
+        </div>
+        <p class="text-muted"> Hover over Node to see information. </p>
+
+</div>
 <hr>
 <div class="row">
     <div class="col-md-6">
@@ -87,5 +115,238 @@
         }
         });
 </script>
+
+
+
+
+{% endblock %}
+
+{% block tail %}
+<!-- STEP 2: THE D3 MODULE -->
+<script src="http://d3js.org/d3.v7.min.js"></script>
+<!-- END STEP 2 -->
+
+  <script>
+// Copyright 2021 Observable, Inc.
+// Released under the ISC license.
+// https://observablehq.com/@d3/force-directed-graph
+function ForceGraph({
+  nodes, // an iterable of node objects (typically [{id}, …])
+  links // an iterable of link objects (typically [{source, target}, …])
+}, {
+  nodeId = d => d.id, // given d in nodes, returns a unique identifier (string)
+  nodeGroup, // given d in nodes, returns an (ordinal) value for color
+  nodeGroups, // an array of ordinal values representing the node groups
+  nodeTitle, // given d in nodes, a title string
+  nodeFill = "currentColor", // node stroke fill (if not using a group color encoding)
+  nodeStroke = "#fff", // node stroke color
+  nodeStrokeWidth = 1.5, // node stroke width, in pixels
+  nodeStrokeOpacity = 1, // node stroke opacity
+  nodeRadius = 5, // node radius, in pixels
+  nodeStrength,
+  linkSource = ({source}) => source, // given d in links, returns a node identifier string
+  linkTarget = ({target}) => target, // given d in links, returns a node identifier string
+  linkStroke = "#999", // link stroke color
+  linkStrokeOpacity = 0.6, // link stroke opacity
+  linkStrokeWidth = 1.5, // given d in links, returns a stroke width in pixels
+  linkStrokeLinecap = "round", // link stroke linecap
+  linkStrength,
+  colors = d3.schemeTableau10, // an array of color strings, for the node groups
+  width = 640, // outer width, in pixels
+  height = 400, // outer height, in pixels
+  invalidation // when this promise resolves, stop the simulation
+} = {}) {
+  // Compute values.
+  const N = d3.map(nodes, nodeId).map(intern);
+  const LS = d3.map(links, linkSource).map(intern);
+  const LT = d3.map(links, linkTarget).map(intern);
+  if (nodeTitle === undefined) nodeTitle = (_, i) => N[i];
+  const T = nodeTitle == null ? null : d3.map(nodes, nodeTitle);
+  const G = nodeGroup == null ? null : d3.map(nodes, nodeGroup).map(intern);
+  const W = typeof linkStrokeWidth !== "function" ? null : d3.map(links, linkStrokeWidth);
+  const L = typeof linkStroke !== "function" ? null : d3.map(links, linkStroke);
+
+  // Replace the input nodes and links with mutable objects for the simulation.
+  nodes = d3.map(nodes, (_, i) => ({id: N[i], group:G[i]}));
+  links = d3.map(links, (_, i) => ({source: LS[i], target: LT[i]}));
+
+  // Compute default domains.
+  if (G && nodeGroups === undefined) nodeGroups = d3.sort(G);
+
+  // Construct the scales.
+  const color = nodeGroup == null ? null : d3.scaleOrdinal(nodeGroups, colors);
+
+  // Construct the forces.
+  const forceNode = d3.forceManyBody();
+  const forceLink = d3.forceLink(links).id(({index: i}) => N[i]);
+  if (nodeStrength !== undefined) forceNode.strength(nodeStrength);
+  if (linkStrength !== undefined) forceLink.strength(linkStrength);
+
+  const simulation = d3.forceSimulation(nodes)
+      .force("link", forceLink)
+      .force("charge", forceNode)
+      .force("x", d3.forceX())
+      .force("y", d3.forceY())
+      .on("tick", ticked);
+
+  const svg = d3.select('#network').append('svg')
+      .attr("width", width)
+      .attr("height", height)
+      .attr("viewBox", [-width / 2, -height / 2, width, height])
+      .attr("style", "max-width: 100%; height: auto; height: intrinsic;");
+
+
+
+  const g = svg.append('g');
+
+  const link = g
+      .attr("stroke-opacity", linkStrokeOpacity)
+      .attr("stroke-width", typeof linkStrokeWidth !== "function" ? linkStrokeWidth : null)
+      .attr("stroke-linecap", linkStrokeLinecap)
+    .selectAll("line")
+    .data(links)
+    .join("line")      .attr("stroke", typeof linkStroke !== "function" ? linkStroke : nul)
+;
+
+  links.forEach(function(link){
+
+    if (!link.source["linkCount"]) link.source["linkCount"] = 0;
+    if (!link.target["linkCount"]) link.target["linkCount"] = 0;
+
+    link.source["linkCount"]++;
+    link.target["linkCount"]++;
+
+  });
+
+
+  var Map = {}
+  Map.Tags = 15;
+  Map.Questions = 25;
+  Map.Services = 8;
+
+  const node = g
+      .attr("fill", nodeFill)
+      .attr("stroke", "black")
+      .attr("stroke-opacity", nodeStrokeOpacity)
+      .attr("stroke-width", nodeStrokeWidth)
+    .selectAll("circle")
+    .data(nodes)
+    .join("circle")
+    .attr("r", function(d){
+    return Map[d.group];
+  })
+      .call(drag(simulation));
+
+
+  if (W) link.attr("stroke-width", ({index: i}) => W[i]);
+  if (L) link.attr("stroke", ({index: i}) => L[i]);
+  if (G) node.attr("fill", ({index: i}) => color(G[i]));
+  if (T) node.append("title").text(({index: i}) => T[i]);
+
+  if (invalidation != null) invalidation.then(() => simulation.stop());
+
+  function intern(value) {
+    return value !== null && typeof value === "object" ? value.valueOf() : value;
+  }
+
+
+  var legendRectSize = 25;
+    var legendSpacing = 4;
+
+var legend = svg.selectAll('.legend')
+  .data(color.domain())
+  .enter()
+  .append('g')
+  .attr('class', 'legend')
+  .attr('transform', function(d, i) {
+    var height = legendRectSize + legendSpacing;
+    var offset =  height * color.domain().length / 2;
+    var horz = 40 * legendRectSize;
+    var vert = i * height - offset;
+    return 'translate(' + horz / 2 + ',' + vert + ')';
+  });
+
+  legend.append('rect')
+  .attr('width', legendRectSize)
+  .attr('height', legendRectSize)
+  .style('fill', color)
+  .style('stroke', color);
+
+  legend.append('text')
+  .attr('x', legendRectSize + legendSpacing)
+  .attr('y', legendRectSize - legendSpacing)
+  .text(function(d) { return d; });
+
+
+function zoomed({transform}) {
+    g.attr("transform", transform);
+
+  }
+    const zoom = d3.zoom().on('zoom', zoomed);
+    d3.select('svg').call(zoom);
+
+
+  function ticked() {
+    link
+      .attr("x1", d => d.source.x)
+      .attr("y1", d => d.source.y)
+      .attr("x2", d => d.target.x)
+      .attr("y2", d => d.target.y);
+
+    node
+      .attr("cx", d => d.x)
+      .attr("cy", d => d.y);
+  }
+
+  function drag(simulation) {
+    function dragstarted(event) {
+      if (!event.active) simulation.alphaTarget(0.3).restart();
+      event.subject.fx = event.subject.x;
+      event.subject.fy = event.subject.y;
+    }
+
+    function dragged(event) {
+      event.subject.fx = event.x;
+      event.subject.fy = event.y;
+    }
+
+    function dragended(event) {
+      if (!event.active) simulation.alphaTarget(0);
+      event.subject.fx = null;
+      event.subject.fy = null;
+    }
+
+    return d3.drag()
+      .on("start", dragstarted)
+      .on("drag", dragged)
+      .on("end", dragended);
+  }
+
+  return Object.assign(svg.node(), {scales: {color}});
+}
+
+
+
+
+<!-- STEP 4: DATA -->
+  graph =  {{ network | tojson }}
+
+
+ window.addEventListener('DOMContentLoaded', function () {
+
+ForceGraph(graph, {
+  nodeId: d => d.id,
+  nodeGroup: d => d.group,
+  nodeTitle: d => `Type: ${d.group}\n Name: ${d.name}`,
+  width: 1500,
+  height: 700,
+  invalidation: null // a promise to stop the simulation when the cell is re-run
+})
+        });
+
+    </script>
+
+
+
 
 {% endblock %}
