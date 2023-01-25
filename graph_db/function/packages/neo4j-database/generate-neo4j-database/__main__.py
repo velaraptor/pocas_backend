@@ -280,8 +280,8 @@ class Analytics2NeoImporter(BaseNeoImporter):
         """Get API data"""
         s = requests.Session()
         s.auth = (
-            os.getenv("API_USER", "UnderoAth71&*10"),
-            os.getenv("API_PASS", "Acz76ball199jsnke*^%CjsnM"),
+            os.getenv("API_USER"),
+            os.getenv("API_PASS"),
         )
         zip_codes_url = f"{self.api_path}/api/v1/platform/zip_codes"
         data_zip_url = f"{self.api_path}/api/v1/platform/data/%s"
