@@ -101,6 +101,9 @@
                                                 {% if question.name == "Identity"%}
                                               <i class="fa-solid fa-people-group"></i>
                                             {% endif %}
+                                                {% if question.name == "Legal Assistance"%}
+                                              <i class="fa-solid fa-scale-balanced"></i>
+                                            {% endif %}
 
                                             </h4>
                                         </button>
@@ -120,7 +123,7 @@
                             </div>
                         </div>
                         {% for question in questions %}
-                            {% if question['name'] == "Legal Assistance" %}
+                            {% if question['name'] == "" %}
                                 {% for q in question.questions %}
                                     {{ render_field(q) }}
                                 {% endfor %}
