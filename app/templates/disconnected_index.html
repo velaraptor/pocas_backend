@@ -3,7 +3,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
 <style>
-       .circle text {
+     .circle text {
       font-size: 10px;
       font-family: "Helvetica";
       stroke: none;
@@ -12,13 +12,27 @@
 
     .link {
       stroke: #999;
-      stroke-opacity: .6;
     }
       .legend {
     font-size: 20px;
   }
   rect {
     stroke-width: 2;
+  }
+
+    .tooltip {
+    background: rgba(6, 6, 6, .6);
+    border-radius: .4rem;
+    color: #fff;
+    display: block;
+    font-family: sans-serif;
+    font-size: .8rem;
+    max-width: 400px;
+    padding: .4rem;
+    position: absolute;
+    text-overflow: ellipsis;
+    z-index: 300;
+    opacity:20;
   }
 
 </style>
@@ -33,7 +47,9 @@
         <div class="col-md-12">
 
     <div id="network" class="main" ></div>
-            <p class="text-muted"><small>Hover over Node to see information.</small></p>
+            <p class="text-secondary"><small>Hover over Node to see information.
+            <br>Click on Node to see information and connections.</small></p>
+
         </div>
 </div>
 <hr>
@@ -146,7 +162,7 @@ function ForceGraph({
   linkSource = ({source}) => source, // given d in links, returns a node identifier string
   linkTarget = ({target}) => target, // given d in links, returns a node identifier string
   linkStroke = "#999", // link stroke color
-  linkStrokeOpacity = 0.6, // link stroke opacity
+  linkStrokeOpacity = 0.8, // link stroke opacity
   linkStrokeWidth = 1.5, // given d in links, returns a stroke width in pixels
   linkStrokeLinecap = "round", // link stroke linecap
   linkStrength,
@@ -166,7 +182,7 @@ function ForceGraph({
   const L = typeof linkStroke !== "function" ? null : d3.map(links, linkStroke);
 
   // Replace the input nodes and links with mutable objects for the simulation.
-  nodes = d3.map(nodes, (_, i) => ({id: N[i], group:G[i]}));
+  nodes = d3.map(nodes, (_, i) => ({id: N[i], group:G[i], name: T[i]}));
   links = d3.map(links, (_, i) => ({source: LS[i], target: LT[i]}));
 
   // Compute default domains.
@@ -235,12 +251,83 @@ function ForceGraph({
     return Map[d.group];
   })
       .call(drag(simulation));
+ const linksByIndex = {};
+
+
+ links.forEach(function(link) {
+  linksByIndex[`${link.source.id},${link.target.id}`] = true;
+ });
+
+
+  const areConnected = (a, b) =>
+    a === b ||
+    linksByIndex[`${a.id},${b.id}`] ||
+    linksByIndex[`${b.id},${a.id}`];
+
+  let focusedNode = null;
+  const transitionTimeout = 125;
+  const handleNodeClick = (d) => {
+      showTooltip(d);
+    if (d === focusedNode) {
+          hideTooltip();
+      focusedNode = null;
+      link
+        .transition(transitionTimeout)
+        .style("stroke-opacity", linkStrokeOpacity)
+        .transition(transitionTimeout)
+        .attr("marker-end", "url(#arrow)");
+      node.transition(transitionTimeout).style("opacity", 1);
+    } else {
+      focusedNode = d;
+
+      link
+        .transition(transitionTimeout)
+        .style("stroke-opacity", (l) =>
+          l.source.id === d.id || l.target.id === d.id ? 1.0 : 0.1
+        )
+        .transition(transitionTimeout)
+
+      node
+        .transition(transitionTimeout)
+        .style("opacity", (n) => (areConnected(n, d) ? 1.0 : 0.25));
+    }
+  };
+
+  const tooltip = d3
+    .select("body")
+    .append("div")
+    .attr("class", "tooltip")
+    .style("visibility", "hidden");
+
+  const hideTooltip = () => tooltip.style("visibility", "hidden");
+
+   const showTooltip = (node) =>
+    tooltip
+      .style("visibility", "visible")
+      .html(
+        `Type: ${node.group}<br>${node.name}<br>${node.linkCount} connections`
+      );
+
+  node.on("mousemove pointermove", (e) =>
+      tooltip
+        .style("top", `${e.clientY - 10}px`)
+        .style("left", `${e.clientX + 10}px`)
+    )
+    .on("mouseenter pointerenter", (e, d) => {
+      showTooltip(d);
+    })
+    .on("mouseout pointerout", () => {
+      hideTooltip();
+      })
+   .on("click", (e, d) => {
+      handleNodeClick(d);
+    });
+
 
 
   if (W) link.attr("stroke-width", ({index: i}) => W[i]);
   if (L) link.attr("stroke", ({index: i}) => L[i]);
   if (G) node.attr("fill", ({index: i}) => color(G[i]));
-  if (T) node.append("title").text(({index: i}) => T[i]);
 
   if (invalidation != null) invalidation.then(() => simulation.stop());
 
@@ -280,7 +367,7 @@ var legend = svg.selectAll('.legend')
 function zoomed({transform}) {
     g.attr("transform", transform);
 
-  }
+  };
     const zoom = d3.zoom().on('zoom', zoomed);
     d3.select('svg').call(zoom);
 
@@ -336,7 +423,7 @@ function zoomed({transform}) {
 ForceGraph(graph, {
   nodeId: d => d.id,
   nodeGroup: d => d.group,
-  nodeTitle: d => `Type: ${d.group}\n Name: ${d.name}`,
+  nodeTitle: d => d.name,
   width: 1500,
   height: 700,
   invalidation: null // a promise to stop the simulation when the cell is re-run
