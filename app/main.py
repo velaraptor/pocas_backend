@@ -508,6 +508,7 @@ async def check_disconnected():
 
 @app.get(
     "/api/v1/alarms/disconnected/network",
+    dependencies=[Depends(get_current_username)],
     tags=["alarms"],
 )
 async def get_network():
