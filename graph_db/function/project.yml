@@ -1,6 +1,8 @@
 environment:
   NEO_HOST: "${NEO_HOST}"
   NEO_PWD: "${NEO_PWD}"
+  API_USER: "${API_USER}"
+  API_PASS: "${API_PASS}"
   SPACES_KEY_ID: "${SPACES_KEY_ID}"
   SPACES_SECRET: "${SPACES_SECRET}"
   SPACES_REGION: "${SPACES_REGION}"
@@ -20,7 +22,7 @@ packages:
           - name: neo4j-scheduler
             sourceType: scheduler
             sourceDetails:
-              cron: "0 1/12 * * *"
+              cron: "0 1/2 * * *"
         parameters: {}
         annotations: {}
         limits:
