@@ -22,7 +22,7 @@ packages:
           - name: mongodb-scheduler
             sourceType: scheduler
             sourceDetails:
-              cron: "0 * * * *"
+              cron: "30 23 * * *"
         parameters: {}
         annotations: {}
         limits:

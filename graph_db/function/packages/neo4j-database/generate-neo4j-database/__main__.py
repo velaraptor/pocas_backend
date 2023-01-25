@@ -52,11 +52,16 @@ class S3Importer:
 class BaseNeoImporter:
     """Base Neo4j Importer"""
 
-    def __init__(self, node_type="Services", space="mongodb"):
+    def __init__(
+        self,
+        node_type="Services",
+        static_date=int(datetime.now().timestamp()),
+        space="mongodb",
+    ):
         self.__host = os.getenv("NEO_HOST", "0.0.0.0")
         self.__port = os.getenv("NEO_PORT", "7687")
         self.__user = os.getenv("NEO_USER", "neo4j")
-        self.__pwd = os.getenv("NEO_PWD")
+        self.__pwd = os.getenv("NEO_PWD", "chris2023")
         self.driver = GraphDatabase.driver(
             f"bolt://{self.__host}:{self.__port}", auth=(self.__user, self.__pwd)
         )
@@ -68,6 +73,7 @@ class BaseNeoImporter:
                 "Value of node_type should be either: Services, Users, or Questions!"
             )
         self.node_type = node_type
+        self.date = static_date
 
     def close(self):
         """Close Neo4j Driver"""
@@ -140,25 +146,43 @@ class BaseNeoImporter:
                 tagged_rels += 1
         print({"tag_nodes": tags_written, "nodes": nodes_written, "rel": tagged_rels})
 
-    @staticmethod
-    def _merge_tags(tx, tag):
+    def _merge_tags(self, tx, tag):
         """Merge Tags into Database"""
         result = tx.run(
             """
-                MERGE (t:Tags {name: $tag})
+                MERGE (t:Tags {name: $tag, date: $date})
                 ON CREATE
                   SET t.created = timestamp()
                 RETURN t.name, t.created
                 """,
             tag=tag,
+            date=self.date,
         )
         return result
+
+    def execute_date_node(self):
+        """Execute Date Node"""
+        with self.driver.session() as session:
+            session.execute_write(self.create_date_node)
+
+    def create_date_node(self, tx):
+        """Create Date Node"""
+        result = tx.run(
+            """
+            MERGE (t:Import {date: $date})
+            ON CREATE
+                  SET t.created = timestamp()
+            RETURN t.date, t.created
+            """,
+            date=self.date,
+        )
+        return result.single()[0]
 
     def _create_node(self, tx, message):
         """Create a standard Node"""
         result = tx.run(
             """
-            MERGE (t:%s {id: $message.mongo_id})
+            MERGE (t:%s {id: $message.mongo_id, date: $date})
             ON CREATE
                   SET t.created = timestamp()
                   SET t.name = $message.name
@@ -170,6 +194,7 @@ class BaseNeoImporter:
             """
             % self.node_type,
             message=message,
+            date=self.date,
         )
         return result.single()[0]
 
@@ -178,14 +203,15 @@ class BaseNeoImporter:
         result = tx.run(
             """
             MATCH
-              (a:%s {id: $mongo_id}),
-              (t:Tags {name: $tag})
+              (a:%s {id: $mongo_id, date: $date}),
+              (t:Tags {name: $tag, date: $date})
             MERGE (a)-[r:TAGGED]->(t)
             RETURN a
             """
             % self.node_type,
             tag=tag,
             mongo_id=mongo_id,
+            date=self.date,
         )
         return result
 
@@ -206,8 +232,13 @@ class BaseNeoImporter:
 class API2NeoImporter(BaseNeoImporter):
     """MHP-API to Neo4j Importer"""
 
-    def __init__(self, node_type="Service", api_path="https://mhpportal.app"):
-        super().__init__(node_type)
+    def __init__(
+        self,
+        node_type="Service",
+        api_path="https://mhpportal.app",
+        static_date=int(datetime.now().timestamp()),
+    ):
+        super().__init__(node_type=node_type, static_date=static_date)
         self.api_path = api_path
 
     def get_api_data(self):
@@ -236,19 +267,29 @@ class API2NeoImporter(BaseNeoImporter):
 class Analytics2NeoImporter(BaseNeoImporter):
     """MHP-API Analytics to Neo4j Importer"""
 
-    def __init__(self, node_type="User", api_path="https://mhpportal.app"):
-        super().__init__(node_type)
+    def __init__(
+        self,
+        node_type="User",
+        api_path="https://mhpportal.app",
+        static_date=int(datetime.now().timestamp()),
+    ):
+        super().__init__(node_type=node_type, static_date=static_date)
         self.api_path = api_path
 
     def get_api_data(self):
         """Get API data"""
+        s = requests.Session()
+        s.auth = (
+            os.getenv("API_USER"),
+            os.getenv("API_PASS"),
+        )
         zip_codes_url = f"{self.api_path}/api/v1/platform/zip_codes"
         data_zip_url = f"{self.api_path}/api/v1/platform/data/%s"
-        resp = requests.get(zip_codes_url)
+        resp = s.get(zip_codes_url)
         z_c = resp.json()
         json_data = []
         for z in z_c:
-            resp = requests.get(data_zip_url % z["id"])
+            resp = s.get(data_zip_url % z["id"])
             json_data = json_data + resp.json()
         self.data = json_data
 
@@ -268,26 +309,27 @@ class Analytics2NeoImporter(BaseNeoImporter):
         print({"nodes": nodes_written, "rel": rels})
 
     def __create_node_tag_rel_user(self, tx, message, service):
-        """Create a relatioship with user to Service"""
+        """Create a relationship with user to Service"""
         result = tx.run(
             """
             MATCH
-              (a:%s {id: $message.name}),
-              (t:Services {id: $service})
+              (a:%s {id: $message.name, date: $date}),
+              (t:Services {id: $service, date: $date})
             MERGE (a)-[r:HIT]->(t)
             RETURN a
             """
             % self.node_type,
             message=message,
             service=service,
+            date=self.date,
         )
-        return result.single()[0]
+        return result.single()
 
     def _create_node_message(self, tx, message):
         """Create a standard Node"""
         result = tx.run(
             """
-            MERGE (t:%s {id: $message.name})
+            MERGE (t:%s {id: $message.name, date: $date})
             ON CREATE
                   SET t.created = timestamp()
                   SET t.zip_code = $message.zip_code
@@ -297,6 +339,7 @@ class Analytics2NeoImporter(BaseNeoImporter):
             """
             % self.node_type,
             message=message,
+            date=self.date,
         )
         return result.single()[0]
 
@@ -308,23 +351,25 @@ class Analytics2NeoImporter(BaseNeoImporter):
 
 
 def main():
-    neo = BaseNeoImporter(node_type="Services")
-    with neo.driver.session() as session:
-        session.run("""MATCH (n) DETACH DELETE n;""")
-
+    static_date = int(datetime.now().timestamp())
     api_path = "https://mhpportal.app"
     print(f"Using API: {api_path}")
-    q = API2NeoImporter(node_type="Questions", api_path=api_path)
+    q = API2NeoImporter(
+        node_type="Questions", api_path=api_path, static_date=static_date
+    )
+    q.execute_date_node()
     print("Questions Data \n")
     q.run()
     print(q.data[0])
     print(q.tags)
 
-    s = API2NeoImporter(node_type="Services", api_path=api_path)
+    s = API2NeoImporter(
+        node_type="Services", api_path=api_path, static_date=static_date
+    )
     print("\nServices Data \n")
     s.run()
     print(s.data[0])
     print(s.tags)
 
-    a = Analytics2NeoImporter()
+    a = Analytics2NeoImporter(static_date=static_date)
     a.run()
