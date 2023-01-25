@@ -11,7 +11,7 @@ from db.mongo_connector import MongoConnector
 # pylint: disable=W0702
 
 
-def get_all_services():
+def get_all_questions():
     """Get all Questions"""
     m = MongoConnector(fsync=True)
     all_services = m.query_results_api(
@@ -25,10 +25,10 @@ def get_all_services():
 def get_question_tags():
     """Get Tags from questions"""
     try:
-        all_services = get_all_services()
-        services = pd.DataFrame(all_services)
-        g_t = services.main_tag.dropna().unique().tolist()
-        tags = services.tags.explode().dropna().unique().tolist()
+        all_questions = get_all_questions()
+        questions = pd.DataFrame(all_questions)
+        g_t = questions.main_tag.dropna().unique().tolist()
+        tags = questions.tags.explode().dropna().unique().tolist()
         values = set(g_t + tags)
         values = sorted(values)
     except:  # noqa: E722

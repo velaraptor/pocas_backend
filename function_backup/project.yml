@@ -1,5 +1,7 @@
 environment:
   API_URL: "${API_URL}"
+  API_USER: "${API_USER}"
+  API_PASS: "${API_PASS}"
   ENV_POCAS: "${ENV_POCAS}"
   SPACES_KEY_ID: "${SPACES_KEY_ID}"
   SPACES_SECRET: "${SPACES_SECRET}"

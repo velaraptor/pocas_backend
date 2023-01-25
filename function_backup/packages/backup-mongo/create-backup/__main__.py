@@ -43,12 +43,14 @@ def backup_api(endpoint):
         resp = requests.get(f"{API_URL}/api/v1/{endpoint}", timeout=5)
         data = resp.json()
     else:
-        resp = requests.get(f"{API_URL}/api/v1/{endpoint}/zip_codes", timeout=5)
+        s = requests.Session()
+        s.auth = (os.getenv("API_USER"), os.getenv("API_PASS"))
+        resp = s.get(f"{API_URL}/api/v1/{endpoint}/zip_codes", timeout=5)
         data = resp.json()
         data_zip_url = f"{API_URL}/api/v1/platform/data/%s"
         json_data = []
         for z in data:
-            resp = requests.get(data_zip_url % z["id"], timeout=5)
+            resp = s.get(data_zip_url % z["id"], timeout=5)
             json_data = json_data + resp.json()
         data = json_data
 
