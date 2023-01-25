@@ -24,25 +24,49 @@ AGE_MAPPER = {
 }
 
 
+def get_all_collection(collection, exclude=None):
+    """Get all Collection Documents"""
+    m = MongoConnector(fsync=True)
+    data = m.query_results_api(
+        db=DB_SERVICES["db"],
+        collection=collection,
+        query={},
+        exclude=exclude,
+    )
+    return data
+
+
 def get_all_services():
     """Get all Services"""
-    m = MongoConnector(fsync=True)
-    all_services = m.query_results_api(
-        db=DB_SERVICES["db"],
-        collection=DB_SERVICES["collection"],
-        query={},
-        exclude={"loc": 0},
-    )
+    all_services = get_all_collection(DB_SERVICES["collection"], {"loc": 0})
     return all_services
 
 
-def get_all_tags():
-    """Get all tags from Services"""
+def get_all_questions():
+    """Get all Questions"""
+    all_questions = get_all_collection("questions")
+    return all_questions
+
+
+def get_all_tags_services():
+    """Get all tags from Collection Services"""
+    return get_all_tags_collection(main_tag="general_topic", data_exc=get_all_services)
+
+
+def get_all_tags_questions():
+    """Get all tags from collection questions"""
+    return get_all_tags_collection(main_tag="main_tag", data_exc=get_all_questions)
+
+
+def get_all_tags_collection(
+    main_tag="general_topic", tags="tags", data_exc=get_all_services
+):
+    """Generic Function to get all Tags"""
     try:
-        all_services = get_all_services()
-        services = pd.DataFrame(all_services)
-        g_t = services.general_topic.dropna().unique().tolist()
-        tags = services.tags.explode().dropna().unique().tolist()
+        all_data = data_exc()
+        data = pd.DataFrame(all_data)
+        g_t = data[main_tag].dropna().unique().tolist()
+        tags = data[tags].explode().dropna().unique().tolist()
         values = set(g_t + tags)
         values = sorted(values)
     except:  # noqa: E722
@@ -50,7 +74,7 @@ def get_all_tags():
     return values
 
 
-ALL_TAGS = get_all_tags()
+ALL_TAGS = get_all_tags_services()
 logging.basicConfig(
     level=logging.INFO,
     format="[%(asctime)s] %(name)s [%(levelname)s]: %(message)s",
