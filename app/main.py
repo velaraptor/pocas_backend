@@ -438,6 +438,24 @@ class BaseNeo:
             tag = data.to_df().to_dict(orient="records")
             return tag
 
+    def get_network(self):
+        """
+        Get network and in format for D3 Network Graph
+        """
+        with self.driver.session() as session:
+            data = session.run(
+                """
+                MATCH p=(a)-[]->(b)
+                WHERE LABELS(a) in [['Services'], ['Tags'], ['Questions']]
+                AND LABELS(b) in [['Services'], ['Tags'], ['Questions']]
+                WITH p unwind nodes(p) as n unwind relationships(p) as r
+                WITH collect( distinct {id: ID( n), name: n.name, group: LABELS(n)[0] }) as nl,
+                     collect( distinct {source: ID(startnode(r)), target: ID(endnode(r)) }) as rl
+                RETURN {nodes: nl, links: rl} as payload
+                """
+            )
+            return data.data()[0]["payload"]
+
 
 class ServiceNeo(BaseModel):
     """Disconnected Service Model"""
@@ -485,4 +503,15 @@ async def check_disconnected():
         "tags": tags,
         "stats": {"tags": len(tags), "services": len(services)},
     }
+    return response
+
+
+@app.get(
+    "/api/v1/alarms/disconnected/network",
+    tags=["alarms"],
+)
+async def get_network():
+    """Check Neo4j Network"""
+    neo = BaseNeo()
+    response = neo.get_network()
     return response
