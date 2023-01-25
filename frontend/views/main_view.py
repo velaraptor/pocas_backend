@@ -14,6 +14,7 @@ from flask import (
     request,
     Response,
     Blueprint,
+    send_file,
 )
 import requests
 from flask_login import (
@@ -47,6 +48,12 @@ main_blueprint = Blueprint("main", __name__, template_folder="templates")
 def welcome():
     """Flash Page"""
     return render_template("flash.html")
+
+
+@main_blueprint.route("/favicon.ico")
+def favicon():
+    """Favicon Route"""
+    return send_file("static/icon.png")
 
 
 @main_blueprint.route("/logout")

@@ -5,8 +5,6 @@
 {{ super() }}
 
 <h2>Welcome to POCAS Admin View!</h2>
-<h6 class="card-subtitle text-muted">This is the Admin Panel for MHP Portal</h6>
-<br>
 <div class="list-group">
     <a href="/admin/servicesview" class="list-group-item list-group-item-action flex-column align-items-start">
         <h3 class="mb-1">Services Editor</h3>
@@ -19,6 +17,10 @@
     <a href="/admin/ip_hitsview" class="list-group-item list-group-item-action flex-column align-items-start">
         <h3 class="mb-1">API Analytics</h3>
         API Hits on Questionnaire with IP address and date
+        </a>
+        <a href="/admin/alarms" class="list-group-item list-group-item-action flex-column align-items-start">
+        <h3 class="mb-1">Alarms Dashboard</h3>
+        Dashboard to show Services either not connected to Tags or Questions
         </a>
 </div>
 <hr>

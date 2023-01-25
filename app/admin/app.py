@@ -244,7 +244,7 @@ class UsersView(SuperUserView):
 
 
 admin = Admin(
-    name="MHP Admin",
+    name="MHP Portal Admin",
     url="/admin",
     index_view=MyAdminIndexView(template="home.html"),
     base_template="master.html",

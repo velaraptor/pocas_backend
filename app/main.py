@@ -350,7 +350,11 @@ async def generate_pdf_get(services: List[Service]):
     )
 
 
-@app.get("/api/v1/platform/zip_codes", tags=["platform"])
+@app.get(
+    "/api/v1/platform/zip_codes",
+    dependencies=[Depends(get_current_username)],
+    tags=["platform"],
+)
 async def get_zip_codes():
     """
     Get Group By of all Zip Codes in User Data
@@ -369,7 +373,11 @@ async def get_zip_codes():
     return zip_code_group
 
 
-@app.get("/api/v1/platform/data/{zip_code}", tags=["platform"])
+@app.get(
+    "/api/v1/platform/data/{zip_code}",
+    dependencies=[Depends(get_current_username)],
+    tags=["platform"],
+)
 async def get_user_data(
     zip_code: int,
     start: Optional[datetime.datetime] = None,
