@@ -14,7 +14,8 @@ class BaseNeo:
         self.driver = GraphDatabase.driver(
             f"bolt://{self.__host}:{self.__port}", auth=(self.__user, self.__pwd)
         )
-        self.max_date = None
+        self.max_date = self.find_max_date()
+        self.d3_response = None
 
     def find_max_date(self):
         """Find Import Max Date"""
@@ -26,7 +27,7 @@ class BaseNeo:
                 RETURN MAX(n.date) as date
                 """
             )
-            self.max_date = data.data()[0]["date"]
+            return data.data()[0]["date"]
 
     def run_services_disconnected(self):
         """Get Tags disconnected to Questions"""
@@ -84,4 +85,14 @@ class BaseNeo:
                 """,
                 max_date=self.max_date,
             )
-            return data.data()[0]["payload"]
+            self.d3_response = data.data()[0]["payload"]
+
+    def response_disconnected(self):
+        """Create JSON response for Disconnected"""
+        services = self.run_services_disconnected()
+        tags = self.run_tags_disconnected()
+        return {
+            "services": services,
+            "tags": tags,
+            "stats": {"tags": len(tags), "services": len(services)},
+        }

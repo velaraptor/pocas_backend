@@ -33,6 +33,7 @@ from models import (
     Disconnected,
     TopNResults,
     QuestionList,
+    D3Response,
 )
 from mongo_utils import send_user_data, send_ip_address_mongo
 from pdf_gen import generate_pdf
@@ -280,25 +281,17 @@ async def get_user_data(
 async def check_disconnected():
     """Check Disconnected Services from Questions"""
     neo = BaseNeo()
-    neo.find_max_date()
-    services = neo.run_services_disconnected()
-    tags = neo.run_tags_disconnected()
-    response = {
-        "services": services,
-        "tags": tags,
-        "stats": {"tags": len(tags), "services": len(services)},
-    }
-    return response
+    return neo.response_disconnected()
 
 
 @app.get(
     "/api/v1/alarms/disconnected/network",
+    response_model=D3Response,
     dependencies=[Depends(get_current_username)],
     tags=["alarms"],
 )
 async def get_network():
-    """Check Neo4j Network"""
+    """Get Neo4j Network in d3 JSON format"""
     neo = BaseNeo()
-    neo.find_max_date()
-    response = neo.get_network()
-    return response
+    neo.get_network()
+    return neo.d3_response

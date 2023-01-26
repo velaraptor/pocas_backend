@@ -103,3 +103,25 @@ class Disconnected(BaseModel):
     services: List[ServiceNeo]
     tags: List[Tag]
     stats: Stats
+
+
+class Node(BaseModel):
+    """Node Model"""
+
+    name: str = Field(example="Node A")
+    id: int = Field(example=3019)
+    group: str = Field(example="Tag")
+
+
+class Link(BaseModel):
+    """Link Model"""
+
+    source: int = Field(example=3019)
+    target: int = Field(example=3020)
+
+
+class D3Response(BaseModel):
+    """D3 JSON MODEL"""
+
+    nodes: List[Optional[Node]]
+    links: List[Optional[Link]]
