@@ -5,6 +5,39 @@ import googlemaps
 
 DB_SERVICES = {"db": "results", "collection": "services"}
 
+EXAMPLE_RESULTS = [
+    1,
+    1,
+    0,
+    1,
+    1,
+    0,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0,
+]
+
 
 def get_env_bool(env):
     """Evaluate Env Bool correctly"""
