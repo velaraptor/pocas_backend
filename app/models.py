@@ -61,6 +61,7 @@ class TopNResults(BaseModel):
     services: List[Service]
     num_of_services: int
     user_loc: UserLocation
+    name: str = Field(example=uuid.uuid4().hex)
 
 
 class RadiusZone(BaseModel):

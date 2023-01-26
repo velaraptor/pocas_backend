@@ -87,14 +87,20 @@ def get_services():
     services_resp = requests.get(f"{API_URL}services", timeout=20)
     services = services_resp.json()
     services = sorted(services["services"], key=lambda d: d["general_topic"])
+
+    payload = {
+        "services": services,
+        "num_of_services": len(services),
+        "user_loc": None,
+        "name": None,
+    }
     return render_template(
         "services.html",
-        markers=services,
+        payload=payload,
         tags=tag_form,
         vals=get_tags(),
         active=False,
         results=False,
-        current_user=None,
     )
 
 
@@ -109,30 +115,36 @@ def filter_tags():
         services_resp = requests.get(f"{API_URL}services", timeout=20)
         services = services_resp.json()
         services = sorted(services["services"], key=lambda d: d["general_topic"])
+        payload = {
+            "services": services,
+            "num_of_services": len(list(services)),
+            "user_loc": None,
+            "name": None,
+        }
+
         if f_val == " ":
             return render_template(
                 "services.html",
-                markers=list(services),
+                payload=payload,
                 tags=tag_form,
                 vals=get_tags(),
                 active=f_val,
                 results=False,
-                current_user=None,
             )
         services_g = list(filter(lambda x: x["general_topic"] == f_val, services))
         services_t = [
             x for x in services if f_val in x["tags"] and f_val != x["general_topic"]
         ]
         services = services_t + services_g
-
+        payload["services"] = services
+        payload["num_of_services"] = len(services)
         return render_template(
             "services.html",
-            markers=services,
+            payload=payload,
             tags=tag_form,
             vals=get_tags(),
             active=f_val,
             results=False,
-            current_user=None,
         )
     return None
 
@@ -178,12 +190,11 @@ def home_page():
 
         return render_template(
             "services.html",
-            markers=top_results["services"],
+            payload=top_results,
             tags=tag_form,
             active=False,
             vals=get_tags(),
             results=True,
-            current_user=top_results["user_loc"],
         )
     # get unique questions
     question_tags = []

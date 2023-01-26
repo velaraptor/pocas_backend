@@ -188,11 +188,12 @@ async def get_top_results(  # pylint: disable=dangerous-default-value
             r.pop("_id", None)
         assert len(top_services) <= int(top_n)
         send_user_data(dob, address, answers, top_services)
+        analytic_name = uuid.uuid4().hex
         ip_data = {
             "ip_address": request.client.host,
             "endpoint": "top_n",
             "date": datetime.datetime.now(),
-            "name": uuid.uuid4().hex,
+            "name": analytic_name,
         }
         if user_name:
             ip_data["ip_address"] = user_name
@@ -201,6 +202,7 @@ async def get_top_results(  # pylint: disable=dangerous-default-value
             "services": top_services,
             "num_of_services": len(top_services),
             "user_loc": user_loc,
+            "name": analytic_name,
         }
     except Exception as exc:
         print(exc)

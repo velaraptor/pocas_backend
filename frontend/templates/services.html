@@ -114,19 +114,19 @@
         <div id="map"></div>
 
     </div>
-    {% if markers %}
+    {% if payload.services %}
     <hr>
         <div style="display: flex; justify-content: flex-end">
-                      <button type="submit" class="btn btn-success"style="width:100%" id="get-pdf" name="get-pdf"> Download <i class="fa-regular fa-file-pdf"></i></button>
+            <button type="submit" class="btn btn-success"style="width:100%" id="get-pdf" name="get-pdf"> Download <i class="fa-regular fa-file-pdf"></i></button>
 
      </div>
     {% endif %}
 
     <hr>
     <div class="row">
-    {% for marker in markers %}
+    {% for marker in payload.services %}
         <div class="col-md-4">
-            <div class="card border-info mb-3" >
+            <div class="card border-info mb-3" id="{{ marker.id }}">
                 <div class="card-header text-info"><strong>{{ marker['name'] }}</strong></div>
                 <div class="card-body">
                     <p class="card-text">
@@ -189,9 +189,10 @@
             markerColor: 'blue'
         });
   var featureGroup = L.featureGroup([
-      {% for marker in markers %}
+      {% for marker in payload.services %}
       {% if marker['lon'] %}
-          L.marker([{{ marker['lat'] }}, {{ marker['lon'] }}], {icon: blueMarker}).bindPopup("{{ marker['name'] }}"),
+          L.marker([{{ marker['lat'] }}, {{ marker['lon'] }}], {icon: blueMarker}).
+          bindPopup("{{ marker['name'] }} <br> <b> Topic: {{ marker.general_topic }} </b><br> <a href='#{{ marker.id }}'>Jump to Service</a>"),
          {% endif %}
     {% endfor %}
     ]);
@@ -211,17 +212,17 @@ var tileLayer = new L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terra
         });
 
 
-    {% if current_user %}
+    {% if payload.user_loc %}
         var userMarker = L.AwesomeMarkers.icon({
                 icon: "fa-house",
                 prefix: "fa",
                 markerColor: 'red'
             });
-        user_marker = new L.marker([{{ current_user['lat'] }}, {{ current_user['lon'] }} ], { icon: userMarker });
+        user_marker = new L.marker([{{ payload.user_loc['lat'] }}, {{ payload.user_loc['lon'] }} ], { icon: userMarker });
         map.addLayer(user_marker);
 
     {% endif %}
-    {% if markers %}
+    {% if payload.services %}
      map.fitBounds(featureGroup.getBounds());
      {% else %}
       var latLngs = [ user_marker.getLatLng() ];
@@ -242,7 +243,7 @@ var tileLayer = new L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terra
         accept: "application/json",
 
         contenttype: 'application/pdf',
-        data: {services:  '{{ markers | tojson() }}'},
+        data: {services:  '{{ payload.services | tojson() }}'},
         success: function (data) {
             if(data){
                 console.log(data)
