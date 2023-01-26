@@ -146,7 +146,7 @@ async def post_new_service(service: Service):
     "/api/v1/radius_check",
     dependencies=[
         Depends(get_current_username),
-        Depends(RateLimiter(times=10, seconds=60)),
+        Depends(RateLimiter(times=20, seconds=10)),
     ],
     response_model=RadiusZone,
 )
@@ -162,7 +162,7 @@ async def check_zone(address: str):
     "/api/v1/top_n",
     dependencies=[
         Depends(get_current_username),
-        Depends(RateLimiter(times=10, seconds=60)),
+        Depends(RateLimiter(times=20, seconds=10)),
     ],
     response_model=TopNResults,
 )
