@@ -127,90 +127,105 @@ class BaseNeoImporter:
         """Import Data to Neo4j"""
         tags_written = 0
         nodes_written = 0
-        tagged_rels = 0
         with self.driver.session() as session:
-            for tag in self.tags:
-                session.execute_write(self._merge_tags, tag)
-                tags_written += 1
-            for d in self.data:
-                session.execute_write(self._create_node, message=d)
-                nodes_written += 1
-                for tag in d["tags"]:
-                    session.execute_write(
-                        self._create_node_tag_rel, tag=tag, mongo_id=d["mongo_id"]
-                    )
-                    tagged_rels += 1
-                session.execute_write(
-                    self._create_node_tag_rel, tag=d["main_tag"], mongo_id=d["mongo_id"]
-                )
-                tagged_rels += 1
-        print({"tag_nodes": tags_written, "nodes": nodes_written, "rel": tagged_rels})
+            session.execute_write(self._merge_tags, self.tags)
+            tags_written += len(self.data)
 
-    def _merge_tags(self, tx, tag):
+            session.execute_write(self._create_node, message=self.data)
+            nodes_written += len(self.data)
+
+            session.execute_write(self._create_node_tag_rel, message=self.data)
+            session.execute_write(self._create_node_tag_rel_main, message=self.data)
+        print({"tag_nodes": tags_written, "nodes": nodes_written})
+
+    def _merge_tags(self, tx, tags):
         """Merge Tags into Database"""
         result = tx.run(
             """
-                MERGE (t:Tags {name: $tag, date: $date})
+                UNWIND $tags AS tag
+                MERGE (t:Tags {name: tag, date: $date})
                 ON CREATE
                   SET t.created = timestamp()
                 RETURN t.name, t.created
                 """,
-            tag=tag,
+            tags=tags,
             date=self.date,
         )
         return result
 
-    def execute_date_node(self):
+    def execute_date_node(self, finished=False):
         """Execute Date Node"""
         with self.driver.session() as session:
-            session.execute_write(self.create_date_node)
+            session.execute_write(self.create_date_node, finished=finished)
 
-    def create_date_node(self, tx):
+    def create_date_node(self, tx, finished=False):
         """Create Date Node"""
         result = tx.run(
             """
             MERGE (t:Import {date: $date})
             ON CREATE
                   SET t.created = timestamp()
+                  SET t.finished = $finished
             RETURN t.date, t.created
             """,
             date=self.date,
+            finished=finished,
         )
-        return result.single()[0]
+        return result
 
     def _create_node(self, tx, message):
         """Create a standard Node"""
         result = tx.run(
             """
-            MERGE (t:%s {id: $message.mongo_id, date: $date})
+            UNWIND $data AS message
+            MERGE (t:%s {id: message.mongo_id, date: $date})
             ON CREATE
                   SET t.created = timestamp()
-                  SET t.name = $message.name
-                  SET t.lat = $message.lat
-                  SET t.lon = $message.lon
-                  SET t.zip_code = $message.zip_code
-                  SET t.city = $message.city
+                  SET t.name = message.name
+                  SET t.lat = message.lat
+                  SET t.lon = message.lon
+                  SET t.address = message.address
+                  SET t.zip_code = message.zip_code
+                  SET t.city = message.city
             RETURN t.name, t.created
+            """
+            % self.node_type,
+            data=message,
+            date=self.date,
+        )
+        return result
+
+    def _create_node_tag_rel_main(self, tx, message):
+        """Create TAGGED from main_tag relationship"""
+        result = tx.run(
+            """
+            UNWIND $message as message
+            MATCH
+              (a:%s {id: message.mongo_id, date: $date}),
+              (t:Tags {name: message.main_tag, date: $date})
+            MERGE (a)-[r:TAGGED]->(t)
+            RETURN a
             """
             % self.node_type,
             message=message,
             date=self.date,
         )
-        return result.single()[0]
+        return result
 
-    def _create_node_tag_rel(self, tx, tag, mongo_id):
+    def _create_node_tag_rel(self, tx, message):
         """Create TAGGED relationship"""
         result = tx.run(
             """
+            UNWIND $message as message
+            UNWIND message.tags as tag
             MATCH
-              (a:%s {id: $mongo_id, date: $date}),
-              (t:Tags {name: $tag, date: $date})
+              (a:%s {id: message.mongo_id, date: $date}),
+              (t:Tags {name: tag, date: $date})
             MERGE (a)-[r:TAGGED]->(t)
             RETURN a
             """
             % self.node_type,
-            tag=tag,
-            mongo_id=mongo_id,
+            message=message,
             date=self.date,
         )
         return result
@@ -296,52 +311,48 @@ class Analytics2NeoImporter(BaseNeoImporter):
     def import_graph(self):
         """Import Data to Neo4j"""
         nodes_written = 0
-        rels = 0
         with self.driver.session() as session:
-            for d in self.data:
-                session.execute_write(self._create_node_message, message=d)
-                nodes_written += 1
-                for service in d["top_services"]:
-                    session.execute_write(
-                        self.__create_node_tag_rel_user, message=d, service=service
-                    )
-                    rels += 1
-        print({"nodes": nodes_written, "rel": rels})
+            session.execute_write(self._create_node_message, message=self.data)
+            nodes_written += len(self.data)
+            session.execute_write(self.__create_node_tag_rel_user, message=self.data)
+        print({"nodes": nodes_written})
 
-    def __create_node_tag_rel_user(self, tx, message, service):
+    def __create_node_tag_rel_user(self, tx, message):
         """Create a relationship with user to Service"""
         result = tx.run(
             """
+            UNWIND $message as message
+            UNWIND message.top_services as service
             MATCH
-              (a:%s {id: $message.name, date: $date}),
-              (t:Services {id: $service, date: $date})
+              (a:%s {id: message.name, date: $date}),
+              (t:Services {id: service, date: $date})
             MERGE (a)-[r:HIT]->(t)
             RETURN a
             """
             % self.node_type,
             message=message,
-            service=service,
             date=self.date,
         )
-        return result.single()
+        return result
 
     def _create_node_message(self, tx, message):
         """Create a standard Node"""
         result = tx.run(
             """
-            MERGE (t:%s {id: $message.name, date: $date})
+            UNWIND $message as message
+            MERGE (t:%s {id: message.name, date: $date})
             ON CREATE
                   SET t.created = timestamp()
-                  SET t.zip_code = $message.zip_code
-                  SET t.dob = $message.dob
-                  SET t.time = $message.time
+                  SET t.zip_code = message.zip_code
+                  SET t.dob = message.dob
+                  SET t.time = message.time
             RETURN t.name, t.created
             """
             % self.node_type,
             message=message,
             date=self.date,
         )
-        return result.single()[0]
+        return result
 
     def run(self):
         """Run Neo4j Importer"""
@@ -353,6 +364,7 @@ class Analytics2NeoImporter(BaseNeoImporter):
 def main():
     static_date = int(datetime.now().timestamp())
     api_path = "https://mhpportal.app"
+    print(f"Import Node: {static_date}")
     print(f"Using API: {api_path}")
     q = API2NeoImporter(
         node_type="Questions", api_path=api_path, static_date=static_date
@@ -370,6 +382,8 @@ def main():
     s.run()
     print(s.data[0])
     print(s.tags)
+    print("\nAnalytics Data \n")
 
     a = Analytics2NeoImporter(static_date=static_date)
+    a.execute_date_node(finished=True)
     a.run()
