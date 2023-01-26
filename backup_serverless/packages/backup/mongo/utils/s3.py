@@ -23,6 +23,7 @@ class Mongo2S3:
         self.api = os.getenv("API_URL", "http://0.0.0.0")
         self.status = None
         self.endpoint = endpoint
+        self.object_key = None
 
     def check_api_live(self):
         """
@@ -52,11 +53,13 @@ class Mongo2S3:
 
         data_bytes = pickle.dumps(data)
         env_pocas = os.getenv("ENV_POCAS", "local")
-        object_key = f"{env_pocas}/api/{directory_date}/{self.endpoint}/data.json.gzip"
-        print(f"Writing object to key: {object_key}")
+        self.object_key = (
+            f"{env_pocas}/api/{directory_date}/{self.endpoint}/data.json.gzip"
+        )
+        print(f"Writing object to key: {self.object_key}")
         self.client.put_object(
             Bucket=os.getenv("SPACES_BUCKET"),
-            Key=object_key,
+            Key=self.object_key,
             Body=data_bytes,
             ACL="private",
         )

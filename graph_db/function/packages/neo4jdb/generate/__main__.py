@@ -30,3 +30,8 @@ def main():
     a = Analytics2NeoImporter(static_date=static_date)
     a.execute_date_node(finished=True)
     a.run()
+    return {
+        a.node_type: len(a.data),
+        q.node_type: len(q.data),
+        s.node_type: len(s.data),
+    }
