@@ -1,9 +1,8 @@
-"""S3 Client"""
-# pylint: disable=C0209
+"""S3 Importer"""
 import os
-import pickle
 from datetime import datetime
 import boto3
+import pickle
 
 
 class S3Importer:

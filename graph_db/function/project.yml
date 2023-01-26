@@ -9,11 +9,11 @@ environment:
   SPACES_BUCKET: "${SPACES_BUCKET}"
 parameters: {}
 packages:
-  - name: neo4j-database
+  - name: neo4jdb
     parameters: {}
     annotations: {}
     functions:
-      - name: generate-neo4j-database
+      - name: generate
         binary: false
         main: ''
         runtime: 'python:3.9'

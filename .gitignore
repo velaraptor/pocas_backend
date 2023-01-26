@@ -10,7 +10,7 @@ c/*
 *.icloud
 **/__pycache__/**
 test_notebook.ipynb
-function_backup/.env
+backup_serverless/.env
 graph_db/.env
 **/.deployed/**
 **/__deployer__.zip

@@ -12,7 +12,11 @@ SPACES_SECRET=xxxx
 SPACES_REGION=xxxx
 SPACES_BUCKET=mhpportal
 NEO4J_AUTH=neo4j/xxxx
+API_PASS=xxxx
+API_USER=xxxx
 ```
+Then copy this file to function module
+`cp .env function`
 
 ## Run Jupyter Lab Locally
 ```shell
@@ -44,5 +48,5 @@ Go to `localhost:7474` to see Neo4j Desktop.
 cd function
 doctl serverless deploy . -v
 # trigger function
-doctl sls fn invoke neo4j-database/generate-neo4j-database
+doctl sls fn invoke neo4jdb/generate
 ```
