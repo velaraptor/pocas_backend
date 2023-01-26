@@ -84,7 +84,7 @@ FIRST_QUESTIONS=True
 
 First Time Run this and then wait 10 minutes
 ```bash
-./start_services.sh
+./start_service_prod.sh
 sleep 300
 docker-compose down 
 ```

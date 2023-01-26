@@ -18,5 +18,5 @@ prod/api/01_20_2023/questions/data.json.gzip
 # deploy function
 doctl serverless deploy . -v
 # trigger function
-doctl sls fn invoke backup-mongo/create-backup
+doctl sls fn invoke backup/mongo
 ```

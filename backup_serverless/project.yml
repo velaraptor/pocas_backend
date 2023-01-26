@@ -9,11 +9,11 @@ environment:
   SPACES_BUCKET: "${SPACES_BUCKET}"
 parameters: {}
 packages:
-  - name: backup-mongo
+  - name: backup
     parameters: {}
     annotations: {}
     functions:
-      - name: create-backup
+      - name: mongo
         binary: false
         main: ''
         runtime: 'python:3.9'
