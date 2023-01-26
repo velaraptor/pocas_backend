@@ -22,9 +22,9 @@ packages:
           - name: neo4j-scheduler
             sourceType: scheduler
             sourceDetails:
-              cron: "0 1/2 * * *"
+              cron: "0 */1 * * *"
         parameters: {}
         annotations: {}
         limits:
-          timeout: 500000
-          memory: 1024
+          timeout: 65000
+          memory: 512

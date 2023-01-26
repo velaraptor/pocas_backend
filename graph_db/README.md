@@ -43,4 +43,6 @@ Go to `localhost:7474` to see Neo4j Desktop.
 ```shell
 cd function
 doctl serverless deploy . -v
+# trigger function
+doctl sls fn invoke neo4j-database/generate-neo4j-database
 ```
