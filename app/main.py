@@ -170,13 +170,17 @@ async def delete_service(_id: str, service_id: str):
     m = MongoConnector()
     db = "platform"
     collection = "user_data"
+    if not _id or _id == "None":
+        raise HTTPException(
+            status_code=404, detail="Result _id cannot be None. No data found!"
+        )
     try:
         c = m.client[db][collection]
         c.update_one({"name": _id}, {"$pull": {"top_services": service_id}})
         return {"status": True}
     except Exception as exc:
         print(exc)
-        raise HTTPException(status_code=404, detail="Could not delete") from exc
+        raise HTTPException(status_code=500, detail="Could not delete") from exc
 
 
 @app.post(
