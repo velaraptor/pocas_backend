@@ -1,24 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="/static/icon.png">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ==" crossorigin="" />
-<script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ==" crossorigin=""></script>
-<link rel="stylesheet" href="http://code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css">
-<link rel="stylesheet" href="/static/leaflet.awesome-markers.css">
-    <link
-      rel="stylesheet"
-      href="https://use.fontawesome.com/releases/v6.2.0/css/all.css"
-    />
-<script src="/static/leaflet.awesome-markers.js"></script>
-
-    <title>MHP Portal</title>
-    <link href="/static/bootstrap.css" rel="stylesheet">
-    <script src="/static/bootstrap.bundle.min.js"></script>
-    <style>
-        #map-container {
+{% extends 'base_mhp.html' %}
+{% block style_head %}
+<style>
+#map-container {
     position: relative;
     height: 500px;
     width: 100%;
@@ -29,100 +12,62 @@
     height: inherit;
     width: inherit;
 }
-    </style>
+</style>
+{% endblock %}
+{% block title %}MHP Portal - Services{% endblock %}
+{% block extra_scripts %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ==" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ==" crossorigin=""></script>
+<link rel="stylesheet" href="http://code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css">
+<link rel="stylesheet" href="/static/leaflet.awesome-markers.css">
+<script src="/static/leaflet.awesome-markers.js"></script>
+{% endblock %}
 
-</head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-3WHF1QS24H"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-3WHF1QS24H');
-</script>
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-  <div class="container-fluid">
-    <a class="navbar-brand">
-        <img src ='/static/icon.png' height="65"></a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarColor01">
-      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link" href="/home"><i class="fa-solid fa-clipboard-question"></i> Questions
-          </a>
-        </li>
-          <li class="nav-item">
-              <a class="nav-link active" href="#"><i class="fa-regular fa-building"></i> Services</a>
-          </li>
-                  <li class="nav-item">
-          <a class="nav-link" href="/account"><i class="fa-regular fa-user"></i> Account</a>
-        </li>
-      </ul>
-        <div class="d-flex">
-            <button id="myButton" class="btn btn-success my-2 my-sm-0" type="submit"><i class="fa-solid fa-right-from-bracket"></i></button>
-
-            <script type="text/javascript">
-                    document.getElementById("myButton").onclick = function () {
-                        location.href = "/logout";
-                    };
-</script>
-        </div>
-    </div>
-  </div>
-</nav>
-<body>
-<div class="container my-2">
-        {% for message in get_flashed_messages() %}
-<div class="alert alert-dismissible alert-warning">
+{% block services %}active{% endblock %}
+{% block content %}
+<div class="container px-2 py-3">
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-dismissible alert-warning">
         <button type="button" class="btn-close" data-dismiss="alert" aria-hidden="true"></button>
         {{ message }}
       </div>
     {% endfor %}
-     {% if not results %}
-    <form method="POST" id="filters" action="/filter">
-                {{ tags.csrf_token }}
-  <div class="form-group">
-        <div class="form-label mt-4 text-muted"><small>{{ tags.tags.label }}</small></div>
-      <div class="row">
-          <div class="col">
-            <select name="comp_select" class="selectpicker form-control">
-              {% for o in vals %}
-                {% if active == o %}
-                <option value="{{ o }}" selected>{{ o }}</option>
-
-                {% else %}
-
-              <option value="{{ o }}">{{ o }}</option>
-                                {% endif %}
-
-              {% endfor %}
-            </select>
-              </div>
+    {% if not results %}
+        <form method="POST" id="filters" action="/filter">
+            {{ tags.csrf_token }}
+            <div class="form-group">
+                <div class="form-label mt-4 text-muted"><small>{{ tags.tags.label }}</small></div>
+                <div class="row">
                     <div class="col">
-
-          <button type="submit" class="btn btn-success"><i class="fa-solid fa-magnifying-glass"></i></button>
+                        <select name="comp_select" class="selectpicker form-control">
+                            {% for o in vals %}
+                                {% if active == o %}
+                                    <option value="{{ o }}" selected>{{ o }}</option>
+                                {% else %}
+                                    <option value="{{ o }}">{{ o }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
                     </div>
-</div>
-    </div>
-    </form>
+                    <div class="col">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fa-solid fa-magnifying-glass"></i></button>
+                    </div>
+                </div>
+            </div>
+        </form>
     {% endif %}
     <hr>
     <div class="jumbotron vertical-center" id="map-container">
         <div id="map"></div>
-
     </div>
     {% if payload.services %}
-    <hr>
+        <hr>
         <div style="display: flex; justify-content: flex-end">
-            <button type="submit" class="btn btn-success"style="width:100%" id="get-pdf" name="get-pdf"> Download <i class="fa-regular fa-file-pdf"></i></button>
-
-     </div>
+            <button type="submit" class="btn btn-success"style="width:100%" id="get-pdf" name="get-pdf">
+                Download <i class="fa-regular fa-file-pdf"></i></button>
+        </div>
     {% endif %}
-
     <hr>
     <div class="row">
     {% for marker in payload.services %}
@@ -132,63 +77,63 @@
                 <div class="card-body">
                     <p class="card-text">
                         {% if marker['phone'] %}
-                    <p class="text-success"><i class="fa-solid fa-phone"></i>  <a href="tel:+{{ marker['phone'] }}">{{ marker['phone'] }}</a></p>
+                            <p class="text-success">
+                                <i class="fa-solid fa-phone"></i>
+                                <a href="tel:+{{ marker['phone'] }}">{{ marker['phone'] }}</a>
+                            </p>
                         {% endif %}
                         {% if marker['address'] %}
-                        <p class="text-muted"><small>
-                    <i class="fa-solid fa-location-dot"></i>
-                            {{ marker['address'] }}
-                    <br>{{ marker['city'] }}, {{ marker['state'] }} {{ marker['zip_code'] }}</small></p>
+                            <p class="text-muted"><small>
+                                <i class="fa-solid fa-location-dot"></i>
+                                {{ marker['address'] }}
+                                <br>{{ marker['city'] }}, {{ marker['state'] }} {{ marker['zip_code'] }}</small>
+                            </p>
                         {% endif %}
                         {% if marker['days'] %}
-                        <p class="text-info"><i class="fa-solid fa-calendar-days"></i> {{ marker['days'] }}</p>
+                            <p class="text-info">
+                                <i class="fa-solid fa-calendar-days"></i>
+                                {{ marker['days'] }}
+                            </p>
                         {% endif %}
                         {% if marker['hours'] %}
-                        <p class="text-info"><i class="fa-solid fa-clock"></i> {{ marker['hours'] }}</p>
+                            <p class="text-info">
+                                <i class="fa-solid fa-clock"></i> {{ marker['hours'] }}
+                            </p>
                         {% endif %}
                         {% if marker['web_site'] %}
-                    <p class="text-info"><a href="{{ marker['web_site'] }}" class="card-link" target="_blank"><i class="fa-solid fa-link"></i> {{ marker['web_site'] }}</a></p>
+                            <p class="text-info">
+                                <a href="{{ marker['web_site'] }}" class="card-link" target="_blank">
+                                    <i class="fa-solid fa-link"></i> {{ marker['web_site'] }}</a>
+                            </p>
                         {% endif %}
                         {% if marker['general_topic'] %}
-
-                                <ul class="list-group bg-secondary">
-                                    <li class="list-group-item d-flex justify-content-between align-items-center active">{{ marker['general_topic'] }}
+                            <ul class="list-group bg-secondary">
+                                <li class="list-group-item d-flex justify-content-between align-items-center active">{{ marker['general_topic'] }}
                                     <span class="badge bg-secondary rounded-pill"><i class="fa-solid fa-tag"></i></span>
-                                    </li>
-                                    {% for tags in marker['tags'] %}
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">{{ tags }}
+                                </li>
+                                {% for tags in marker['tags'] %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">{{ tags }}
                                         <span class="badge bg-secondary rounded-pill"> <i class="fa-solid fa-tag"></i></span>
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                    {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
                     </p>
                 </div>
             </div>
         </div>
-        {% endfor %}
+    {% endfor %}
     </div>
-    <footer class="bg-white py-4 mt-auto">
-                    <div class="container px-2">
-                <hr>
-                        <h6 class="text-info"><small> <i class="fa-regular fa-envelope"></i> Contact Us: <a href="mailto:chris@mhpportal.app">chris@mhpportal.app</a></small></h6>
-                        <h4 class="text-primary">
-                            <a href="https://twitter.com/MHPPortal"><i class="fa-brands fa-twitter"></i></a>
-                            <a href="https://www.linkedin.com/company/mhpportal"><i class="fa-brands fa-linkedin"></i></a>
-                        </h4>
-                        <a href="https://www.digitalocean.com/?refcode=70e93ffa8b88&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge"><img src="https://web-platforms.sfo2.digitaloceanspaces.com/WWW/Badge%202.svg" alt="DigitalOcean Referral Badge" /></a>
-
-                <p class="text-muted"><small>Copyright 2023: MHP Portal, Inc.</small></p>
-                    </div>
-            </footer>
 </div>
-</body>
+{% endblock %}
+
+{% block script %}
 <script>
-      var blueMarker = L.AwesomeMarkers.icon({
-                      icon: "fa-circle-info",
-                prefix: "fa",
-            markerColor: 'blue'
-        });
+  var blueMarker = L.AwesomeMarkers.icon({
+                        icon: "fa-circle-info",
+                        prefix: "fa",
+                        markerColor: 'blue'
+                    });
   var featureGroup = L.featureGroup([
       {% for marker in payload.services %}
       {% if marker['lon'] %}
@@ -198,20 +143,19 @@
     {% endfor %}
     ]);
 
+    var tileLayer = new L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}{r}.{ext}', {
+        attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        subdomains: 'abcd',
+        minZoom: 8,
+        maxZoom: 13,
+        ext: 'png'
+    });
 
-var tileLayer = new L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}{r}.{ext}', {
-	attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-	subdomains: 'abcd',
-	minZoom: 5,
-	maxZoom: 15,
-	ext: 'png'
-});
     var map = new L.Map('map', {
           'center': [0, 0],
           'zoom': 0,
           'layers': [tileLayer, featureGroup]
         });
-
 
     {% if payload.user_loc %}
         var userMarker = L.AwesomeMarkers.icon({
@@ -221,23 +165,21 @@ var tileLayer = new L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terra
             });
         user_marker = new L.marker([{{ payload.user_loc['lat'] }}, {{ payload.user_loc['lon'] }} ], { icon: userMarker });
         map.addLayer(user_marker);
-
     {% endif %}
+
     {% if payload.services %}
-     map.fitBounds(featureGroup.getBounds());
-     {% else %}
-      var latLngs = [ user_marker.getLatLng() ];
-      var markerBounds = L.latLngBounds(latLngs);
-      map.fitBounds(markerBounds);
-     {% endif %}
-
-
- </script>
+        map.fitBounds(featureGroup.getBounds());
+    {% else %}
+          var latLngs = [ user_marker.getLatLng() ];
+          var markerBounds = L.latLngBounds(latLngs);
+          map.fitBounds(markerBounds);
+    {% endif %}
+</script>
 <script src="/static/jquery-3.5.1.js"></script>
 <script type="text/javascript">
-      $(document).on('click','#get-pdf',function(e)
-                   {
-      $.ajax({
+    $(document).on('click','#get-pdf',function(e)
+               {
+    $.ajax({
         type:'POST',
         url:'/results',
         dataType: 'json',
@@ -252,11 +194,10 @@ var tileLayer = new L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terra
         },
         error: function (jqXHR, textStatus, errorThrow) {
             var file = new Blob([jqXHR.responseText], { type: 'application/pdf' });
-    var fileURL = URL.createObjectURL(file);
-    window.open(fileURL);
+        var fileURL = URL.createObjectURL(file);
+        window.open(fileURL);
         }
-      })
+        })
     });
-
 </script>
-</html>
+{% endblock %}

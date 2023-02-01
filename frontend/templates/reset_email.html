@@ -1,20 +1,19 @@
 <head>
    <meta charset="UTF-8">
-  <link href="https://bootswatch.com/5/cerulean/bootstrap.css" rel="stylesheet">
 </head>
-  <div class="container">
-     <div class="row">
-       <div class="card bg-light mb-3" style="padding-top: 10;">
-    <p class="text-primary">Reset Your Password to MHP Portal
-    <a href="{{ url_for('main.reset_verified', user=user, token=token, _external=True) }}">
-      <button class="btn btn-success" type="button"> Click Here </button>
-    </a></p>
-         <p class="text-muted">Note link is valid for 10 minutes.</p>
-       </div>
-       </div>
-
-    <footer>
-        <hr>
-        <p class="text-muted"><small>Copyright 2023: MHP Portal, Inc.</small></p>
-</footer>
+<div class="container">
+      <div class="row">
+          <div class="card bg-light mb-3" style="padding-top: 10;">
+              <p class="text-primary">Reset Your Password to MHP Portal
+                  <a href="{{ url_for('main.reset_verified', user=user, token=token, _external=True) }}">
+                      <button class="btn btn-success" type="button"> Click Here </button>
+                  </a>
+              </p>
+              <p class="text-muted">Note link is valid for 10 minutes.</p>
+          </div>
+      </div>
+      <footer>
+          <hr>
+          <p class="text-muted"><small>Copyright 2023: MHP Portal, Inc.</small></p>
+      </footer>
 </div>

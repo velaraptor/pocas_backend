@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block navbar %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container-fluid">
+    <a class="navbar-brand">
+        <img src ='/static/icon.png' height="65"></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarColor01">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        {% block navitems %}
+
+        <li class="nav-item">
+          <a class="nav-link {% block login %}{% endblock %}" href="/login">Home
+          </a>
+        </li>
+          <li class="nav-item">
+          <a class="nav-link {% block about %}{% endblock %}" href="/about">About</a>
+        </li>
+                  <li class="nav-item">
+          <a class="nav-link {% block register %}{% endblock %}" href="/register">Register</a>
+        </li>
+        {% endblock %}
+      </ul>
+      {% block logout %}
+      {% endblock %}
+    </div>
+  </div>
+</nav>
+{% endblock %}
+
+{% block body %}
+<body>
+
+{% block content %}
+{% endblock %}
+{% block footer %}
+<footer class="navbar navbar-expand-lg navbar-dark bg-light">
+  <div class="container px-5 my-1">
+    <h4 class="text-primary">
+      <a href="https://twitter.com/MHPPortal">
+        <i class="fa-brands fa-twitter"></i></a>
+      <a href="https://www.linkedin.com/company/mhpportal">
+        <i class="fa-brands fa-linkedin"></i></a>
+    </h4>
+    <h6 class="text-info">
+      <small><i class="fa-regular fa-envelope"></i>
+        Contact Us: <a href="mailto:chris@mhpportal.app">chris@mhpportal.app</a>
+      </small>
+    </h6>
+    <a href="https://www.digitalocean.com/?refcode=70e93ffa8b88&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge">
+      <img src="https://web-platforms.sfo2.digitaloceanspaces.com/WWW/Badge%202.svg" alt="DigitalOcean Referral Badge"
+           height="34px"/>
+    </a>
+    <h6 class="text-muted"><small><i class="fa-regular fa-copyright"></i> 2023: MHP Portal, Inc.</small></h6>
+  </div>
+</footer>
+{% endblock %}
+{% endblock %}

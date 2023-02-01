@@ -1,69 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="icon" href="/static/icon.png">
-
-    <title>MHP Portal</title>
-    <link href="/static/bootstrap.css" rel="stylesheet">
-        <link
-      rel="stylesheet"
-      href="https://use.fontawesome.com/releases/v6.2.0/css/all.css"
-    />
-    <script src="/static/bootstrap.bundle.min.js"></script>
-
-</head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-3WHF1QS24H"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-3WHF1QS24H');
-</script>
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-  <div class="container-fluid">
-    <a class="navbar-brand">
-        <img src ='/static/icon.png' height="65"></a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarColor01">
-      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" href="#"><i class="fa-solid fa-clipboard-question"></i> Questions
-            <span class="visually-hidden">(current)</span>
-          </a>
-        </li>
-                  <li class="nav-item">
-          <a class="nav-link" href="/services"><i class="fa-regular fa-building"></i> Services</a>
-        </li>
-                            <li class="nav-item">
-          <a class="nav-link" href="/account"><i class="fa-regular fa-user"></i> Account</a>
-        </li>
-      </ul>
-         <div class="d-flex">
-
-        <button id="myButton" class="btn btn-success my-2 my-sm-0" type="submit" ><i class="fa-solid fa-right-from-bracket"></i></button>
-
-                  <script type="text/javascript">
-    document.getElementById("myButton").onclick = function () {
-        location.href = "/logout";
-    };
-</script>
-    </div>
-    </div>
-  </div>
-</nav>
-<body>
-<div class="container my-2">
+{% extends 'base_mhp.html' %}
+{% block home %}active{% endblock %}
+{% block content %}
+<div class="container px-2 py-3">
     {% from "_formhelpers.html" import render_field %}
     <div class="jumbotron vertical-center">
         <div class="row">
-            <h1 class="text-primary"><i class="fa-solid fa-clipboard-question"></i> Questions</h1>
+            <h1 class="text-primary">
+                <i class="fa-solid fa-clipboard-question"></i> Questions</h1>
             <form method=post>
                 {{ form.csrf_token }}
                 <div class="form-group">
@@ -120,7 +63,6 @@
                                 </div>
                                 {% endif %}
                                 {% endfor %}
-
                             </div>
                         </div>
                         {% for question in questions %}
@@ -130,30 +72,11 @@
                                 {% endfor %}
                             {% endif %}
                         {% endfor %}
-
-
                     </dl>
                 </div>
-
-                <p><input type=submit value=Submit class="btn  btn-lg btn-primary" style="width:100%">
+                <p><input type=submit value=Submit class="btn  btn-lg btn-primary" style="width:100%"></p>
             </form>
-
         </div>
     </div>
-
-    <footer class="bg-white py-4 mt-auto">
-                    <div class="container px-2">
-                <hr>
-                        <h6 class="text-info"><small> <i class="fa-regular fa-envelope"></i> Contact Us: <a href="mailto:chris@mhpportal.app">chris@mhpportal.app</a></small></h6>
-                        <h4 class="text-primary">
-                            <a href="https://twitter.com/MHPPortal"><i class="fa-brands fa-twitter"></i></a>
-                            <a href="https://www.linkedin.com/company/mhpportal"><i class="fa-brands fa-linkedin"></i></a>
-                        </h4>
-                        <a href="https://www.digitalocean.com/?refcode=70e93ffa8b88&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=badge"><img src="https://web-platforms.sfo2.digitaloceanspaces.com/WWW/Badge%202.svg" alt="DigitalOcean Referral Badge" /></a>
-
-                <p class="text-muted"><small>Copyright 2023: MHP Portal, Inc.</small></p>
-                    </div>
-            </footer>
 </div>
-</body>
-</html>
+{% endblock %}
