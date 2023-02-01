@@ -1,0 +1,30 @@
+{% extends 'public/public_base.html' %}
+{% block navitems %}
+<li class="nav-item">
+  <a class="nav-link {% block home %}{% endblock %}" href="/home"><i class="fa-solid fa-clipboard-question"></i> Questions
+  </a>
+</li>
+<li class="nav-item">
+  <a class="nav-link {% block services %}{% endblock %}" href="/services"><i class="fa-regular fa-building"></i> Services</a>
+</li>
+<li class="nav-item">
+  <a class="nav-link {% block account %}{% endblock %}" href="/account"><i class="fa-regular fa-user"></i> Account</a>
+</li>
+{% endblock %}
+
+{% block logout %}
+<div class="d-flex">
+  <button id="logout"
+          class="btn btn-success my-2 my-sm-0" type="submit" >
+    <i class="fa-solid fa-right-from-bracket"></i>
+  </button>
+</div>
+
+<script type="text/javascript">
+    document.getElementById("logout").onclick = function () {
+        location.href = "/logout";
+    };
+</script>
+{% endblock %}
+
+

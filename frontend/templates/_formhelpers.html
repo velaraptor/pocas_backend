@@ -1,25 +1,26 @@
 {% macro render_field(field) %}
   <fieldset>
 
-  <fieldset class="col-form-label mt-2">{{ field.label }}</label>
-    {% if field.type == 'SwitchField' %}
-             <div class="form-check form-switch">
-                {%- if field.errors %}
-                    {{ field(class_="custom-control-input is-invalid%s" % extra_classes)|safe }}
-                {%- else -%}
-                    {{ field(class_="form-check-input%s" % extra_classes)|safe }}
-                {%- endif %}
-    </div>
-    {% else %}
- {{ field(class_="form-control")|safe }}
-     {% endif %}
-  {% if field.errors %}
-    <ul class=errors>
-    {% for error in field.errors %}
-      <li>{{ error }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-  </dd>
+  <fieldset class="col-form-label mt-2">{{ field.label }}
+      </label>
+      {% if field.type == 'SwitchField' %}
+        <div class="form-check form-switch">
+            {%- if field.errors %}
+                {{ field(class_="custom-control-input is-invalid%s" % extra_classes)|safe }}
+            {%- else -%}
+                {{ field(class_="form-check-input%s" % extra_classes)|safe }}
+            {%- endif %}
+        </div>
+        {% else %}
+         {{ field(class_="form-control")|safe }}
+      {% endif %}
+      {% if field.errors %}
+      <ul class=errors>
+          {% for error in field.errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+      </dd>
   </fieldset>
 {% endmacro %}

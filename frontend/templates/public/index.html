@@ -1,0 +1,127 @@
+{% extends 'public/public_base.html' %}
+
+{% block login %}active{% endblock %}
+{% block content %}
+<div class="container px-1">
+    <div class="container px-5">
+        <div class="row gx-5 align-items-center justify-content-center">
+            <div class="col-lg-8 col-xl-7 col-xxl-6">
+                <div class="my-5 text-center text-xl-start">
+                    <h1 class="display-6 fw-bolder text-primary mb-2">
+                        The revolutionary tool that bridges the gap between healthcare and social services!</h1>
+                    <p class="lead text-info mb-4">
+                        MHP Portal integrates a city-wide database of social services, making it easy for healthcare providers
+                        to quickly find and refer patients to resources that can improve their health and well-being.
+                        From food and housing insecurity to transportation and employment challenges,
+                        MHP Portal helps identify and address the root causes of health issues, allowing for a more comprehensive approach to care.
+                        <br><br>
+                        Start making a positive impact on your patients' health and well-being today!
+                    </p>
+                    <p class="lead fw-normal text-muted-50 mb-3">
+                        <small>Currently servicing the Tucson, AZ area.</small></p>
+
+                    <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start">
+                        <a class="btn btn-primary btn-lg px-4 me-sm-3" href="#login-container">Login</a>
+                        <a class="btn btn-outline-dark btn-lg px-4" href="/about">About Us</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-5 col-xxl-6 d-none d-xl-block text-center">
+                <img class="img-fluid rounded-3 my-5" src="/static/banner.png" alt="..." />
+            </div>
+        </div>
+    </div>
+
+    <!-- Features section-->
+    <hr>
+    <section class="py-5" id="features">
+        <div class="container px-5 my-5">
+            <div class="row gx-5">
+                <div class="col-lg-4 mb-5 mb-lg-0"><h2 class="fw-bolder mb-0">
+                    A better way to get community services into the hands of patients.</h2></div>
+                <div class="col-lg-8">
+                    <div class="row gx-5 row-cols-1 row-cols-md-2">
+                        <div class="col mb-5 h-100">
+                            <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3">
+                                <i class="fa-solid fa-bolt"></i>
+                            </div>
+                            <h2 class="h5">Ease of Use</h2>
+                            <p class="mb-0">
+                                Designed for easy use on any web-enabled device,
+                                the MHP Portal empowers healthcare providers with the tools they need to make a
+                                real difference in the lives of their patients. Say goodbye to endless search engines
+                                and outdated databases, and hello to a new way of delivering care that prioritizes
+                                the social and economic factors that impact health.
+                            </p>
+                        </div>
+                        <div class="col mb-5 h-100">
+                            <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3">
+                                <i class="fa-solid fa-truck-medical"></i>
+                            </div>
+                            <h2 class="h5">Mobile and Desktop Friendly</h2>
+                            <p class="mb-0">
+                                Whether you have a laptop, mobile phone, or tablet,
+                                MHP Portal will work for you!
+                            </p>
+                        </div>
+                        <div class="col mb-5 mb-md-0 h-100">
+                            <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3">
+                                <i class="fa-solid fa-user-doctor"></i>
+                            </div>
+                            <h2 class="h5">Made for Healthcare Providers in Mind</h2>
+                            <p class="mb-0">
+                                We use the Accountable Health Communities Health-Related Social Needs Screening Tool
+                                which is a validated SDOH questionnaire through CMS (Center for Medicare and Medicaid Services).
+                            </p>
+                        </div>
+                        <div class="col h-100">
+                            <div class="feature bg-primary bg-gradient text-white rounded-3 mb-3">
+                                <i class="fa-solid fa-file-medical"></i>
+                            </div>
+                            <h2 class="h5">Export Easily</h2>
+                            <p class="mb-0">Easily download a PDF of the results of the questionnaire to a patient!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="py-3" id="scroll-target">
+        <div class="container px-3 py-2 bg-light rounded-3">
+            <div class="row gx-5 align-items-center justify-content-center" id="login-container">
+            {% for message in get_flashed_messages() %}
+                <div class="alert alert-dismissible alert-warning">
+                    <button type="button" class="btn-close" data-dismiss="alert" aria-hidden="true"></button>
+                    {{ message }}
+                </div>
+            {% endfor %}
+                <div class="jumbotron vertical-center">
+                    {% from "_formhelpers.html" import render_field %}
+                    <div class="row">
+                        <form method=post>
+                            {{ form.csrf_token }}
+                            <div class="col">
+                                <h1 class="display-5 fw-bolder text-primary mb-2">Login</h1>
+                                <div class="form-group">
+                                    <dl>
+                                        {{ render_field(form.user_name) }}
+                                        {{ render_field(form.password) }}
+                                        <p class="text-muted">Remember Me:
+                                            <input type="checkbox" id="remember" name="remember" value="False">
+                                        </p>
+                                    </dl>
+                                    <p><input type=submit value=Login style="width:100%" class="btn btn-primary"></p>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start">
+                            <a class="btn btn-warning px-4" href="/password_reset">Forgot Password</a>
+                            <a class="btn btn-outline-dark px-4" href="/register">Register</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

@@ -47,7 +47,7 @@ main_blueprint = Blueprint("main", __name__, template_folder="templates")
 @main_blueprint.route("/", methods=["GET"])
 def welcome():
     """Flash Page"""
-    return render_template("flash.html")
+    return render_template("public/flash.html")
 
 
 @main_blueprint.route("/favicon.ico")
@@ -237,7 +237,7 @@ def login():
             return redirect(url_for("main.home_page"))
         flash("Invalid username/password combination")
         return redirect(url_for("main.login"))
-    return render_template("index.html", form=form)
+    return render_template("public/index.html", form=form)
 
 
 @main_blueprint.route("/password_change", methods=["GET", "POST"])
@@ -305,7 +305,7 @@ def register():
             login_user(user)  # Log in as newly created user
             return redirect(url_for("main.login"))
         flash("A user already exists with that username.")
-    return render_template("register.html", form=form)
+    return render_template("public_user/register.html", form=form)
 
 
 @main_blueprint.route("/password_reset", methods=["GET", "POST"])
@@ -318,13 +318,13 @@ def reset():
             send_email(user)
             flash("Found Email! Check your email for link to reset password!")
         return redirect(url_for("main.login"))
-    return render_template("reset.html")
+    return render_template("public_user/reset.html")
 
 
 @main_blueprint.route("/about", methods=["GET"])
 def get_about():
     """Get About Page"""
-    return render_template("about.html")
+    return render_template("public/about.html")
 
 
 @main_blueprint.route("/password_reset_verified/<token>", methods=["GET", "POST"])
@@ -341,7 +341,7 @@ def reset_verified(token):
         db.session.commit()
         return redirect(url_for("main.login"))
 
-    return render_template("reset_verfied.html")
+    return render_template("pubic_user/reset_verfied.html")
 
 
 @main_blueprint.route("/results", methods=["POST", "GET"])

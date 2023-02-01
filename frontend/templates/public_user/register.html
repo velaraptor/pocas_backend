@@ -1,0 +1,39 @@
+{% extends 'public/public_base.html' %}
+{% block register %}active{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="container px-2 py-3">
+        {% for message in get_flashed_messages() %}
+        <div class="alert alert-dismissible alert-warning">
+            <button type="button" class="btn-close" data-dismiss="alert" aria-hidden="true"></button>
+            {{ message }}
+        </div>
+        {% endfor %}
+        <div class="jumbotron vertical-center">
+            {% from "_formhelpers.html" import render_field %}
+            <div class="row">
+                <form method=post width="50%">
+                    {{ form.csrf_token }}
+                    <div class="col">
+                        <h1 class="text-primary">Register</h1>
+                        <div class="form-group">
+                            <dl>
+                                {{ render_field(form.email) }}
+                                {{ render_field(form.user_name) }}
+                                {{ render_field(form.city) }}
+                                {{ render_field(form.affiliation) }}
+                                {{ render_field(form.password) }}
+                                {{ render_field(form.confirm) }}
+                            </dl>
+                            <p>
+                                <input id="submit" name="submit" type="submit"  style="width:100%"
+                                       value="Register" class="btn btn-primary">
+                            </p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
