@@ -246,7 +246,6 @@ def change_password():
     """Change Password"""
     pass_form = ChangePassForm()
     user_name = current_user.user_name
-
     if pass_form.validate_on_submit():
         user = User.query.filter_by(user_name=user_name.lower()).first()
         if user.check_password(pass_form.old_password.data):
@@ -343,6 +342,16 @@ def reset_verified(token):
         return redirect(url_for("main.login"))
 
     return render_template("pubic_user/reset_verfied.html")
+
+
+@main_blueprint.route("/results/topn/<topn_id>/<service_id>", methods=["DELETE"])
+@login_required
+def delete_service_topn(topn_id, service_id):
+    """Delete Service for Top N result"""
+    s1 = requests.Session()
+    s1.auth = (os.getenv("API_USER"), os.getenv("API_PASS"))
+    req = s1.delete(f"{API_URL}top_n/service/{topn_id}/{service_id}")
+    return req.json()
 
 
 @main_blueprint.route("/results", methods=["POST", "GET"])

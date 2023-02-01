@@ -191,22 +191,28 @@
       if (x.style.display === "none") {
         x.style.display = "block";
       } else {
-        x.style.display = "none";
-        for(var i=0; i < services.length; i++) {
-            if(services[i].id == divID){
-                services.splice(i,1);
-                }
-        };
-        featureGroup.getLayers()
-              .filter(function(layer) {
-                return layer instanceof L.Marker;
-              })
-              .forEach(function(layer) {
-                console.log(layer);
-                if(layer.options.customId == divID){
-                    map.removeLayer(layer);
-                 }
-              });
+            x.style.display = "none";
+            for(var i=0; i < services.length; i++) {
+                if(services[i].id == divID){
+                    services.splice(i,1);
+                    }
+            };
+            featureGroup.getLayers()
+                  .filter(function(layer) {
+                    return layer instanceof L.Marker;
+                  })
+                  .forEach(function(layer) {
+                    if(layer.options.customId == divID){
+                        map.removeLayer(layer);
+                     }
+                  });
+     $.ajax({
+        type:'DELETE',
+        url:'/results/topn/{{ payload.name }}/' + divID,
+        accept: "application/json",
+        contenttype: 'application/json',
+        })
+
       }
     };
 
