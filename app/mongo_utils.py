@@ -1,10 +1,9 @@
 """Mongo Utils"""
 import datetime
-import uuid
 from db.mongo_connector import MongoConnector
 
 
-def send_user_data(dob, address, answers, services):
+def send_user_data(dob, address, answers, services, result_id):
     """Send data for Platform Analytics"""
     try:
         service_ids = [service["id"] for service in services]
@@ -16,7 +15,7 @@ def send_user_data(dob, address, answers, services):
                 "answers": answers,
                 "top_services": service_ids,
                 "time": datetime.datetime.now(),
-                "name": uuid.uuid4().hex,
+                "name": result_id,
             }
         ]
         m = MongoConnector()
