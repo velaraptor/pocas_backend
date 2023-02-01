@@ -75,7 +75,7 @@ def load_user(user_id):
 @login_manager.unauthorized_handler
 def unauthorized():
     """Redirect unauthorized users to Login page."""
-    flash("You must be logged in to view that page.")
+    flash("You must be logged in to view that page.", "warning")
     return redirect(url_for("main.login") + "#login-container")
 
 
@@ -184,7 +184,10 @@ def home_page():
         top_results = post_questions.json()
         print(top_results)
         if not radius_check["radius_status"]:
-            flash("Patient not within 200 miles of any services in MHP Database!")
+            flash(
+                "Patient not within 200 miles of any services in MHP Database!",
+                "warning",
+            )
             top_results["services"] = []
         tag_form = Tags()
 
@@ -235,7 +238,7 @@ def login():
             user.last_login = datetime.now()
             db.session.commit()
             return redirect(url_for("main.home_page"))
-        flash("Invalid username/password combination")
+        flash("Invalid username/password combination", "warning")
         return redirect(url_for("main.login") + "#login-container")
     return render_template("public/index.html", form=form)
 
@@ -250,9 +253,9 @@ def change_password():
         user = User.query.filter_by(user_name=user_name.lower()).first()
         if user.check_password(pass_form.old_password.data):
             user.set_password(pass_form.password.data)
-            flash("Password Changed!")
+            flash("Password Changed!", "info")
             return render_template("password_change.html", form=pass_form)
-        flash("Current Password is incorrect!")
+        flash("Current Password is incorrect!", "warning")
     return render_template("password_change.html", form=pass_form)
 
 
@@ -277,7 +280,7 @@ def user_account():
         existing_user.affiliation = form.affiliation.data
         existing_user.email = form.email.data
         db.session.commit()
-        flash("Updated Profile!")
+        flash("Updated Profile!", "info")
         return render_template("user_account.html", form=form, user_data=user_data)
     return render_template("user_account.html", form=form, user_data=user_data)
 
@@ -303,7 +306,7 @@ def register():
             db.session.commit()  # Create new user
             login_user(user)  # Log in as newly created user
             return redirect(url_for("main.login"))
-        flash("A user already exists with that username.")
+        flash("A user already exists with that username.", "warning")
     return render_template("public_user/register.html", form=form)
 
 
@@ -315,9 +318,9 @@ def reset():
         user = User.verify_email(email)
         if user:
             send_email(user)
-            flash("Found Email! Check your email for link to reset password!")
+            flash("Found Email! Check your email for link to reset password!", "info")
             return redirect(url_for("main.login") + "#login-container")
-        flash("No Email Found!")
+        flash("No Email Found!", "warning")
     return render_template("public_user/reset.html")
 
 
@@ -332,7 +335,7 @@ def reset_verified(token):
     """Reset Verified based on JWT token"""
     user = User.verify_reset_token(token)
     if not user:
-        flash("no user found")
+        flash("no user found", "warning")
         return redirect(url_for("main.login") + "#login-container")
 
     password = request.form.get("password")
@@ -341,7 +344,7 @@ def reset_verified(token):
         db.session.commit()
         return redirect(url_for("main.login"))
 
-    return render_template("pubic_user/reset_verfied.html")
+    return render_template("public_user/reset_verfied.html")
 
 
 @main_blueprint.route("/results/topn/<topn_id>/<service_id>", methods=["DELETE"])

@@ -90,10 +90,17 @@
         <div class="container px-3 py-2 bg-light rounded-3">
             <div class="row gx-5 align-items-center justify-content-center" id="login-container">
                 <div class="jumbotron vertical-center">
-                    {% for message in get_flashed_messages() %}
+                    {% for message in get_flashed_messages(category_filter=["warning"]) %}
                         <div class="alert alert-dismissible alert-warning">
                             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                             <i class="fa fa-exclamation-triangle"></i> {{ message }}
+                        </div>
+                    {% endfor %}
+
+                    {% for message in get_flashed_messages(category_filter=["info"]) %}
+                        <div class="alert alert-dismissible alert-success">
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            <i class="fa-regular fa-thumbs-up"></i> {{ message }}
                         </div>
                     {% endfor %}
                     {% from "_formhelpers.html" import render_field %}
@@ -103,12 +110,11 @@
                             <div class="col">
                                 <h2 class="fw-bolder text-primary mb-2">Login</h2>
                                 <div class="form-group">
-                                    <dl>
                                         {{ render_field(form.user_name) }}
                                         {{ render_field(form.password) }}
 
                                         <div class="form-check form-switch">
-                                            <label class="form-check-label"
+                                            <label class="form-check-label mb-3"
                                                    for="remember">
                                                 <p class="text-muted">
                                                 Remember Me
@@ -117,7 +123,6 @@
                                             <input class="form-check-input"
                                                    type="checkbox" id="remember" name="remember" checked="">
                                         </div>
-                                    </dl>
                                     <p><input type=submit value=Login style="width:100%" class="btn btn-primary"></p>
                                 </div>
                             </div>

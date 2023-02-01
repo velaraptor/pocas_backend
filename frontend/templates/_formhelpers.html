@@ -1,8 +1,6 @@
 {% macro render_field(field) %}
-  <fieldset>
 
-  <fieldset class="col-form-label mt-2">{{ field.label }}
-      </label>
+  <div class="form-floating mb-3">
       {% if field.type == 'SwitchField' %}
         <div class="form-check form-switch">
             {%- if field.errors %}
@@ -21,6 +19,7 @@
           {% endfor %}
         </ul>
       {% endif %}
-      </dd>
-  </fieldset>
+      {{ field.label }}
+      </label>
+  </div>
 {% endmacro %}
