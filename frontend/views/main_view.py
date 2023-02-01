@@ -236,7 +236,7 @@ def login():
             db.session.commit()
             return redirect(url_for("main.home_page"))
         flash("Invalid username/password combination")
-        return redirect(url_for("main.login"))
+        return redirect(url_for("main.login") + "#login-container")
     return render_template("public/index.html", form=form)
 
 
