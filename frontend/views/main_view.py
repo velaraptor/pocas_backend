@@ -317,7 +317,8 @@ def reset():
         if user:
             send_email(user)
             flash("Found Email! Check your email for link to reset password!")
-        return redirect(url_for("main.login") + "#login-container")
+            return redirect(url_for("main.login") + "#login-container")
+        flash("No Email Found!")
     return render_template("public_user/reset.html")
 
 
