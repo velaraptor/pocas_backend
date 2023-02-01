@@ -11,7 +11,7 @@ from wtforms import (
     IntegerField,
     SelectMultipleField,
 )
-from wtforms.validators import DataRequired, EqualTo, Length, Email
+from wtforms.validators import DataRequired, EqualTo, Length, Email, NumberRange
 import pandas as pd
 from frontend.consts import API_URL  # pylint: disable=import-error
 
@@ -116,7 +116,7 @@ class LoginForm(FlaskForm):
 class Questions(FlaskForm):
     """Questions for POCAS"""
 
-    age = IntegerField("Age", validators=[DataRequired()])
+    age = IntegerField("Age", validators=[DataRequired(), NumberRange(min=0, max=150)])
     zip_code = StringField(
         "Zip Code", validators=[DataRequired(), Length(min=5, max=5)]
     )

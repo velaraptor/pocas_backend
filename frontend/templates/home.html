@@ -56,7 +56,12 @@
                                          aria-labelledby="heading{{question.safe_html_name}}" style="">
                                         <div style="padding: 1%;">
                                             {% for q in question.questions %}
-                                            {{ render_field(q) }}
+                                                <fieldset class="col-form-label mt-2">
+                                                    {{ q.label }}
+                                                    <div class="form-check form-switch">
+                                                        {{ q(class_="form-check-input%s" % extra_classes)|safe }}
+                                                    </div>
+                                                </fieldset>
                                             {% endfor %}
                                         </div>
                                     </div>

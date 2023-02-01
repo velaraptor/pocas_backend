@@ -3,11 +3,18 @@
 {% block content %}
 <div class="container">
     <div class="container px-2 py-3">
-        {% for message in get_flashed_messages() %}
-        <div class="alert alert-dismissible alert-warning">
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        {% for message in get_flashed_messages(category_filter=["warning"]) %}
+            <div class="alert alert-dismissible alert-warning">
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 <i class="fa fa-exclamation-triangle"></i> {{ message }}
-        </div>
+            </div>
+        {% endfor %}
+
+        {% for message in get_flashed_messages(category_filter=["info"]) %}
+            <div class="alert alert-dismissible alert-success">
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                <i class="fa-regular fa-thumbs-up"></i> {{ message }}
+            </div>
         {% endfor %}
         <div class="jumbotron vertical-center">
             {% from "_formhelpers.html" import render_field %}
@@ -17,13 +24,12 @@
                         <h1 class="text-primary">
                             <i class="fa-solid fa-key"></i> Reset Password</h1>
                         <div class="form-group">
-                            <dl>
-                                <fieldset class="col-form-label mt-2">
-                                    <label for="password">Password</label>
-                                    <input class='form-control'
+                             <div class="form-floating mb-3">
+                                 <input class='form-control'
                                            type="password" name="password" id="password" required>
-                                </fieldset>
-                            </dl>
+                                 <label for="password">Password</label>
+
+                                </div>
                             <p>
                                 <input id="submit" name="submit" type="submit"
                                        style="width:100%" value="Reset" class="btn btn-primary">

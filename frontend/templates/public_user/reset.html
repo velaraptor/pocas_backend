@@ -3,11 +3,18 @@
 {% block content %}
 <div class="container my-1">
     <div class="container px-2 py-3">
-        {% for message in get_flashed_messages() %}
-        <div class="alert alert-dismissible alert-warning">
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        {% for message in get_flashed_messages(category_filter=["warning"]) %}
+            <div class="alert alert-dismissible alert-warning">
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 <i class="fa fa-exclamation-triangle"></i> {{ message }}
-        </div>
+            </div>
+        {% endfor %}
+
+        {% for message in get_flashed_messages(category_filter=["info"]) %}
+            <div class="alert alert-dismissible alert-success">
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                <i class="fa-regular fa-thumbs-up"></i> {{ message }}
+            </div>
         {% endfor %}
         <div class="jumbotron vertical-center">
             {% from "_formhelpers.html" import render_field %}
@@ -18,12 +25,10 @@
                             <i class="fa-solid fa-key"></i>
                             Reset Password</h1>
                         <div class="form-group">
-                            <dl>
-                                <fieldset class="col-form-label mt-2">
-                                    <label for="email">Email</label>
-                                    <input class="form-control" type="email" name="email" id="email" required>
-                                </fieldset>
-                            </dl>
+                             <div class="form-floating mb-3">
+                                 <input class="form-control" type="email" name="email" id="email" required>
+                                 <label for="email">Email</label>
+                             </div>
                             <p>
                                 <input id="submit" name="submit" type="submit"  style="width:100%"
                                        value="Submit" class="btn btn-primary">
