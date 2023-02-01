@@ -28,8 +28,8 @@
 <div class="container px-2 py-3">
     {% for message in get_flashed_messages() %}
     <div class="alert alert-dismissible alert-warning">
-        <button type="button" class="btn-close" data-dismiss="alert" aria-hidden="true"></button>
-        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <i class="fa fa-exclamation-triangle"></i> {{ message }}
       </div>
     {% endfor %}
     {% if not results %}

@@ -76,7 +76,7 @@ def load_user(user_id):
 def unauthorized():
     """Redirect unauthorized users to Login page."""
     flash("You must be logged in to view that page.")
-    return redirect(url_for("main.login"))
+    return redirect(url_for("main.login") + "#login-container")
 
 
 @main_blueprint.route("/services", methods=["GET"])
@@ -236,7 +236,7 @@ def login():
             db.session.commit()
             return redirect(url_for("main.home_page"))
         flash("Invalid username/password combination")
-        return redirect(url_for("main.login"))
+        return redirect(url_for("main.login") + "#login-container")
     return render_template("public/index.html", form=form)
 
 
@@ -317,7 +317,8 @@ def reset():
         if user:
             send_email(user)
             flash("Found Email! Check your email for link to reset password!")
-        return redirect(url_for("main.login"))
+            return redirect(url_for("main.login") + "#login-container")
+        flash("No Email Found!")
     return render_template("public_user/reset.html")
 
 
@@ -333,7 +334,7 @@ def reset_verified(token):
     user = User.verify_reset_token(token)
     if not user:
         flash("no user found")
-        return redirect(url_for("main.login"))
+        return redirect(url_for("main.login") + "#login-container")
 
     password = request.form.get("password")
     if password:
