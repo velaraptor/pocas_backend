@@ -12,6 +12,12 @@
     height: inherit;
     width: inherit;
 }
+
+.badge:hover {
+    color: #73a839;
+    background-color: transparent;
+    cursor:pointer;
+}
 </style>
 {% endblock %}
 {% block title %}MHP Portal - Services{% endblock %}
@@ -71,9 +77,11 @@
     <hr>
     <div class="row">
     {% for marker in payload.services %}
-        <div class="col-md-4">
-            <div class="card border-info mb-3" id="{{ marker.id }}">
-                <div class="card-header text-info"><strong>{{ marker['name'] }}</strong></div>
+        <div class="col-md-4" id="{{ marker.id }}">
+            <div class="card border-info mb-3">
+                <div class="card-header text-info d-flex justify-content-between align-items-center"><strong>{{ marker['name'] }}</strong>
+                    <button type="button" class="btn-close" onclick="hideCard('{{ marker.id }}')"></button>
+                </div>
                 <div class="card-body">
                     <p class="card-text">
                         {% if marker['phone'] %}
@@ -128,16 +136,18 @@
 {% endblock %}
 
 {% block script %}
-<script>
+<script src="/static/jquery-3.5.1.js"></script>
+<script type="text/javascript">
   var blueMarker = L.AwesomeMarkers.icon({
                         icon: "fa-circle-info",
                         prefix: "fa",
                         markerColor: 'blue'
                     });
+
   var featureGroup = L.featureGroup([
       {% for marker in payload.services %}
       {% if marker['lon'] %}
-          L.marker([{{ marker['lat'] }}, {{ marker['lon'] }}], {icon: blueMarker}).
+          L.marker([{{ marker['lat'] }}, {{ marker['lon'] }}], {icon: blueMarker, customId:"{{ marker.id }}"}).
           bindPopup("{{ marker['name'] }} <br> <b> Topic: {{ marker.general_topic }} </b><br> <a href='#{{ marker.id }}'>Jump to Service</a>"),
          {% endif %}
     {% endfor %}
@@ -147,7 +157,7 @@
         attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         subdomains: 'abcd',
         minZoom: 8,
-        maxZoom: 13,
+        maxZoom: 14,
         ext: 'png'
     });
 
@@ -163,7 +173,8 @@
                 prefix: "fa",
                 markerColor: 'red'
             });
-        user_marker = new L.marker([{{ payload.user_loc['lat'] }}, {{ payload.user_loc['lon'] }} ], { icon: userMarker });
+        user_marker = new L.marker([{{ payload.user_loc['lat'] }}, {{ payload.user_loc['lon'] }} ],
+        { icon: userMarker, customId: "userID" });
         map.addLayer(user_marker);
     {% endif %}
 
@@ -174,9 +185,37 @@
           var markerBounds = L.latLngBounds(latLngs);
           map.fitBounds(markerBounds);
     {% endif %}
-</script>
-<script src="/static/jquery-3.5.1.js"></script>
-<script type="text/javascript">
+    var services = JSON.parse('{{ payload.services | tojson() }}');
+    function hideCard(divID) {
+      var x = document.getElementById(divID);
+      if (x.style.display === "none") {
+        x.style.display = "block";
+      } else {
+            x.style.display = "none";
+            for(var i=0; i < services.length; i++) {
+                if(services[i].id == divID){
+                    services.splice(i,1);
+                    }
+            };
+            featureGroup.getLayers()
+                  .filter(function(layer) {
+                    return layer instanceof L.Marker;
+                  })
+                  .forEach(function(layer) {
+                    if(layer.options.customId == divID){
+                        map.removeLayer(layer);
+                     }
+                  });
+     $.ajax({
+        type:'DELETE',
+        url:'/results/topn/{{ payload.name }}/' + divID,
+        accept: "application/json",
+        contenttype: 'application/json',
+        })
+
+      }
+    };
+
     $(document).on('click','#get-pdf',function(e)
                {
     $.ajax({
@@ -184,9 +223,8 @@
         url:'/results',
         dataType: 'json',
         accept: "application/json",
-
         contenttype: 'application/pdf',
-        data: {services:  '{{ payload.services | tojson() }}'},
+        data: {services:  JSON.stringify(services)},
         success: function (data) {
             if(data){
                 console.log(data)

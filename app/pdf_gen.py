@@ -32,32 +32,34 @@ def generate_pdf(services):
     styles = getSampleStyleSheet()
     styles.add(ParagraphStyle(name="Justify", alignment=TA_JUSTIFY))
     Story.append(Spacer(1, 12))
-    Story.append(Paragraph("Services", styles["Heading1"]))
+    Story.append(
+        Paragraph("<font name='Helvetica'>Services</font>", styles["Heading1"])
+    )
     for service in services:
         Story.append(Spacer(1, 12))
         header = f"""
-            {service.name}
+            <font name='Helvetica' color="#4582ec">{service.name}</font>
             """
-
-        address = (
-            f"""{service.address} {service.city}, {service.state} {service.zip_code} """
-        )
+        address = f"""<font name='Helvetica'>
+                {service.address} {service.city}, {service.state} {service.zip_code}</font>"""
         web_site = f"""{service.web_site}"""
         hours = f"""
+        <font name='Helvetica'>
             Hours of Operation<br/>
             Days: {service.days}<br/>
             Hours: {service.hours}<br/>
+            </font>
             """
         Story.append(Paragraph(header, styles["Heading2"]))
         if service.address:
             Story.append(Paragraph(address, styles["Justify"]))
         if service.phone:
-            phone = f"""Phone Number: {phone_format(service.phone)} """
+            phone = f"""<font name='Helvetica'>Phone Number: {phone_format(service.phone)}</font>"""
             Story.append(Paragraph(phone, styles["Justify"]))
         if service.web_site:
             Story.append(
                 Paragraph(
-                    '<font color="blue"><link'
+                    '<font color="blue" name="Helvetica"><link'
                     f' href="{web_site}">{web_site}</link></font>',
                     styles["Justify"],
                 )

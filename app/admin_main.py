@@ -131,12 +131,12 @@ def home():
 @security.context_processor
 def security_context_processor():
     """Security Context for Flask-Login to work with Flask-Admin"""
-    return dict(
-        admin_base_template=admin.base_template,
-        admin_view=admin.index_view,
-        h=admin_helpers,
-        get_url=url_for,
-    )
+    return {
+        "admin_base_template": admin.base_template,
+        "admin_view": admin.index_view,
+        "h": admin_helpers,
+        "get_url": url_for,
+    }
 
 
 admin.add_view(

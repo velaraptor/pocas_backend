@@ -159,6 +159,26 @@ async def check_zone(address: str):
     return {"radius_status": check}
 
 
+@app.delete(
+    "/api/v1/top_n/service/{_id}/{service_id}",
+    dependencies=[
+        Depends(get_current_username),
+    ],
+)
+async def delete_service(_id: str, service_id: str):
+    """Delete Service Recommended from MHP. Used when user deletes a card on frontend UI"""
+    m = MongoConnector()
+    db = "platform"
+    collection = "user_data"
+    try:
+        c = m.client[db][collection]
+        c.update_one({"name": _id}, {"$pull": {"top_services": service_id}})
+        return {"status": True}
+    except Exception as exc:
+        print(exc)
+        raise HTTPException(status_code=404, detail="Could not delete") from exc
+
+
 @app.post(
     "/api/v1/top_n",
     dependencies=[
@@ -187,13 +207,13 @@ async def get_top_results(  # pylint: disable=dangerous-default-value
             r["id"] = str(r["_id"])
             r.pop("_id", None)
         assert len(top_services) <= int(top_n)
-        send_user_data(dob, address, answers, top_services)
-        analytic_name = uuid.uuid4().hex
+        result_id = uuid.uuid4().hex
+        send_user_data(dob, address, answers, top_services, result_id)
         ip_data = {
             "ip_address": request.client.host,
             "endpoint": "top_n",
             "date": datetime.datetime.now(),
-            "name": analytic_name,
+            "name": result_id,
         }
         if user_name:
             ip_data["ip_address"] = user_name
@@ -202,7 +222,7 @@ async def get_top_results(  # pylint: disable=dangerous-default-value
             "services": top_services,
             "num_of_services": len(top_services),
             "user_loc": user_loc,
-            "name": analytic_name,
+            "name": result_id,
         }
     except Exception as exc:
         print(exc)
