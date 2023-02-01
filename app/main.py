@@ -159,6 +159,26 @@ async def check_zone(address: str):
     return {"radius_status": check}
 
 
+@app.delete(
+    "/api/v1/top_n/service/{_id}/{service_id}",
+    dependencies=[
+        Depends(get_current_username),
+    ],
+)
+async def delete_service(_id: str, service_id: str):
+    """Delete Service Recommended from MHP. Used when user deletes a card on frontend UI"""
+    m = MongoConnector()
+    db = "platform"
+    collection = "user_data"
+    try:
+        c = m.client[db][collection]
+        c.update_one({"name": _id}, {"$pull": {"top_services": service_id}})
+        return {"status": True}
+    except Exception as exc:
+        print(exc)
+        raise HTTPException(status_code=404, detail="Could not delete") from exc
+
+
 @app.post(
     "/api/v1/top_n",
     dependencies=[
