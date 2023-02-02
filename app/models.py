@@ -24,6 +24,7 @@ class Service(BaseModel):
     days: Optional[str]
     hours: Optional[str]
     id: Optional[str]
+    pocas_score: Optional[float]
 
 
 class FullServices(BaseModel):
