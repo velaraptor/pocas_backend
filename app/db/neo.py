@@ -17,7 +17,9 @@ class BaseNeo:
             f"bolt://{self.__host}:{self.__port}", auth=(self.__user, self.__pwd)
         )
         self.max_date = self.find_max_date()
+        self.import_date = self.find_max_created_date()
         self.d3_response = None
+        self.network_labels = [["Questions"], ["Services"], ["Tags"]]
 
     def find_max_date(self):
         """Find Import Max Date"""
@@ -48,6 +50,7 @@ class BaseNeo:
             .astimezone(pytz.timezone("UTC"))
             .astimezone(pytz.timezone("America/Chicago"))
         )
+        # add date as human friendly str
         max_dt_str = datetime.strftime(max_dt, "%h %d, %Y  %H:%M:%S %Z")
         return max_dt_str
 
@@ -97,8 +100,8 @@ class BaseNeo:
             data = session.run(
                 """
                 MATCH p=(a)-[]->(b)
-                WHERE LABELS(a) in [['Services'], ['Tags'], ['Questions']]
-                AND LABELS(b) in [['Services'], ['Tags'], ['Questions']]
+                WHERE LABELS(a) in $labels
+                AND LABELS(b) in $labels
                 AND a.date = b.date = $max_date
                 WITH p unwind nodes(p) as n unwind relationships(p) as r
                 WITH collect( distinct {id: ID( n), name: n.name, group: LABELS(n)[0] }) as nl,
@@ -106,6 +109,7 @@ class BaseNeo:
                 RETURN {nodes: nl, links: rl} as payload
                 """,
                 max_date=self.max_date,
+                labels=self.network_labels,
             )
             self.d3_response = data.data()[0]["payload"]
 
@@ -117,5 +121,5 @@ class BaseNeo:
             "services": services,
             "tags": tags,
             "stats": {"tags": len(tags), "services": len(services)},
-            "max_date": self.find_max_created_date(),
+            "max_date": self.import_date,
         }
