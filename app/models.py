@@ -104,6 +104,7 @@ class Disconnected(BaseModel):
     services: List[ServiceNeo]
     tags: List[Tag]
     stats: Stats
+    max_date: str
 
 
 class Node(BaseModel):

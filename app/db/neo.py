@@ -1,5 +1,7 @@
 """Base Neo4j API"""
 import os
+from datetime import datetime
+import pytz
 from neo4j import GraphDatabase
 
 
@@ -28,6 +30,26 @@ class BaseNeo:
                 """
             )
             return data.data()[0]["date"]
+
+    def find_max_created_date(self):
+        """Find Import Max Created Date"""
+
+        with self.driver.session() as session:
+            data = session.run(
+                """
+                MATCH (n:Import)
+                RETURN MAX(n.created) as date
+                """
+            )
+            max_created = data.data()[0]["date"]
+        max_created = int(max_created / 1000)
+        max_dt = (
+            datetime.fromtimestamp(max_created)
+            .astimezone(pytz.timezone("UTC"))
+            .astimezone(pytz.timezone("America/Chicago"))
+        )
+        max_dt_str = datetime.strftime(max_dt, "%h %d, %Y  %H:%M:%S %Z")
+        return max_dt_str
 
     def run_services_disconnected(self):
         """Get Tags disconnected to Questions"""
@@ -95,4 +117,5 @@ class BaseNeo:
             "services": services,
             "tags": tags,
             "stats": {"tags": len(tags), "services": len(services)},
+            "max_date": self.find_max_created_date(),
         }
