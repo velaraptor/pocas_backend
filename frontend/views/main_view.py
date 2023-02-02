@@ -4,6 +4,7 @@
 import os
 import json
 from datetime import datetime, timedelta
+import urllib.parse
 from dateutil.relativedelta import relativedelta
 from flask import (
     render_template,
@@ -94,6 +95,9 @@ def get_services():
         "user_loc": None,
         "name": None,
     }
+    for s in payload["services"]:
+        s["sms_payload"] = get_encode_services(s)
+
     return render_template(
         "services.html",
         payload=payload,
@@ -121,7 +125,8 @@ def filter_tags():
             "user_loc": None,
             "name": None,
         }
-
+        for s in payload["services"]:
+            s["sms_payload"] = get_encode_services(s)
         if f_val == " ":
             return render_template(
                 "services.html",
@@ -138,6 +143,8 @@ def filter_tags():
         services = services_t + services_g
         payload["services"] = services
         payload["num_of_services"] = len(services)
+        for s in payload["services"]:
+            s["sms_payload"] = get_encode_services(s)
         return render_template(
             "services.html",
             payload=payload,
@@ -147,6 +154,24 @@ def filter_tags():
             results=False,
         )
     return None
+
+
+def get_encode_services(service):
+    """Encode Service for SMS"""
+    body = service["name"] + "\n"
+    if service["phone"]:
+        body = body + f"Phone: {service['phone']}" + "\n"
+    if service["address"]:
+        body = body + f"Address: {service['address']}" + "\n"
+    if service["days"]:
+        body = body + f"Days: {service['days']}" + "\n"
+    if service["hours"]:
+        body = body + f"Hours: {service['hours']}" + "\n"
+    if service["web_site"]:
+        body = body + f"Web Site: {service['web_site']}" + "\n"
+    body = body + "Sent via MHP Portal (https://mhpportal.app)"
+    safe_body = urllib.parse.quote(body)
+    return safe_body
 
 
 @main_blueprint.route("/home", methods=["GET", "POST"])
@@ -190,6 +215,8 @@ def home_page():
             )
             top_results["services"] = []
         tag_form = Tags()
+        for s in top_results["services"]:
+            s["sms_payload"] = get_encode_services(s)
 
         return render_template(
             "services.html",
