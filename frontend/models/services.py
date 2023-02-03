@@ -26,6 +26,9 @@ class Service:
     def __init__(self, service):
         for key, value in service.items():
             setattr(self, key, value)
+        print(f"{self.name}: {self.pocas_score}")
+        if not self.pocas_score:
+            self.pocas_score = 0.5
 
     def __eq__(self, other):
         return self.id == other.id and self.name == other.name
@@ -76,7 +79,6 @@ class Services:
         """Export dict to be read"""
         payload = self.__dict__
         payload["services"] = [s.serialize() for s in self.services]
-        print(payload["services"])
         return payload
 
     def sort(self, key="general_topic", desc=False):
