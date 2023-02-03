@@ -41,6 +41,7 @@ from frontend.models.flask_models import (  # pylint: disable=import-error
 )
 from frontend.models.services import Services
 from frontend.email_function import send_email  # pylint: disable=import-error
+from frontend.setup_logging import logger
 
 main_blueprint = Blueprint("main", __name__, template_folder="templates")
 
@@ -107,7 +108,7 @@ def filter_tags():
     """Filter by Tag and show services"""
     if request.form["comp_select"]:
         tag_form = Tags()
-        print(tag_form.tags.data)
+        logger.debug(tag_form.tags.data)
         f_val = request.form["comp_select"]
         services_resp = requests.get(f"{API_URL}services", timeout=20)
         payload = services_resp.json()
@@ -170,7 +171,7 @@ def home_page():
             json=answers,
         )
         payload = post_questions.json()
-        print(len(payload["services"]))
+        logger.debug(len(payload["services"]))
         if not radius_check["radius_status"]:
             flash(
                 "Patient not within 200 miles of any services in MHP Database!",

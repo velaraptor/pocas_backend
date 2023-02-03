@@ -1,6 +1,11 @@
 """Mongo Utils"""
 import datetime
+import logging
 from db.mongo_connector import MongoConnector
+
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("mongo_utils")
 
 
 def send_user_data(dob, address, answers, services, result_id):
@@ -23,9 +28,9 @@ def send_user_data(dob, address, answers, services, result_id):
         collection = "user_data"
         m.upload_results(db, collection, data)
     except Exception as e:
-        print("Send User data did not send!")
-        print(dob)
-        print(str(e))
+        logger.warning("Send User data did not send!")
+        logger.warning(dob)
+        logger.warning(str(e))
 
 
 def send_ip_address_mongo(data):
@@ -36,4 +41,4 @@ def send_ip_address_mongo(data):
         collection = "ip_hits"
         m.upload_results(db, collection, data)
     except Exception as e:
-        print(str(e))
+        logger.warning(str(e))

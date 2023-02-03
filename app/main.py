@@ -7,6 +7,7 @@ import os
 import io
 import secrets
 import uuid
+import logging
 from typing import Optional, List
 from fastapi import (
     FastAPI,
@@ -57,6 +58,10 @@ app = FastAPI(
 security = HTTPBasic()
 temp = APIRouter()
 app.include_router(temp, prefix="/api/v1")
+
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("MHP_API")
 
 
 @app.on_event("startup")
@@ -179,7 +184,7 @@ async def delete_service(_id: str, service_id: str):
         c.update_one({"name": _id}, {"$pull": {"top_services": service_id}})
         return {"status": True}
     except Exception as exc:
-        print(exc)
+        logger.warning(exc)
         raise HTTPException(status_code=500, detail="Could not delete") from exc
 
 
@@ -229,7 +234,7 @@ async def get_top_results(  # pylint: disable=dangerous-default-value
             "name": result_id,
         }
     except Exception as exc:
-        print(exc)
+        logger.warning(exc)
         raise HTTPException(status_code=404, detail="Results not found") from exc
 
 

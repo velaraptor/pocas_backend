@@ -1,7 +1,11 @@
 """Default Mongo Connector to Read/Upload"""
 
 import os
+import logging
 from pymongo import MongoClient, GEOSPHERE
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("MongoConnector")
 
 
 class MongoConnector:
@@ -85,7 +89,7 @@ class MongoConnector:
         for d in c.find({key: data[key]}):
             results.append(d)
         if len(results) > 0:
-            print("Found Duplicates!")
+            logger.info("Found Duplicates!")
             return None
         return data
 
