@@ -27,11 +27,17 @@ class Service:
         for key, value in service.items():
             setattr(self, key, value)
 
+    def __eq__(self, other):
+        return self.id == other.id and self.name == other.name
+
+    def __hash__(self):
+        return hash(("id", self.id, "name", self.name))
+
     def serialize(self):
         """Serialize Service object"""
         return self.__dict__
 
-    def get_encode_service(self):
+    def encode_service(self):
         """Encode Service for SMS"""
         body = self.name + "\n"
         if self.phone:
@@ -64,6 +70,7 @@ class Services:
                     self.services.append(Service(service))
             else:
                 setattr(self, key, value)
+        self.services = list(set(self.services))
 
     def export(self):
         """Export dict to be read"""
