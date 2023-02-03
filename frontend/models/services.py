@@ -67,12 +67,14 @@ class Service:
 class Services:
     """Services object for FrontEnd"""
 
-    services = []
+    services = None
     num_of_services = None
     user_loc = None
     name = None
 
     def __init__(self, payload):
+        self.services = []
+        print(f"Initial Services: {self.services}")
         for key, value in payload.items():
             if key == "services":
                 for service in value:
@@ -80,7 +82,7 @@ class Services:
             else:
                 setattr(self, key, value)
         self.services = list(set(self.services))
-        print(len(self.services))
+        print(f"Length of Services at init: {len(self.services)}")
 
     def export(self):
         """Export dict to be read"""
@@ -93,7 +95,7 @@ class Services:
         self.services = sorted(
             self.services, key=operator.attrgetter(key), reverse=desc
         )
-        print(len(self.services))
+        print(f"Length of Services at sort: {len(self.services)}")
 
     def filter(self, filter_val):
         """Filter based on filter Value for tags and general topic"""
