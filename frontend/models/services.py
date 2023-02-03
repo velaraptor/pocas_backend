@@ -29,6 +29,7 @@ class Service:
         print(f"{self.name}: {self.pocas_score}")
         if not self.pocas_score:
             self.pocas_score = 0.5
+        self.remove_tag_duplicate()
 
     def __eq__(self, other):
         return self.id == other.id and self.name == other.name
@@ -39,6 +40,11 @@ class Service:
     def serialize(self):
         """Serialize Service object"""
         return self.__dict__
+
+    def remove_tag_duplicate(self):
+        """Remove Tag Duplciate if General Topic"""
+        if self.general_topic in self.tags:
+            self.tags = [tag for tag in self.tags if tag != self.general_topic]
 
     def encode_service(self):
         """Encode Service for SMS"""

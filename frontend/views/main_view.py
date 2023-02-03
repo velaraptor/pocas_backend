@@ -170,6 +170,7 @@ def home_page():
             json=answers,
         )
         payload = post_questions.json()
+        print(len(payload["services"]))
         if not radius_check["radius_status"]:
             flash(
                 "Patient not within 200 miles of any services in MHP Database!",
