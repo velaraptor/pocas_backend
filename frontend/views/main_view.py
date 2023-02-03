@@ -4,7 +4,6 @@
 import os
 import json
 from datetime import datetime, timedelta
-import urllib.parse
 from dateutil.relativedelta import relativedelta
 from flask import (
     render_template,
@@ -40,6 +39,7 @@ from frontend.models.flask_models import (  # pylint: disable=import-error
     db,
     login_manager,
 )
+from frontend.models.services import Services
 from frontend.email_function import send_email  # pylint: disable=import-error
 
 main_blueprint = Blueprint("main", __name__, template_folder="templates")
@@ -86,21 +86,14 @@ def get_services():
     """Get all Services"""
     tag_form = Tags()
     services_resp = requests.get(f"{API_URL}services", timeout=20)
-    services = services_resp.json()
-    services = sorted(services["services"], key=lambda d: d["general_topic"])
-
-    payload = {
-        "services": services,
-        "num_of_services": len(services),
-        "user_loc": None,
-        "name": None,
-    }
-    for s in payload["services"]:
-        s["sms_payload"] = get_encode_services(s)
+    payload = services_resp.json()
+    obj = Services(payload)
+    obj.sort()
+    obj.encode_services()
 
     return render_template(
         "services.html",
-        payload=payload,
+        payload=obj.export(),
         tags=tag_form,
         vals=get_tags(),
         active=False,
@@ -117,61 +110,31 @@ def filter_tags():
         print(tag_form.tags.data)
         f_val = request.form["comp_select"]
         services_resp = requests.get(f"{API_URL}services", timeout=20)
-        services = services_resp.json()
-        services = sorted(services["services"], key=lambda d: d["general_topic"])
-        payload = {
-            "services": services,
-            "num_of_services": len(list(services)),
-            "user_loc": None,
-            "name": None,
-        }
-        for s in payload["services"]:
-            s["sms_payload"] = get_encode_services(s)
+        payload = services_resp.json()
+        obj = Services(payload)
+        obj.sort()
+        obj.encode_services()
+
         if f_val == " ":
             return render_template(
                 "services.html",
-                payload=payload,
+                payload=obj.export(),
                 tags=tag_form,
                 vals=get_tags(),
                 active=f_val,
                 results=False,
             )
-        services_g = list(filter(lambda x: x["general_topic"] == f_val, services))
-        services_t = [
-            x for x in services if f_val in x["tags"] and f_val != x["general_topic"]
-        ]
-        services = services_t + services_g
-        payload["services"] = services
-        payload["num_of_services"] = len(services)
-        for s in payload["services"]:
-            s["sms_payload"] = get_encode_services(s)
+
+        obj.filter(filter_val=f_val)
         return render_template(
             "services.html",
-            payload=payload,
+            payload=obj.export(),
             tags=tag_form,
             vals=get_tags(),
             active=f_val,
             results=False,
         )
     return None
-
-
-def get_encode_services(service):
-    """Encode Service for SMS"""
-    body = service["name"] + "\n"
-    if service["phone"]:
-        body = body + f"Phone: {service['phone']}" + "\n"
-    if service["address"]:
-        body = body + f"Address: {service['address']}" + "\n"
-    if service["days"]:
-        body = body + f"Days: {service['days']}" + "\n"
-    if service["hours"]:
-        body = body + f"Hours: {service['hours']}" + "\n"
-    if service["web_site"]:
-        body = body + f"Web Site: {service['web_site']}" + "\n"
-    body = body + "Sent via MHP Portal (https://mhpportal.app)"
-    safe_body = urllib.parse.quote(body)
-    return safe_body
 
 
 @main_blueprint.route("/home", methods=["GET", "POST"])
@@ -206,21 +169,22 @@ def home_page():
             f"{API_URL}top_n?top_n=15&dob={dob}&address={address}&user_name={current_user.user_name}",
             json=answers,
         )
-        top_results = post_questions.json()
-        print(top_results)
+        payload = post_questions.json()
         if not radius_check["radius_status"]:
             flash(
                 "Patient not within 200 miles of any services in MHP Database!",
                 "warning",
             )
-            top_results["services"] = []
+            payload["services"] = []
         tag_form = Tags()
-        for s in top_results["services"]:
-            s["sms_payload"] = get_encode_services(s)
+
+        obj = Services(payload)
+        obj.sort("pocas_score", desc=True)
+        obj.encode_services()
 
         return render_template(
             "services.html",
-            payload=top_results,
+            payload=obj.export(),
             tags=tag_form,
             active=False,
             vals=get_tags(),

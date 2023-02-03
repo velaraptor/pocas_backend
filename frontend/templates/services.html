@@ -70,7 +70,7 @@
     {% if payload.services %}
         <hr>
         <div style="display: flex; justify-content: flex-end">
-            <button type="submit" class="btn btn-success"style="width:100%" id="get-pdf" name="get-pdf">
+            <button type="submit" class="btn btn-success" style="width:100%" id="get-pdf" name="get-pdf">
                 Download <i class="fa-regular fa-file-pdf"></i></button>
         </div>
     {% endif %}
@@ -78,16 +78,16 @@
     <div class="row">
     {% for marker in payload.services %}
         <div class="col-md-4" id="{{ marker.id }}">
-            <div class="card border-info mb-3">
+            <div class="card border-info mb-3" style="height:325px;">
                 <div class="card-header text-info d-flex justify-content-between align-items-center"><strong>{{ marker['name'] }}</strong>
                     <button type="button" class="btn-close" onclick="hideCard('{{ marker.id }}')"></button>
                 </div>
-                <div class="card-body py-1">
-                    <p class="card-text">
+                <div class="card-body py-1" style="overflow-y: scroll;">
                         {% if marker['phone'] %}
-                            <p class="text-success">
+                            <p class="text-success"><small>
                                 <i class="fa-solid fa-phone"></i>
                                 <a href="tel:+{{ marker['phone'] }}">{{ marker['phone'] }}</a>
+                            </small>
                             </p>
                         {% endif %}
                         {% if marker['address'] %}
@@ -98,20 +98,19 @@
                             </p>
                         {% endif %}
                         {% if marker['days'] %}
-                            <p class="text-info">
+                            <p class="text-info"><small>
                                 <i class="fa-solid fa-calendar-days"></i>
                                 {{ marker['days'] }}
-                            </p>
-                        {% endif %}
-                        {% if marker['hours'] %}
-                            <p class="text-info">
-                                <i class="fa-solid fa-clock"></i> {{ marker['hours'] }}
+                                {% if marker['hours'] %}  | <i class="fa-solid fa-clock"></i> {{ marker['hours'] }}
+                                {% endif %}
+                            </small>
                             </p>
                         {% endif %}
                         {% if marker['web_site'] %}
-                            <p class="text-info">
+                            <p class="text-info"><small>
                                 <a href="{{ marker['web_site'] }}" class="card-link" target="_blank">
                                     <i class="fa-solid fa-link"></i> {{ marker['web_site'] }}</a>
+                            </small>
                             </p>
                         {% endif %}
                         {% if marker['general_topic'] %}
@@ -130,7 +129,6 @@
                             <a class="btn btn-outline-success px-2 my-2" href="sms:?&body={{ marker['sms_payload'] }}">
                                 <i class="fa-solid fa-comment-medical"></i> Share via SMS</a>
                         </div>
-                    </p>
                 </div>
             </div>
         </div>
