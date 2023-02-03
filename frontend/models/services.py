@@ -74,6 +74,7 @@ class Services:
             else:
                 setattr(self, key, value)
         self.services = list(set(self.services))
+        print(len(self.services))
 
     def export(self):
         """Export dict to be read"""
@@ -86,6 +87,7 @@ class Services:
         self.services = sorted(
             self.services, key=operator.attrgetter(key), reverse=desc
         )
+        print(len(self.services))
 
     def filter(self, filter_val):
         """Filter based on filter Value for tags and general topic"""
