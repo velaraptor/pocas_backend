@@ -23,7 +23,11 @@ class API2NeoImporter(BaseNeoImporter):
             f"{self.api_path}/api/v1/{self.node_type.lower()}", timeout=10
         )
         data = resp.json()
-        for d in data[self.node_type.lower()]:
+        key = self.node_type.lower()
+        if self.node_type.lower() == "questions":
+            key = "items"
+
+        for d in data[key]:
             if "id" in d:
                 d["mongo_id"] = d["id"]
             if "general_topic" in d:
