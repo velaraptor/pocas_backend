@@ -218,8 +218,11 @@ async def get_top_results(  # pylint: disable=dangerous-default-value
     Send questionnaire and get Top N results
     """
     try:
-        len_quest = await get_questions()
-        assert len(answers) == len(len_quest["questions"])
+        m = MongoConnectorAsync()
+        len_quest = await m.query_results_api(
+            db="results", collection="questions", query={}
+        )
+        assert len(answers) == len(len_quest)
         gtr = GetTopNResults(top_n=top_n, dob=dob, answers=answers, address=address)
         top_services, user_loc = gtr.get_top_results()
         for r in top_services:
