@@ -27,6 +27,17 @@ class Service(BaseModel):
     pocas_score: Optional[float]
 
 
+class ServiceOut(Service):
+    """Service Pagination"""
+
+    _id: int
+
+    class Config:
+        """Config"""
+
+        orm_mode = True
+
+
 class FullServices(BaseModel):
     """Full Services Model"""
 
@@ -41,6 +52,17 @@ class Question(BaseModel):
     question: str
     tags: List[str]
     main_tag: Optional[str]
+
+
+class QuestionOut(Question):
+    """Question Pagination"""
+
+    _id: int
+
+    class Config:
+        """Config"""
+
+        orm_mode = True
 
 
 class QuestionList(BaseModel):
