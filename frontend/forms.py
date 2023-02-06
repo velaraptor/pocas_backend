@@ -14,6 +14,7 @@ from wtforms import (
 from wtforms.validators import DataRequired, EqualTo, Length, Email, NumberRange
 import pandas as pd
 from frontend.consts import API_URL  # pylint: disable=import-error
+from frontend.setup_logging import logger
 
 
 def get_tags():
@@ -29,7 +30,7 @@ def get_tags():
     except requests.exceptions.RequestException as e:
         raise SystemExit(e) from e
     except Exception as e:
-        print(str(e))
+        logger.warning(str(e))
         values = []
     return values
 

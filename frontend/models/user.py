@@ -6,6 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 import jwt
 from frontend.models.flask_models import db
+from frontend.setup_logging import logger
 
 
 class User(UserMixin, db.Model):
@@ -39,7 +40,7 @@ class User(UserMixin, db.Model):
                 token, key=os.getenv("FLASK_SECRET_KEY"), algorithms="HS256"
             )["reset_password"]
         except Exception:
-            print(traceback.format_exc())
+            logger.warning(traceback.format_exc())
             return None
         return User.query.filter_by(user_name=username).first()
 

@@ -7,6 +7,7 @@ import os
 import io
 import secrets
 import uuid
+import logging
 from typing import Optional, List
 from fastapi import (
     FastAPI,
@@ -20,9 +21,11 @@ from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi.responses import StreamingResponse
 from fastapi_limiterx import FastAPILimiter
 from fastapi_limiterx.depends import RateLimiter
+from fastapi_paginate import Page, add_pagination
+from fastapi_paginate.ext.motor import paginate
 import aioredis
-from cosine_search.top_results import GetTopNResults, get_all_services
-from db.mongo_connector import MongoConnector
+from cosine_search.top_results import GetTopNResults
+from db.mongo_connector import MongoConnector, MongoConnectorAsync
 from db.consts import DB_SERVICES, get_lat_lon, EXAMPLE_RESULTS
 from db.neo import BaseNeo
 from models import (
@@ -32,8 +35,9 @@ from models import (
     FullServices,
     Disconnected,
     TopNResults,
-    QuestionList,
+    QuestionOut,
     D3Response,
+    ServiceOut,
 )
 from mongo_utils import send_user_data, send_ip_address_mongo
 from pdf_gen import generate_pdf
@@ -57,6 +61,10 @@ app = FastAPI(
 security = HTTPBasic()
 temp = APIRouter()
 app.include_router(temp, prefix="/api/v1")
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("MHP_API")
+mongo_client = MongoConnectorAsync().client
 
 
 @app.on_event("startup")
@@ -96,30 +104,37 @@ async def get_services():
     """
     Get all Services for POCAS
     """
-    all_services = get_all_services()
-    num_docs = len(all_services)
+    m = MongoConnectorAsync()
+    results = await m.query_results_api(db="results", collection="services", query={})
+    num_docs = len(results)
     if num_docs > 0:
-        response = {"services": all_services, "num_of_services": num_docs}
+        response = {"services": results, "num_of_services": num_docs}
         return response
     raise HTTPException(status_code=404, detail="Services not found")
 
 
 @app.get(
+    "/api/v1/services2",
+    response_model=Page[ServiceOut],
+    dependencies=[Depends(RateLimiter(times=50, seconds=5))],
+)
+async def get_services2():
+    """
+    Get all Services for POCAS Pagnation
+    """
+    return await paginate(mongo_client.results.services)
+
+
+@app.get(
     "/api/v1/questions",
-    response_model=QuestionList,
+    response_model=Page[QuestionOut],
     dependencies=[Depends(RateLimiter(times=50, seconds=5))],
 )
 async def get_questions():
     """
     Get all Questions for POCAS
     """
-    m = MongoConnector()
-    questions = GetTopNResults(1, 1205970, None, None).get_questions(m)
-    num_docs = len(questions)
-    if num_docs > 0:
-        response = {"questions": questions}
-        return response
-    raise HTTPException(status_code=404, detail="Questions not found")
+    return await paginate(mongo_client.results.questions)
 
 
 @app.post(
@@ -134,10 +149,10 @@ async def post_new_service(service: Service):
     Upload Service to MongoDB
     """
     # https://github.com/uriyyo/fastapi-pagination/blob/main/fastapi_pagination/ext/pymongo.py
-    m = MongoConnector()
+    m = MongoConnectorAsync()
     payload = service.dict()
     payload = get_lat_lon(payload)
-    mongo_id = m.upload_results(
+    mongo_id = await m.upload_results(
         db=DB_SERVICES["db"], collection=DB_SERVICES["collection"], data=[payload]
     )
     return {"id": str(mongo_id[0])}
@@ -179,7 +194,7 @@ async def delete_service(_id: str, service_id: str):
         c.update_one({"name": _id}, {"$pull": {"top_services": service_id}})
         return {"status": True}
     except Exception as exc:
-        print(exc)
+        logger.warning(exc)
         raise HTTPException(status_code=500, detail="Could not delete") from exc
 
 
@@ -229,7 +244,7 @@ async def get_top_results(  # pylint: disable=dangerous-default-value
             "name": result_id,
         }
     except Exception as exc:
-        print(exc)
+        logger.warning(exc)
         raise HTTPException(status_code=404, detail="Results not found") from exc
 
 
@@ -257,8 +272,8 @@ async def get_zip_codes():
     """
     Get Group By of all Zip Codes in User Data
     """
-    m = MongoConnector()
-    zip_code_group = m.aggregate(
+    m = MongoConnectorAsync()
+    zip_code_group = await m.aggregate(
         db="platform",
         collection="user_data",
         query={
@@ -287,14 +302,16 @@ async def get_user_data(
     `2022-11-16T19:00:44.173000`
     """
     # tie answers to tags
-    m = MongoConnector()
+    m = MongoConnectorAsync()
     query = {"zip_code": int(zip_code)}
 
     if start:
         date_query = {"$gte": start, "$lt": end}
         query["time"] = date_query
 
-    results = m.query_results_api(db="platform", collection="user_data", query=query)
+    results = await m.query_results_api(
+        db="platform", collection="user_data", query=query
+    )
     return results
 
 
@@ -321,3 +338,6 @@ async def get_network():
     neo = BaseNeo()
     neo.get_network()
     return neo.d3_response
+
+
+add_pagination(app)

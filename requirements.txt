@@ -23,3 +23,5 @@ aioredis
 psycopg2-binary==2.9.2
 neo4j==5.4.0
 SQLAlchemy==1.4.46
+motor==3.1.1
+fastapi-paginate==0.1.0

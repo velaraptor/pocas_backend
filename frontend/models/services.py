@@ -1,6 +1,7 @@
 """Generic Top Services Class"""
 import urllib.parse
 import operator
+from frontend.setup_logging import logger
 
 
 class Service:
@@ -26,7 +27,7 @@ class Service:
     def __init__(self, service):
         for key, value in service.items():
             setattr(self, key, value)
-        print(f"{self.name}: {self.pocas_score}")
+        logger.debug(f"{self.name}: {self.pocas_score}")
         if not self.pocas_score:
             self.pocas_score = 0.5
         self.remove_tag_duplicate()
@@ -78,15 +79,18 @@ class Services:
 
     def __init__(self, payload):
         self.services = []
-        print(f"Initial Services: {self.services}")
+        logger.debug(f"Initial Services: {self.services}")
         for key, value in payload.items():
             if key == "services":
+                for service in value:
+                    self.services.append(Service(service))
+            elif key == "items":
                 for service in value:
                     self.services.append(Service(service))
             else:
                 setattr(self, key, value)
         self.services = list(set(self.services))
-        print(f"Length of Services at init: {len(self.services)}")
+        logger.info(f"Length of Services at init: {len(self.services)}")
 
     def export(self):
         """Export dict to be read"""
@@ -99,7 +103,7 @@ class Services:
         self.services = sorted(
             self.services, key=operator.attrgetter(key), reverse=desc
         )
-        print(f"Length of Services at sort: {len(self.services)}")
+        logger.debug(f"Length of Services at sort: {len(self.services)}")
 
     def filter(self, filter_val):
         """Filter based on filter Value for tags and general topic"""
