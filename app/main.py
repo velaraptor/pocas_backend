@@ -24,7 +24,7 @@ from fastapi_limiterx.depends import RateLimiter
 from fastapi_paginate import Page, add_pagination
 from fastapi_paginate.ext.motor import paginate
 import aioredis
-from cosine_search.top_results import GetTopNResults, get_all_services
+from cosine_search.top_results import GetTopNResults
 from db.mongo_connector import MongoConnector, MongoConnectorAsync
 from db.consts import DB_SERVICES, get_lat_lon, EXAMPLE_RESULTS
 from db.neo import BaseNeo
@@ -104,11 +104,11 @@ async def get_services():
     """
     Get all Services for POCAS
     """
-    # https://github.com/nazmulnnb/fastapi-paginate/blob/main/examples/pagination_motor.py
-    all_services = get_all_services()
-    num_docs = len(all_services)
+    m = MongoConnectorAsync()
+    results = await m.query_results_api(db="results", collection="services", query={})
+    num_docs = len(results)
     if num_docs > 0:
-        response = {"services": all_services, "num_of_services": num_docs}
+        response = {"services": results, "num_of_services": num_docs}
         return response
     raise HTTPException(status_code=404, detail="Services not found")
 
@@ -149,10 +149,10 @@ async def post_new_service(service: Service):
     Upload Service to MongoDB
     """
     # https://github.com/uriyyo/fastapi-pagination/blob/main/fastapi_pagination/ext/pymongo.py
-    m = MongoConnector()
+    m = MongoConnectorAsync()
     payload = service.dict()
     payload = get_lat_lon(payload)
-    mongo_id = m.upload_results(
+    mongo_id = await m.upload_results(
         db=DB_SERVICES["db"], collection=DB_SERVICES["collection"], data=[payload]
     )
     return {"id": str(mongo_id[0])}

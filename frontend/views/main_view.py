@@ -144,7 +144,7 @@ def home_page():
     """Home Page with Questions"""
     questions = requests.get(f"{API_URL}questions", timeout=3).json()
 
-    for q in questions["questions"]:
+    for q in questions["items"]:
         setattr(Questions, "question_" + str(q["id"]), SwitchField(q["question"]))
     form = Questions()
 
@@ -194,7 +194,7 @@ def home_page():
         )
     # get unique questions
     question_tags = []
-    for question in questions["questions"]:
+    for question in questions["items"]:
         question_tags.append(question["main_tag"])
     question_tags = sorted(set(question_tags))
 
@@ -206,7 +206,7 @@ def home_page():
             "safe_html_name": question_tag.replace(" ", ""),
             "questions": [],
         }
-        for question in questions["questions"]:
+        for question in questions["items"]:
             if question["main_tag"] == question_tag:
                 form_question_temp = getattr(
                     form, "question_" + str(question.get("id"))

@@ -199,9 +199,7 @@ class MongoConnectorAsync(MongoConnector):
     @staticmethod
     async def check_duplicates(c, data, key):
         """Check Duplicates in Collection"""
-        results = []
-        for d in await c.find({key: data[key]}):
-            results.append(d)
+        results = await c.find({key: data[key]}).to_list(length=None)
         if len(results) > 0:
             logger.info("Found Duplicates!")
             return None

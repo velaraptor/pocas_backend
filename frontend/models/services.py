@@ -84,6 +84,9 @@ class Services:
             if key == "services":
                 for service in value:
                     self.services.append(Service(service))
+            elif key == "items":
+                for service in value:
+                    self.services.append(Service(service))
             else:
                 setattr(self, key, value)
         self.services = list(set(self.services))
