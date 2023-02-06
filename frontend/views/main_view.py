@@ -39,9 +39,9 @@ from frontend.models.flask_models import (  # pylint: disable=import-error
     db,
     login_manager,
 )
-from frontend.models.services import Services
+from frontend.models.services import Services  # pylint: disable=import-error
 from frontend.email_function import send_email  # pylint: disable=import-error
-from frontend.setup_logging import logger
+from frontend.setup_logging import logger  # pylint: disable=import-error
 
 main_blueprint = Blueprint("main", __name__, template_folder="templates")
 
@@ -158,7 +158,7 @@ def home_page():
         address = form.zip_code.data
         answers = [
             getattr(form, "question_" + str(question.get("id"))).data
-            for question in questions["questions"]
+            for question in questions["items"]
         ]
         answers = list(map(int, answers))
         s = requests.Session()
