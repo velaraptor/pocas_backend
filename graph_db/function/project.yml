@@ -22,7 +22,7 @@ packages:
           - name: neo4j-scheduler
             sourceType: scheduler
             sourceDetails:
-              cron: "0 */1 * * *"
+              cron: "0 0 * * 0"
         parameters: {}
         annotations: {}
         limits:
