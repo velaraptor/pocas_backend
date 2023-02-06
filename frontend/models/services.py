@@ -51,15 +51,19 @@ class Service:
         """Encode Service for SMS"""
         body = self.name + "\n"
         if self.phone:
-            body = body + f"Phone: {self.phone}" + "\n"
+            body = body + f"Phone: {self.phone} \n"
         if self.address:
-            body = body + f"Address: {self.address}" + "\n"
+            body = (
+                body
+                + f"Address: {self.address} {self.city},"
+                f" {self.state} {self.zip_code} \n"
+            )
         if self.days:
-            body = body + f"Days: {self.days}" + "\n"
+            body = body + f"Days: {self.days} \n"
         if self.hours:
-            body = body + f"Hours: {self.hours}" + "\n"
+            body = body + f"Hours: {self.hours} \n"
         if self.web_site:
-            body = body + f"Web Site: {self.web_site}" + "\n"
+            body = body + f"Web Site: {self.web_site} \n"
         body = body + "Sent via MHP Portal (https://mhpportal.app)"
         safe_body = urllib.parse.quote(body)
         self.sms_payload = safe_body
