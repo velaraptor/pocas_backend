@@ -81,16 +81,37 @@ def unauthorized():
     return redirect(url_for("main.login") + "#login-container")
 
 
-@main_blueprint.route("/services", methods=["GET"])
+@main_blueprint.route("/services/", methods=["GET"])
 @login_required
 def get_services():
     """Get all Services"""
     tag_form = Tags()
+    logger.debug(tag_form.tags.data)
     services_resp = requests.get(f"{API_URL}services", timeout=20)
     payload = services_resp.json()
     obj = Services(payload)
     obj.sort()
     obj.encode_services()
+    tag = request.args.get("tag")
+    if tag:
+        if tag == " ":
+            return render_template(
+                "services.html",
+                payload=obj.export(),
+                tags=tag_form,
+                vals=get_tags(),
+                active=tag,
+                results=False,
+            )
+        obj.filter(filter_val=tag)
+        return render_template(
+            "services.html",
+            payload=obj.export(),
+            tags=tag_form,
+            vals=get_tags(),
+            active=tag,
+            results=False,
+        )
 
     return render_template(
         "services.html",
@@ -107,34 +128,8 @@ def get_services():
 def filter_tags():
     """Filter by Tag and show services"""
     if request.form["comp_select"]:
-        tag_form = Tags()
-        logger.debug(tag_form.tags.data)
         f_val = request.form["comp_select"]
-        services_resp = requests.get(f"{API_URL}services", timeout=20)
-        payload = services_resp.json()
-        obj = Services(payload)
-        obj.sort()
-        obj.encode_services()
-
-        if f_val == " ":
-            return render_template(
-                "services.html",
-                payload=obj.export(),
-                tags=tag_form,
-                vals=get_tags(),
-                active=f_val,
-                results=False,
-            )
-
-        obj.filter(filter_val=f_val)
-        return render_template(
-            "services.html",
-            payload=obj.export(),
-            tags=tag_form,
-            vals=get_tags(),
-            active=f_val,
-            results=False,
-        )
+        return redirect(url_for("main.get_services", tag=f_val))
     return None
 
 
@@ -151,7 +146,6 @@ def home_page():
     if form.validate_on_submit():
         age = form.age.data
         # convert to date
-        # TODO: this should be using python-dateutil library
         dob = datetime.now() - timedelta(days=1) - relativedelta(years=age)
         # change dob to int style
         dob = int(datetime.strftime(dob, "%m%d%Y"))
