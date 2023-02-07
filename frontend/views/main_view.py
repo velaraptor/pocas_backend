@@ -122,10 +122,10 @@ def get_services():
 @login_required
 def filter_tags():
     """Filter by Tag and show services"""
-    if request.form["comp_select"]:
+    if request.form.get("comp_select"):
         f_val = request.form["comp_select"]
         return redirect(url_for("main.get_services", tag=f_val))
-    return None
+    return redirect(url_for("main.get_services", tag=None))
 
 
 @main_blueprint.route("/home", methods=["GET", "POST"])
