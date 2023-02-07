@@ -36,6 +36,10 @@
 <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css">
 <link rel="stylesheet" href="/static/leaflet.awesome-markers.css">
 <script src="/static/leaflet.awesome-markers.js"></script>
+<script async
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyADfhwbFms8vsRFXX4T_co-qj4rAlkwJOc&libraries=places&callback=initMap">
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 {% endblock %}
 
 {% block services %}active{% endblock %}
@@ -58,10 +62,9 @@
         <form method="POST" id="filters" action="/filter">
             {{ tags.csrf_token }}
             <div class="form-group">
-                <div class="form-label mt-4 text-muted"><small>{{ tags.tags.label }}</small></div>
-                <div class="row">
-                    <div class="col">
+                <div class="input-group mb-3">
                         <select name="comp_select" class="selectpicker form-control">
+                            <option value="nada" disabled selected>Filter by Tags</option>
                             {% for o in vals %}
                                 {% if active == o %}
                                     <option value="{{ o }}" selected>{{ o }}</option>
@@ -70,14 +73,24 @@
                                 {% endif %}
                             {% endfor %}
                         </select>
-                    </div>
-                    <div class="col">
                         <button type="submit" class="btn btn-success">
                             <i class="fa-solid fa-magnifying-glass"></i></button>
-                    </div>
                 </div>
             </div>
         </form>
+        <div class="form-group">
+            <div class="input-group mb-3">
+                <input id="pac-input" type="text"
+                       class="form-control"
+                       placeholder="Filter by Location"
+                       aria-label="Filter Location"
+                       aria-describedby="button-addon2">
+                <button class="btn btn-primary"
+                        type="button" id="button-addon2">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </div>
+        </div>
     {% endif %}
     <hr>
     <div class="jumbotron vertical-center" id="map-container">
@@ -256,5 +269,16 @@
         }
         })
     });
+</script>
+<script>
+const input = document.getElementById("pac-input");
+const options = {
+  componentRestrictions: { country: "us" },
+  fields: ["geometry", "name"],
+  strictBounds: false,
+  types: ["(cities)"],
+};
+const autocomplete = new google.maps.places.Autocomplete(input, options);
+
 </script>
 {% endblock %}
