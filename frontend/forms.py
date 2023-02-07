@@ -20,17 +20,16 @@ from frontend.setup_logging import logger
 def get_tags():
     """Get Tags from POCAS API and get unique ones"""
     try:
-        services_resp = requests.get(f"{API_URL}services", timeout=20)
+        services_resp = requests.get(f"{API_URL}services", timeout=5)
         services = pd.DataFrame(services_resp.json()["services"])
         g_t = services.general_topic.dropna().unique().tolist()
         tags = services.tags.explode().dropna().unique().tolist()
-        tags = tags + [" "]
         values = set(g_t + tags)
         values = sorted(values)
     except requests.exceptions.RequestException as e:
         raise SystemExit(e) from e
     except Exception as e:
-        logger.warning(str(e))
+        logger.warning(str(e), exc_info=True)
         values = []
     return values
 

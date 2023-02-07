@@ -100,12 +100,22 @@ def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
     response_model=FullServices,
     dependencies=[Depends(RateLimiter(times=50, seconds=5))],
 )
-async def get_services():
+async def get_services(tag: Optional[str] = None):
     """
     Get all Services for POCAS
     """
     m = MongoConnectorAsync()
-    results = await m.query_results_api(db="results", collection="services", query={})
+    query = {}
+    if tag:
+        query = {
+            "$or": [
+                {"tags": {"$in": [tag]}},
+                {"general_topic": {"$in": [tag]}},
+            ],
+        }
+    results = await m.query_results_api(
+        db="results", collection="services", query=query
+    )
     num_docs = len(results)
     if num_docs > 0:
         response = {"services": results, "num_of_services": num_docs}

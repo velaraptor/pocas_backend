@@ -85,24 +85,19 @@ def unauthorized():
 @login_required
 def get_services():
     """Get all Services"""
+    tag = request.args.get("tag")
+
     tag_form = Tags()
     logger.debug(tag_form.tags.data)
-    services_resp = requests.get(f"{API_URL}services", timeout=20)
+    data = None
+    if tag:
+        data = {"tag": tag}
+    services_resp = requests.get(f"{API_URL}services", timeout=20, data=data)
     payload = services_resp.json()
     obj = Services(payload)
     obj.sort()
     obj.encode_services()
-    tag = request.args.get("tag")
     if tag:
-        if tag == " ":
-            return render_template(
-                "services.html",
-                payload=obj.export(),
-                tags=tag_form,
-                vals=get_tags(),
-                active=tag,
-                results=False,
-            )
         obj.filter(filter_val=tag)
         return render_template(
             "services.html",
