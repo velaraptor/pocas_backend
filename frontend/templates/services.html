@@ -81,8 +81,8 @@
     {% if payload.services %}
         <hr>
         <div style="display: flex; justify-content: flex-end">
-            <button type="submit" class="btn btn-success" style="width:100%" id="get-pdf" name="get-pdf">
-                Download <i class="fa-regular fa-file-pdf"></i></button>
+            <button type="submit" class="btn btn-success btn-lg" style="width:100%" id="get-pdf" name="get-pdf">
+                Download <i class="fa-solid fa-file-pdf"></i></button>
         </div>
     {% endif %}
     <hr>
@@ -162,7 +162,7 @@
       {% for marker in payload.services %}
       {% if marker['lon'] %}
           L.marker([{{ marker['lat'] }}, {{ marker['lon'] }}], {icon: blueMarker, customId:"{{ marker.id }}"}).
-          bindPopup("<h5 class='text-info'>{{ marker['name'] }}</h5><p class='text-muted'><small><i class='fa-solid fa-location-dot'></i>{{ marker['address'] }}<br>{{ marker['city'] }}, {{ marker['state'] }} {{ marker['zip_code'] }}</small></p><p class='text-success'> Topic: {{ marker.general_topic }} </p> <a class='btn btn-outline-info px-2 my-2' href='#{{ marker.id }}'>Jump to Service</a>"),
+          bindPopup("<h5 class='text-info'>{{ marker['name'] }}</h5><p class='text-muted'><small><i class='fa-solid fa-location-dot'></i>{{ marker['address'] }}<br>{{ marker['city'] }}, {{ marker['state'] }} {{ marker['zip_code'] }}</small></p><p class='text-success'> Topic: {{ marker.general_topic }} </p> <a class='btn btn-outline-primary px-2 my-2' href='#{{ marker.id }}'>Jump to Service</a>"),
          {% endif %}
     {% endfor %}
     ]);
@@ -233,13 +233,14 @@
 
     $(document).on('click','#get-pdf',function(e)
                {
+               var servicePayload = services.map(({ sms_payload, ...item }) => item);
     $.ajax({
         type:'POST',
         url:'/results',
         dataType: 'json',
         accept: "application/json",
         contenttype: 'application/pdf',
-        data: {services:  JSON.stringify(services)},
+        data: {services:  JSON.stringify(servicePayload)},
         success: function (data) {
             if(data){
                 console.log(data)
