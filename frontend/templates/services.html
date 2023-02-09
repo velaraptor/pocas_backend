@@ -185,9 +185,9 @@
                             </ul>
                         {% endif %}
                        <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start">
-                            <a class="btn btn-outline-success px-2 my-2" href="sms:?&body={{ marker['sms_payload'] }}">
+                            <a class="btn btn-outline-success px-4 my-1" href="sms:?&body={{ marker['sms_payload'] }}">
                                 <i class="fa-solid fa-comment-medical"></i> Share via SMS</a>
-                    <button type="button" class="btn btn-outline-success px-2 my-2"
+                    <button type="button" class="btn btn-outline-success px-4 my-1"
                             data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="{{ marker['sms_payload'] }}">
                         <i class="fa-solid fa-comment-medical"></i> Share via MHP Text
                     </button>
@@ -310,13 +310,15 @@ function showAlert() {
 
     $(document).on('click','#get-pdf',function(e)
                {
+    var servicePayload = services.map(({ sms_payload, ...item }) => item);
+
     $.ajax({
         type:'POST',
         url:'/results',
         dataType: 'json',
         accept: "application/json",
         contenttype: 'application/pdf',
-        data: {services:  JSON.stringify(services)},
+        data: {services:  JSON.stringify(servicePayload)},
         success: function (data) {
             if(data){
                 console.log(data)
