@@ -27,6 +27,14 @@
   overflow:auto;
   z-index: 98;
 }
+
+#submitted-sms {
+  display: none;
+}
+
+#submitted-sms.show {
+  display: block;
+}
 </style>
 {% endblock %}
 {% block title %}MHP Portal - Services{% endblock %}
@@ -39,6 +47,46 @@
 
 {% block services %}active{% endblock %}
 {% block content %}
+
+
+
+<!-- Modal -->
+<div class="modal" id="exampleModal" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-success" id="exampleModalLabel">
+                    <i class="fa-solid fa-comment-medical"></i> Share via MHP Text</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-dismissible alert-success" id="submitted-sms">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    Sent Text Message
+                </div>
+                <form action="{{ url_for('main.send_twilio_sms') }}" method="post" onsubmit="showAlert();" target="hidden-form">
+                    <label class="form-label" for="phone_number">Phone Number in Format (xxxxxxxxxx)</label>
+
+                    <input type="tel" class="form-control" name="phone_number" id="phone_number" pattern="^\d{10}$" required>
+                    <input type="hidden" class="form-control" id="twilio_body" name="twilio_body">
+                    <button type="submit" class="btn btn-primary px-2 my-2">Send</button>
+                </form>
+                <iframe style="display:none" name="hidden-form"></iframe>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
 <div class="container px-2 py-3">
     <button
         type="button"
@@ -81,8 +129,8 @@
     {% if payload.services %}
         <hr>
         <div style="display: flex; justify-content: flex-end">
-            <button type="submit" class="btn btn-success" style="width:100%" id="get-pdf" name="get-pdf">
-                Download <i class="fa-regular fa-file-pdf"></i></button>
+            <button type="submit" class="btn btn-success btn-lg" style="width:100%" id="get-pdf" name="get-pdf">
+                Download <i class="fa-solid fa-file-pdf"></i></button>
         </div>
     {% endif %}
     <hr>
@@ -136,10 +184,15 @@
                                 {% endfor %}
                             </ul>
                         {% endif %}
-                        <div>
+                       <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start">
                             <a class="btn btn-outline-success px-2 my-2" href="sms:?&body={{ marker['sms_payload'] }}">
                                 <i class="fa-solid fa-comment-medical"></i> Share via SMS</a>
-                        </div>
+                    <button type="button" class="btn btn-outline-success px-2 my-2"
+                            data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="{{ marker['sms_payload'] }}">
+                        <i class="fa-solid fa-comment-medical"></i> Share via MHP Text
+                    </button>
+                       </div>
+
                 </div>
             </div>
         </div>
@@ -152,6 +205,30 @@
 <script src="/static/jquery-3.5.1.js"></script>
 <script src="/static/scroll_top.js"></script>
 <script type="text/javascript">
+
+
+const successSMS = document.querySelector('#submitted-sms');
+
+const exampleModal = document.getElementById('exampleModal')
+exampleModal.addEventListener('show.bs.modal', event => {
+  // Button that triggered the modal
+  const button = event.relatedTarget
+  // Extract info from data-bs-* attributes
+  const sms_body = button.getAttribute('data-bs-whatever')
+  // If necessary, you could initiate an AJAX request here
+  // and then do the updating in a callback.
+  //
+  // Update the modal's content.
+  const modalBodyInput = exampleModal.querySelector('.modal-body input[name="twilio_body"]')
+  modalBodyInput.value = sms_body
+})
+
+function showAlert() {
+  successSMS.classList.add('show');
+
+};
+
+
   var blueMarker = L.AwesomeMarkers.icon({
                         icon: "fa-solid fa-house-medical",
                         prefix: "fa",
@@ -162,7 +239,7 @@
       {% for marker in payload.services %}
       {% if marker['lon'] %}
           L.marker([{{ marker['lat'] }}, {{ marker['lon'] }}], {icon: blueMarker, customId:"{{ marker.id }}"}).
-          bindPopup("<h5 class='text-info'>{{ marker['name'] }}</h5><p class='text-muted'><small><i class='fa-solid fa-location-dot'></i>{{ marker['address'] }}<br>{{ marker['city'] }}, {{ marker['state'] }} {{ marker['zip_code'] }}</small></p><p class='text-success'> Topic: {{ marker.general_topic }} </p> <a class='btn btn-outline-info px-2 my-2' href='#{{ marker.id }}'>Jump to Service</a>"),
+          bindPopup("<h5 class='text-info'>{{ marker['name'] }}</h5><p class='text-muted'><small><i class='fa-solid fa-location-dot'></i>{{ marker['address'] }}<br>{{ marker['city'] }}, {{ marker['state'] }} {{ marker['zip_code'] }}</small></p><p class='text-success'> Topic: {{ marker.general_topic }} </p> <a class='btn btn-outline-primary px-2 my-2' href='#{{ marker.id }}'>Jump to Service</a>"),
          {% endif %}
     {% endfor %}
     ]);

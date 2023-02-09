@@ -18,3 +18,4 @@ PyJWT==2.6.0
 Flask-JWT-Extended==4.4.4
 boto3==1.26.46
 SQLAlchemy==1.4.46
+twilio==7.16.2

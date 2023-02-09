@@ -17,6 +17,7 @@ from flask import (
     send_file,
 )
 import requests
+from twilio.rest import Client
 from flask_login import (
     login_user,
     login_required,
@@ -126,6 +127,26 @@ def filter_tags():
         f_val = request.form["comp_select"]
         return redirect(url_for("main.get_services", tag=f_val))
     return redirect(url_for("main.get_services", tag=None))
+
+
+@main_blueprint.route("/send_sms", methods=["POST"])
+@login_required
+def send_twilio_sms():
+    """From Form Send to Twilio"""
+    number = request.form.get("phone_number")
+    body = request.form.get("twilio_body")
+    logger.info(body)
+    account_sid = "AC79e33d48f80a66dd8f84e2cfce2517c6"
+    auth_token = os.environ["TWILIO_AUTH_TOKEN"]
+    if not auth_token:
+        raise ValueError("Set TWILIO_AUTH_TOKEN")
+    client = Client(account_sid, auth_token)
+
+    message = client.messages.create(
+        body=body, from_="+18776442588", to="+1" + str(number)
+    )
+    logger.info(message.sid)
+    return {"status": "True"}
 
 
 @main_blueprint.route("/home", methods=["GET", "POST"])
