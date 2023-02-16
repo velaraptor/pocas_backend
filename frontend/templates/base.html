@@ -18,6 +18,11 @@
     {% block extra_scripts %}
     {% endblock %}
     <style>
+        .form-floating.required .form-label:after {
+      content:"*";
+      color:red;
+        }
+
         .feature {
             display: inline-flex;
             align-items: center;

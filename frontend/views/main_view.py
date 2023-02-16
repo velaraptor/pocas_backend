@@ -350,7 +350,7 @@ def get_pdf():
     req = s1.post(f"{API_URL}pdf", stream=True, json=services)
     return (
         Response(
-            stream_with_context(req.iter_content(chunk_size=1024 * 1)),
+            stream_with_context(req.iter_content(chunk_size=512 * 4)),
             content_type=req.headers["content-type"],
         ),
         200,

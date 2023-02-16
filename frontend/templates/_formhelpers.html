@@ -1,6 +1,10 @@
 {% macro render_field(field) %}
 
+{% if field.flags.required %}
+  <div class="form-floating required mb-3">
+      {% else %}
   <div class="form-floating mb-3">
+      {% endif %}
       {% if field.type == 'SwitchField' %}
         <div class="form-check form-switch">
             {%- if field.errors %}
@@ -12,14 +16,14 @@
         {% else %}
          {{ field(class_="form-control")|safe }}
       {% endif %}
-      {% if field.errors %}
-      <ul class=errors>
+            {% if field.errors %}
+      <div class="invalid-feedback d-block mx-2">
           {% for error in field.errors %}
-            <li>{{ error }}</li>
+           {{ error }}
           {% endfor %}
-        </ul>
+        </div>
       {% endif %}
-      {{ field.label }}
-      </label>
+
+      {{ field.label(class_="form-label") }}
   </div>
 {% endmacro %}
