@@ -27,6 +27,8 @@
   overflow:auto;
   z-index: 98;
 }
+
+.pdfobject-container { height: 60rem; border: 1rem solid rgba(0,0,0,.1); }
 </style>
 {% endblock %}
 {% block title %}MHP Portal - Services{% endblock %}
@@ -35,10 +37,41 @@
 <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
 <link rel="stylesheet" href="/static/leaflet.awesome-markers.css">
 <script src="/static/leaflet.awesome-markers.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdfobject@2.2.8/pdfobject.min.js"></script>
+
 {% endblock %}
 
 {% block services %}active{% endblock %}
 {% block content %}
+
+<!-- Modal -->
+<div class="modal" id="exampleModal" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-fullscreen" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-success" id="exampleModalLabel">
+                    <i class="fa-solid fa-file-pdf"></i> Exported PDF</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="pdf-container"></div>
+
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-success" id="pdf-download" download>
+                    Download <i class="fa-solid fa-file-pdf"></i></a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
 <div class="container px-2 py-3">
     <button
         type="button"
@@ -81,7 +114,9 @@
     {% if payload.services %}
         <hr>
         <div style="display: flex; justify-content: flex-end">
-            <button type="submit" class="btn btn-success btn-lg" style="width:100%" id="get-pdf" name="get-pdf">
+            <button type="button" class="btn btn-success btn-lg" style="width:100%"
+                    data-bs-toggle="modal" data-bs-target="#exampleModal"
+                    id="get-pdf" name="get-pdf">
                 Download <i class="fa-solid fa-file-pdf"></i></button>
         </div>
     {% endif %}
@@ -244,7 +279,11 @@
             if(data){
             var file = new Blob([data], { type: 'application/pdf' });
             var fileURL = URL.createObjectURL(file);
-            window.open(fileURL);
+
+            var pdf_link = document.getElementById("pdf-download");
+            pdf_link.href= fileURL
+
+            PDFObject.embed(fileURL, "#pdf-container");
             }
         },
         error: function (jqXHR, textStatus, errorThrow) {
