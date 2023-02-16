@@ -14,7 +14,7 @@
 }
 
 .badge:hover {
-    color: #73a839;
+    color: #4582ec;
     background-color: transparent;
     cursor:pointer;
 }
@@ -28,7 +28,7 @@
   z-index: 98;
 }
 
-.pdfobject-container { height: 60rem; border: 1rem solid rgba(0,0,0,.1); }
+.pdfobject-container { height: 40rem; border: 1rem solid rgba(0,0,0,.1); }
 </style>
 {% endblock %}
 {% block title %}MHP Portal - Services{% endblock %}
@@ -200,7 +200,7 @@
       {% for marker in payload.services %}
       {% if marker['lon'] %}
           L.marker([{{ marker['lat'] }}, {{ marker['lon'] }}], {icon: blueMarker, customId:"{{ marker.id }}"}).
-          bindPopup("<h5 class='text-info'>{{ marker['name'] }}</h5><p class='text-muted'><small><i class='fa-solid fa-location-dot'></i>{{ marker['address'] }}<br>{{ marker['city'] }}, {{ marker['state'] }} {{ marker['zip_code'] }}</small></p><p class='text-success'> Topic: {{ marker.general_topic }} </p> <a class='btn btn-outline-primary px-2 my-2' href='#{{ marker.id }}'>Jump to Service</a>"),
+          bindPopup("<h5 class='text-info'>{{ marker['name'] }}</h5><p class='text-muted'><small><i class='fa-solid fa-location-dot'></i><br>{{ marker['address'] }}<br>{{ marker['city'] }}, {{ marker['state'] }} {{ marker['zip_code'] }}</small></p><p class='text-success'> Topic: {{ marker.general_topic }} </p> <a class='btn btn-outline-primary px-2 my-2' href='#{{ marker.id }}'>Jump to Service</a>"),
          {% endif %}
     {% endfor %}
     ]);
@@ -285,8 +285,11 @@
 
             var pdf_link = document.getElementById("pdf-download");
             pdf_link.href= fileURL
-
-            PDFObject.embed(fileURL, "#pdf-container");
+            pdf_link.download = "mhpServices.pdf";
+            var options = {
+            fallbackLink: "<p class='text-muted'>Download the file by clicking this <a href='[url]'>Link</a>! <br>On Mobile (iOS) follow these instructions to download: <ul> <li> Press the Share button in the top-right corner.</li><li>Tap on Print after scrolling down.</li><li>In the Print Options menu, select the appropriate settings.</li></p>"
+            };
+            PDFObject.embed(fileURL, "#pdf-container", options);
             }
         },
         error: function (jqXHR, textStatus, errorThrow) {

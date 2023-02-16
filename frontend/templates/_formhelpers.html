@@ -14,15 +14,19 @@
             {%- endif %}
         </div>
         {% else %}
-         {{ field(class_="form-control")|safe }}
-      {% endif %}
             {% if field.errors %}
-      <div class="invalid-feedback d-block mx-2">
-          {% for error in field.errors %}
-           {{ error }}
-          {% endfor %}
-        </div>
+                {{ field(class_="form-control is-invalid")|safe }}
+            {% else %}
+                {{ field(class_="form-control")|safe }}
+            {% endif %}
       {% endif %}
+      {% if field.errors %}
+          <div class="invalid-feedback d-block mx-2">
+              {% for error in field.errors %}
+               {{ error }}
+              {% endfor %}
+            </div>
+          {% endif %}
 
       {{ field.label(class_="form-label") }}
   </div>

@@ -11,7 +11,7 @@ from wtforms import (
     IntegerField,
     SelectMultipleField,
 )
-from wtforms.validators import DataRequired, EqualTo, Length, Email, NumberRange
+from wtforms.validators import InputRequired, EqualTo, Length, Email, NumberRange
 import pandas as pd
 from frontend.consts import API_URL  # pylint: disable=import-error
 from frontend.setup_logging import logger
@@ -43,9 +43,9 @@ class Tags(FlaskForm):
 class EditForm(FlaskForm):
     """Edit User Profile"""
 
-    city = StringField("City", validators=[DataRequired()])
+    city = StringField("City", validators=[InputRequired()])
     affiliation = StringField("Affiliation")
-    email = StringField("Email", validators=[DataRequired(), Email()])
+    email = StringField("Email", validators=[InputRequired(), Email()])
     submit = SubmitField("Save Changes")
 
 
@@ -55,21 +55,21 @@ class ChangePassForm(FlaskForm):
     old_password = PasswordField(
         "Old Password",
         validators=[
-            DataRequired(),
+            InputRequired(),
             Length(min=6, message="Select a stronger password."),
         ],
     )
     password = PasswordField(
         "Password",
         validators=[
-            DataRequired(),
+            InputRequired(),
             Length(min=6, message="Select a stronger password."),
         ],
     )
     confirm = PasswordField(
         "Confirm Your Password",
         validators=[
-            DataRequired(),
+            InputRequired(),
             EqualTo("password", message="Passwords must match."),
         ],
     )
@@ -78,21 +78,21 @@ class ChangePassForm(FlaskForm):
 class SignupForm(FlaskForm):
     """User Sign-up Form."""
 
-    user_name = StringField("User Name", validators=[DataRequired()])
+    user_name = StringField("User Name", validators=[InputRequired()])
     password = PasswordField(
         "Password",
         validators=[
-            DataRequired(),
+            InputRequired(),
             Length(min=6, message="Select a stronger password."),
         ],
     )
-    email = StringField("Email", validators=[DataRequired(), Email()])
-    city = StringField("City", validators=[DataRequired()])
+    email = StringField("Email", validators=[InputRequired(), Email()])
+    city = StringField("City", validators=[InputRequired()])
     affiliation = StringField("Affiliation")
     confirm = PasswordField(
         "Confirm Your Password",
         validators=[
-            DataRequired(),
+            InputRequired(),
             EqualTo("password", message="Passwords must match."),
         ],
     )
@@ -105,10 +105,10 @@ class LoginForm(FlaskForm):
     user_name = StringField(
         "User Name",
         validators=[
-            DataRequired(),
+            InputRequired(),
         ],
     )
-    password = PasswordField("Password", validators=[DataRequired()])
+    password = PasswordField("Password", validators=[InputRequired()])
     remember = BooleanField()
     submit = SubmitField("Login")
 
@@ -116,8 +116,18 @@ class LoginForm(FlaskForm):
 class Questions(FlaskForm):
     """Questions for POCAS"""
 
-    age = IntegerField("Age", validators=[DataRequired(), NumberRange(min=0, max=150)])
+    age = IntegerField(
+        "Age",
+        validators=[
+            InputRequired(),
+            NumberRange(min=0, max=150, message="Age Must be between 0 and 150!"),
+        ],
+    )
     zip_code = StringField(
-        "Zip Code", validators=[DataRequired(), Length(min=5, max=5)]
+        "Zip Code",
+        validators=[
+            InputRequired(),
+            Length(min=5, max=5, message="Zip Code length must be %(max)d characters"),
+        ],
     )
     submit = SubmitField("Submit")
