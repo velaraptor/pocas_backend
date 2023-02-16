@@ -38,6 +38,7 @@
 <link rel="stylesheet" href="/static/leaflet.awesome-markers.css">
 <script src="/static/leaflet.awesome-markers.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/pdfobject@2.2.8/pdfobject.min.js"></script>
+<script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
 
 {% endblock %}
 
@@ -61,8 +62,10 @@
 
             </div>
             <div class="modal-footer">
-                <a class="btn btn-success" id="pdf-download" download>
+                <a class="btn btn-primary" id="pdf-download" download>
                     Download <i class="fa-solid fa-file-pdf"></i></a>
+                <button type="button" class="btn btn-outline-dark d-none d-sm-block" id="pdf-print">
+                    Print <i class="fa-solid fa-file-pdf"></i></button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
 
@@ -292,5 +295,12 @@
         }
         })
     });
+
+        $(document).on('click touchstart','#pdf-print',function(e)
+               {
+               var pdf_link_1 = document.getElementById("pdf-download");
+               printJS(pdf_link_1.href);
+               });
+
 </script>
 {% endblock %}
