@@ -271,6 +271,7 @@ def user_account():
 def register():
     """Register Route"""
     form = SignupForm()
+    google_key = os.getenv("GOOGLE_API_KEY")
     if form.validate_on_submit():
         existing_user = User.query.filter_by(
             user_name=form.user_name.data.lower()
@@ -289,7 +290,9 @@ def register():
             login_user(user)  # Log in as newly created user
             return redirect(url_for("main.login"))
         flash("A user already exists with that username.", "warning")
-    return render_template("public_user/register.html", form=form)
+    return render_template(
+        "public_user/register.html", form=form, googleAPIKey=google_key
+    )
 
 
 @main_blueprint.route("/password_reset", methods=["GET", "POST"])

@@ -37,3 +37,24 @@
     </div>
 </div>
 {% endblock %}
+{% block script %}
+<script
+      src="https://maps.googleapis.com/maps/api/js?key={{ googleAPIKey }}&callback=initAutocomplete&libraries=places"
+      defer
+    ></script>
+<script>
+function initAutocomplete() {
+const input = document.getElementById("city");
+const options = {
+  componentRestrictions: { country: "us" },
+  fields: ["geometry", "name"],
+  strictBounds: false,
+  types: ["(cities)"],
+  placeholder: undefined
+};
+const autocomplete = new google.maps.places.Autocomplete(input, options);
+};
+window.initAutocomplete = initAutocomplete;
+
+</script>
+{% endblock %}

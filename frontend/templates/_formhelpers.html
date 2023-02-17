@@ -15,9 +15,9 @@
         </div>
         {% else %}
             {% if field.errors %}
-                {{ field(class_="form-control is-invalid")|safe }}
+                {{ field(class_="form-control is-invalid", placeholder="&nbsp;")|safe }}
             {% else %}
-                {{ field(class_="form-control")|safe }}
+                {{ field(class_="form-control", placeholder="&nbsp;")|safe }}
             {% endif %}
       {% endif %}
       {% if field.errors %}
