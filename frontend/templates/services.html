@@ -49,7 +49,6 @@
 <script src="/static/leaflet.awesome-markers.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/pdfobject@2.2.8/pdfobject.min.js"></script>
 <script src="/static/printjs.js"></script>
-
 {% endblock %}
 
 {% block services %}active{% endblock %}
@@ -122,6 +121,8 @@
                         </select>
                         <button type="submit" class="btn btn-success">
                             <i class="fa-solid fa-magnifying-glass"></i></button>
+                    <button class="btn btn-warning btn-lg" onclick="resetHide()">Reset</button>
+
                 </div>
             </div>
         </form>
@@ -191,6 +192,14 @@
                             </ul>
                         {% endif %}
                         <div>
+                            <a class="btn btn-outline-dark px-2 my-2"
+                               href="https://www.doximity.com/conversations/new?
+                               message={{ marker['sms_payload'].replace('%0A', '\n') }}&
+                               subject=MHP%20Portal%20Recommended%20Service"
+                               aria-label="Share via Doximity">
+                                <i class="fa-solid fa-rss"></i> Share via Doximity®
+                            </a>
+
                             <a class="btn btn-outline-success px-2 my-2" href="sms:?&body={{ marker['sms_payload'] }}">
                                 <i class="fa-solid fa-comment-medical"></i> Share via SMS</a>
                         </div>
@@ -249,12 +258,19 @@
 
     {% if payload.services %}
         map.fitBounds(featureGroup.getBounds());
+        map.setZoom(11);
     {% else %}
           var latLngs = [ user_marker.getLatLng() ];
           var markerBounds = L.latLngBounds(latLngs);
           map.fitBounds(markerBounds);
     {% endif %}
     var services = JSON.parse('{{ payload.services | tojson() }}');
+    var staticServices = services;
+
+    function resetHide() {
+        services = staticServices;
+    }
+
     function hideCard(divID) {
       var x = document.getElementById(divID);
       if (x.style.display === "none") {

@@ -66,6 +66,7 @@ class Service:
             body = body + f"Web Site: {self.web_site} \n"
         body = body + "Sent via MHP Portal (https://mhpportal.app)"
         safe_body = urllib.parse.quote(body)
+        logger.debug(safe_body)
         self.sms_payload = safe_body
 
 
