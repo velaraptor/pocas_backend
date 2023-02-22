@@ -78,7 +78,7 @@ def load_user(user_id):
 def unauthorized():
     """Redirect unauthorized users to Login page."""
     flash("You must be logged in to view that page.", "warning")
-    return redirect(url_for("main.login") + "#login-container")
+    return redirect(url_for("main.login_page"))
 
 
 @main_blueprint.route("/services/", methods=["GET"])
@@ -206,6 +206,25 @@ def home_page():
     return render_template("home.html", form=form, questions=questions_payload)
 
 
+@main_blueprint.route("/login_page", methods=["GET", "POST"])
+def login_page():
+    """Login Route"""
+    if current_user.is_authenticated:
+        return redirect(url_for("main.home_page"))
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(user_name=form.user_name.data.lower()).first()
+        if user and user.check_password(password=form.password.data):
+            remember = form.remember.data
+            login_user(user, remember=remember)
+            user.last_login = datetime.now()
+            db.session.commit()
+            return redirect(url_for("main.home_page"))
+        flash("Invalid username/password combination", "warning")
+        return redirect(url_for("main.login_page"))
+    return render_template("public/login.html", form=form)
+
+
 @main_blueprint.route("/login", methods=["GET", "POST"])
 def login():
     """Login Route"""
@@ -221,7 +240,7 @@ def login():
             db.session.commit()
             return redirect(url_for("main.home_page"))
         flash("Invalid username/password combination", "warning")
-        return redirect(url_for("main.login") + "#login-container")
+        return redirect(url_for("main.login_page"))
     return render_template("public/index.html", form=form)
 
 
@@ -288,7 +307,7 @@ def register():
             db.session.add(user)
             db.session.commit()  # Create new user
             login_user(user)  # Log in as newly created user
-            return redirect(url_for("main.login"))
+            return redirect(url_for("main.login_page"))
         flash("A user already exists with that username.", "warning")
     return render_template(
         "public_user/register.html", form=form, googleAPIKey=google_key
@@ -304,7 +323,7 @@ def reset():
         if user:
             send_email(user)
             flash("Found Email! Check your email for link to reset password!", "info")
-            return redirect(url_for("main.login") + "#login-container")
+            return redirect(url_for("main.login_page"))
         flash("No Email Found!", "warning")
     return render_template("public_user/reset.html")
 
@@ -321,7 +340,7 @@ def reset_verified(token):
     user = User.verify_reset_token(token)
     if not user:
         flash("no user found", "warning")
-        return redirect(url_for("main.login") + "#login-container")
+        return redirect(url_for("main.login"))
 
     password = request.form.get("password")
     if password:
