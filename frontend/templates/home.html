@@ -1,6 +1,19 @@
 {% extends 'base_mhp.html' %}
 {% block home %}active{% endblock %}
 {% block title %}MHP Portal - Questions{% endblock %}
+{% block style_head %}
+<style>
+#btn-back-to-top {
+  position: fixed;
+  bottom: 5%;
+  right: 25px;
+  display: block;
+  overflow:auto;
+  z-index: 98;
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container px-2 py-3">
     {% from "_formhelpers.html" import render_field %}
@@ -11,7 +24,6 @@
             <form method=post>
                 {{ form.csrf_token }}
                 <div class="form-group">
-                    <dl>
                         {{ render_field(form.age) }}
                         {{ render_field(form.zip_code) }}
                         <hr>
@@ -54,7 +66,7 @@
                                         </button>
                                     <div id="collapse{{question.safe_html_name}}" class="accordion-collapse collapse"
                                          aria-labelledby="heading{{question.safe_html_name}}" style="">
-                                        <div style="padding: 1%;">
+                                        <div class="mx-3">
                                             {% for q in question.questions %}
                                                 <fieldset class="col-form-label mt-2">
                                                     {{ q.label }}
@@ -71,16 +83,31 @@
                                 {% endfor %}
                             </div>
                         </div>
+                        <div class="row">
                         {% for question in questions %}
                             {% if question['name'] == "" %}
+
                                 {% for q in question.questions %}
-                                    {{ render_field(q) }}
+                            <div class="mx-3">
+                                     <fieldset class="col-form-label mt-2">
+                                    {{ q.label }}
+                                    <div class="form-check form-switch">
+                                        {{ q(class_="form-check-input%s" % extra_classes)|safe }}
+                                    </div>
+                                </fieldset>
+                            </div>
                                 {% endfor %}
                             {% endif %}
                         {% endfor %}
-                    </dl>
+                        </div>
                 </div>
-                <p><input type=submit value=Submit class="btn  btn-lg btn-primary" style="width:100%"></p>
+                <button
+                    type="submit"
+                    class="btn btn-primary btn-floating btn-lg shadow-lg"
+                    id="btn-back-to-top"
+                    >
+                 <i class="fa-regular fa-paper-plane"></i> Submit
+                            </button>
             </form>
         </div>
     </div>

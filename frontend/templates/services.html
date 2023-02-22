@@ -93,7 +93,7 @@
 <div class="container px-2 py-3">
     <button
         type="button"
-        class="btn btn-info btn-floating btn-lg"
+        class="btn btn-info btn-floating btn-lg shadow-lg"
         id="btn-back-to-top"
         >
   <i class="fas fa-arrow-up"></i>
@@ -126,6 +126,13 @@
                 </div>
             </div>
         </form>
+    {% else %}
+    <h4 class="text-muted">
+        <small>
+            <a href="/home" class="link-secondary"><i class="fa-solid fa-angles-left"></i></a>
+        </small>
+    </h4>
+
     {% endif %}
     <hr>
     <div class="jumbotron vertical-center" id="map-container">

@@ -8,8 +8,8 @@ window.onscroll = function () {
 
 function scrollFunction() {
   if (
-    document.body.scrollTop > 60 ||
-    document.documentElement.scrollTop > 60
+    document.body.scrollTop > 70 ||
+    document.documentElement.scrollTop > 70
   ) {
     mybutton.style.display = "block";
   } else {
