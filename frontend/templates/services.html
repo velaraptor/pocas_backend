@@ -199,13 +199,13 @@
                             </ul>
                         {% endif %}
                         <div>
-                            <a class="btn btn-outline-dark px-2 my-2"
-                               href="https://www.doximity.com/conversations/new?
-                               message={{ marker['sms_payload'].replace('%0A', '\n') }}&
-                               subject=MHP%20Portal%20Recommended%20Service"
-                               aria-label="Share via Doximity">
-                                <i class="fa-solid fa-rss"></i> Share via Doximity®
-                            </a>
+<!--                            <a class="btn btn-outline-dark px-2 my-2"-->
+<!--                               href="https://www.doximity.com/conversations/new?-->
+<!--                               message={{ marker['sms_payload'].replace('%0A', '\n') }}&-->
+<!--                               subject=MHP%20Portal%20Recommended%20Service"-->
+<!--                               aria-label="Share via Doximity">-->
+<!--                                <i class="fa-solid fa-rss"></i> Share via Doximity®-->
+<!--                            </a>-->
 
                             <a class="btn btn-outline-success px-2 my-2" href="sms:?&body={{ marker['sms_payload'] }}">
                                 <i class="fa-solid fa-comment-medical"></i> Share via SMS</a>
