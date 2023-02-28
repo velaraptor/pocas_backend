@@ -77,6 +77,9 @@
                 <div id="pdf-container"></div>
             </div>
             <div class="modal-footer">
+        <button class="btn btn-success" data-bs-target="#myModal2"
+                data-bs-toggle="modal"><i class="fa-regular fa-envelope"></i> Send Email</button>
+
                 <a class="btn btn-primary" id="pdf-download" download>
                     Download <i class="fa-solid fa-file-pdf"></i></a>
                 <button type="button" class="btn btn-outline-dark d-none d-sm-block" id="pdf-print">
@@ -84,6 +87,45 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
 
+        </div>
+    </div>
+</div>
+
+
+<div class="modal" id="myModal2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-success" id="exampleModalToggleLabel2"><i class="fa-regular fa-envelope"></i> Send Email</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"></span>
+                    </button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-dismissible alert-success"
+                     id="success-alert" style="display:none">
+                      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    Successfully Sent Message</div>
+                <div class="alert alert-dismissible alert-danger"
+                     id="error-alert" style="display:none">
+                      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    Non-Valid Email! Please Correct!</div>
+
+                <form>
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">Recipient Email</label>
+            <input type="email" class="form-control" id="recipient-name">
+          </div>
+          <div class="mb-3">
+              <label for="provider-name" class="col-form-label">Healthcare Provider Name</label>
+            <input type="text" class="form-control" id="provider-name">
+          </div>
+        </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="send-email"><i class="fa-regular fa-envelope"></i> Send Email</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
         </div>
     </div>
 </div>
@@ -144,7 +186,7 @@
             <button type="button" class="btn btn-success btn-lg" style="width:100%"
                     data-bs-toggle="modal" data-bs-target="#exampleModal"
                     id="get-pdf" name="get-pdf">
-                Download <i class="fa-solid fa-file-pdf"></i></button>
+                Download/Email <i class="fa-solid fa-file-pdf"></i></button>
         </div>
     {% endif %}
     <hr>
@@ -307,6 +349,30 @@
 
       }
     };
+
+     $(document).on('click','#send-email',function(e)
+     {
+     var servicePayload2 = services.map(({ sms_payload, ...item }) => item);
+      $.ajax({
+        type:'POST',
+        url:'/email/send',
+        data: { services:  JSON.stringify(servicePayload2),
+                recipient: $("#recipient-name").val(),
+                 provider: $("#provider-name").val(),
+        },
+        success: function(data) {
+           $("#success-alert").show();
+            setTimeout(function() { $("#success-alert").hide(); }, 25000);
+        },
+        error: function (jqXHR, textStatus, errorThrow) {
+            $("#error-alert").show();
+            setTimeout(function() { $("#error-alert").hide(); }, 25000);
+            console.log(textStatus);
+            console.log(errorThrow);
+        },
+
+     })
+     });
 
     $(document).on('click','#get-pdf',function(e)
                {
