@@ -273,6 +273,15 @@
 <script src="/static/jquery-3.5.1.js"></script>
 <script src="/static/scroll_top.js"></script>
 <script type="text/javascript">
+    function changeBorder(divID) {
+        function changeDivColor(color) {
+            document.getElementById(divID).getElementsByClassName("card border-info mb-3")[0].style.backgroundColor = color;
+        }
+        changeDivColor("#cdd8e3");
+        setTimeout(function() {
+            changeDivColor("white"); //then change it back to white
+        }, 10000);
+    };
   var blueMarker = L.AwesomeMarkers.icon({
                         icon: "fa-solid fa-house-medical",
                         prefix: "fa",
@@ -283,7 +292,7 @@
       {% for marker in payload.services %}
       {% if marker['lon'] %}
           L.marker([{{ marker['lat'] }}, {{ marker['lon'] }}], {icon: blueMarker, customId:"{{ marker.id }}"}).
-          bindPopup("<h5 class='text-info'>{{ marker['name'] }}</h5><p class='text-muted'><small><i class='fa-solid fa-location-dot'></i><br>{{ marker['address'] }}<br>{{ marker['city'] }}, {{ marker['state'] }} {{ marker['zip_code'] }}</small></p><p class='text-success'> Topic: {{ marker.general_topic }} </p> <a class='btn btn-outline-primary px-2 my-2' href='#{{ marker.id }}'>Jump to Service</a>"),
+          bindPopup("<h5 class='text-info'>{{ marker['name'] }}</h5><p class='text-muted'><small><i class='fa-solid fa-location-dot'></i><br>{{ marker['address'] }}<br>{{ marker['city'] }}, {{ marker['state'] }} {{ marker['zip_code'] }}</small></p><p class='text-success'> Topic: {{ marker.general_topic }} </p> <a class='btn btn-outline-primary px-2 my-2' href='#{{ marker.id }}' onclick='changeBorder(&quot;{{ marker.id }}&quot;)'>Jump to Service</a>"),
          {% endif %}
     {% endfor %}
     ]);
