@@ -32,8 +32,8 @@
 
 .loadingMask {
     top: 25%;
-    position:fixed;
-    height:100%;
+    position:absolute;
+    height:90%;
     width:100%;
     opacity:0.5;
     z-index:12030
@@ -102,19 +102,28 @@
                     </button>
             </div>
             <div class="modal-body">
+                <div class="loadingMask" id="loadingMask2" style="visibility: hidden;">
+                    <div class="d-flex justify-content-center" style="color:#4582ec; font-size:6rem;">
+                          <div class="fa-3x">
+                            <i class="fas fa-circle-notch fa-spin"></i>
+                          </div>
+                    </div>
+                </div>
                 <div class="alert alert-dismissible alert-success"
                      id="success-alert" style="display:none">
                       <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    <i class="fa-regular fa-thumbs-up"></i>
                     Successfully Sent Message</div>
                 <div class="alert alert-dismissible alert-danger"
                      id="error-alert" style="display:none">
                       <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    <i class="fa-solid fa-triangle-exclamation"></i>
                     Non-Valid Email! Please Correct!</div>
 
                 <form>
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label">Recipient Email</label>
-            <input type="email" class="form-control" id="recipient-name">
+            <input type="email" class="form-control" id="recipient-name" required>
           </div>
           <div class="mb-3">
               <label for="provider-name" class="col-form-label">Healthcare Provider Name</label>
@@ -360,11 +369,16 @@
                 recipient: $("#recipient-name").val(),
                  provider: $("#provider-name").val(),
         },
+         beforeSend: function(){
+              $("#loadingMask2").css('visibility', 'visible');
+                },
         success: function(data) {
            $("#success-alert").show();
+           $("#loadingMask2").css('visibility', 'hidden');
             setTimeout(function() { $("#success-alert").hide(); }, 25000);
         },
         error: function (jqXHR, textStatus, errorThrow) {
+        $("#loadingMask2").css('visibility', 'hidden');
             $("#error-alert").show();
             setTimeout(function() { $("#error-alert").hide(); }, 25000);
             console.log(textStatus);
@@ -402,6 +416,7 @@
             }
         },
         error: function (jqXHR, textStatus, errorThrow) {
+        $("#loadingMask").css('visibility', 'hidden');
             console.log(textStatus);
             console.log(errorThrow);
         }
