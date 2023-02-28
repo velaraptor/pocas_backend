@@ -24,6 +24,8 @@ from flask_login import (
     current_user,
 )
 from flask_bootstrap import SwitchField
+from flask_mail import Message
+from frontend.models.flask_models import mail  # pylint: disable=import-error
 from frontend.forms import (  # pylint: disable=import-error
     SignupForm,
     LoginForm,
@@ -377,3 +379,26 @@ def get_pdf():
         ),
         200,
     )
+
+
+@main_blueprint.route("/email/send", methods=["POST"])
+@login_required
+def send_email_pdf():
+    """Send an email with attached PDF"""
+    email = request.form.get("recipient")
+    name = request.form.get("provider")
+    services = request.form.get("services")
+    msg = Message()
+    msg.subject = "MHP Portal Services"
+    msg.sender = os.getenv("MAIL_USERNAME")
+    msg.recipients = [email]
+
+    services = json.loads(services)
+    s1 = requests.Session()
+    s1.auth = (os.getenv("API_USER"), os.getenv("API_PASS"))
+    req = s1.post(f"{API_URL}pdf", stream=True, json=services)
+
+    msg.attach("mhp.pdf", "application/pdf", req.content)
+    msg.html = render_template("send_email.html", name=name)
+    mail.send(msg)
+    return {"status": True}
