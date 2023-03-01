@@ -120,14 +120,16 @@
                     <i class="fa-solid fa-triangle-exclamation"></i>
                     Non-Valid Email! Please Correct!</div>
 
-                <form>
-          <div class="mb-3">
-            <label for="recipient-name" class="col-form-label">Recipient Email</label>
-            <input type="email" class="form-control" id="recipient-name" required>
+                <form id="sendEmailForm">
+          <div class="form-floating required mb-3">
+            <input type="email" class="form-control" id="recipient-name" name="recipient-name" placeholder="&nbsp;" required value>
+            <label for="recipient-name" class="form-label">Recipient Email</label>
+
           </div>
-          <div class="mb-3">
-              <label for="provider-name" class="col-form-label">Healthcare Provider Name</label>
-            <input type="text" class="form-control" id="provider-name">
+          <div class="form-floating required mb-3">
+            <input type="text" class="form-control" id="provider-name" name="provider-name" required value>
+              <label for="provider-name" class="form-label">Healthcare Provider Name</label>
+
           </div>
         </form>
             </div>
@@ -274,12 +276,13 @@
 <script src="/static/scroll_top.js"></script>
 <script type="text/javascript">
     function changeBorder(divID) {
-        function changeDivColor(color) {
-            document.getElementById(divID).getElementsByClassName("card border-info mb-3")[0].style.backgroundColor = color;
+        function changeDivColor(color, color2) {
+            document.getElementById(divID).getElementsByClassName("card-header")[0].style.backgroundColor = color;
+            document.getElementById(divID).getElementsByClassName("card-body")[0].style.backgroundColor = color2;
         }
-        changeDivColor("#cdd8e3");
+        changeDivColor("#cdd8e3", "papayawhip");
         setTimeout(function() {
-            changeDivColor("white"); //then change it back to white
+            changeDivColor("white", "white"); //then change it back to white
         }, 10000);
     };
   var blueMarker = L.AwesomeMarkers.icon({

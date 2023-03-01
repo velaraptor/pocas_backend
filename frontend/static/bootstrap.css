@@ -11038,3 +11038,17 @@ table,
 .list-group {
   font-size: 0.9625rem;
 }
+
+.btn-circle {
+  width: 45px;
+  height: 45px;
+  line-height: 45px !important;
+  text-align: center !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+}
+
+.btn-circle i {
+  position: relative;
+  top: -1px;
+}

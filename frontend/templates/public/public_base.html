@@ -31,7 +31,6 @@
 </nav>
 {% endblock %}
 
-
 {% block body %}
 <body>
 {% block canvascontent %}
@@ -40,22 +39,22 @@
 {% block content %}
 {% endblock %}
 {% block footer %}
+
 <footer class="navbar navbar-expand-lg navbar-dark bg-light">
   <div class="container px-5 my-1">
-    <h4 class="text-primary">
-      <a href="https://twitter.com/MHPPortal">
+    <h2 class="text-primary">
+      <a class="btn btn-primary btn-circle" href="https://twitter.com/MHPPortal">
         <i class="fa-brands fa-twitter"></i></a>
-      <a href="https://www.linkedin.com/company/mhpportal">
+      <a class="btn btn-primary btn-circle" href="https://www.linkedin.com/company/mhpportal">
         <i class="fa-brands fa-linkedin"></i></a>
-          <a href="https://donate.stripe.com/14kg03b9l5Mn2zKeUU"
-       class="btn btn-warning btn-block">Donate via <i class="fa-brands fa-stripe"></i></a>
-    </h4>
-    <h6 class="text-info">
-      <small><i class="fa-regular fa-envelope"></i>
-        Contact Us: <a href="mailto:chris@mhpportal.app">chris@mhpportal.app</a>
-      </small>
-    </h6>
-    <h6 class="text-muted"><small><i class="fa-regular fa-copyright"></i> 2023: MHP Portal, Inc.</small></h6>
+    </h2>
+       <script type='text/javascript' src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script>
+      <script type='text/javascript'>kofiwidget2.init('Support Us on Ko-fi', '#29abe0', 'N4N1J510G');kofiwidget2.draw();</script>
+    <a class="btn btn-outline-primary m-1" href="mailto:chris@mhpportal.app">
+      <i class="fa-regular fa-envelope"></i>
+        Contact Us: chris@mhpportal.app
+    </a>
+    <button class="btn btn-info disabled"><small><i class="fa-regular fa-copyright"></i> 2023: MHP Portal, Inc.</small></button>
   </div>
 </footer>
 {% endblock %}
