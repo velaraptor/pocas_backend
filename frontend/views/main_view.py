@@ -399,6 +399,6 @@ def send_email_pdf():
     req = s1.post(f"{API_URL}pdf", stream=True, json=services)
 
     msg.attach("mhp.pdf", "application/pdf", req.content)
-    msg.html = render_template("send_email.html", name=name)
+    msg.html = render_template("send_email.html", name=name, services=services[:5])
     mail.send(msg)
     return {"status": True}
