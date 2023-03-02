@@ -7,8 +7,7 @@
         <td style="padding: 0 2.5em; text-align: center; padding-bottom: 3em;">
             <div class="text">
                 <p>Hello!</p>
-                <br> Your healthcare provider sent you SDOH services sent through MHP Portal
-                {% if name %} from <b>{{ name }}</b> {% endif %}!
+                <br> Your healthcare provider sent you SDOH services sent through MHP Portal{% if name %} from <b>{{ name }}</b>{% endif %}!
                 <p> PDF is attached with services requested by your healthcare provider for your use.</p>
             </div>
         </td>
@@ -48,13 +47,6 @@
                             <i class="fa-solid fa-link"></i> {{ marker['web_site'] }}</a>
                     </small>
                     </p>
-                {% endif %}
-                {% if marker['general_topic'] %}
-                    <ul class="list-group bg-secondary">
-                        <li class="list-group-item d-flex justify-content-between align-items-center active">{{ marker['general_topic'] }}
-                            <span class="badge bg-secondary rounded-pill"><i class="fa-solid fa-tag"></i></span>
-                        </li>
-                    </ul>
                 {% endif %}
             </div>
         </div>

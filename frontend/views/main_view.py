@@ -108,6 +108,7 @@ def get_services():
             vals=get_tags(),
             active=tag,
             results=False,
+            affiliation=current_user.affiliation,
         )
 
     return render_template(
@@ -117,6 +118,7 @@ def get_services():
         vals=get_tags(),
         active=False,
         results=False,
+        affiliation=current_user.affiliation,
     )
 
 
@@ -182,6 +184,7 @@ def home_page():
             active=False,
             vals=get_tags(),
             results=True,
+            affiliation=current_user.affiliation,
         )
     # get unique questions
     question_tags = []

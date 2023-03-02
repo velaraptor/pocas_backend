@@ -127,7 +127,7 @@
 
           </div>
           <div class="form-floating required mb-3">
-            <input type="text" class="form-control" id="provider-name" name="provider-name" required value>
+            <input type="text" class="form-control" id="provider-name" name="provider-name" required value {% if affiliation %}="{{ affiliation }}" {% endif %}>
               <label for="provider-name" class="form-label">Healthcare Provider Name</label>
 
           </div>
