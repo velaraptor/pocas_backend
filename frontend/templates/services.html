@@ -146,7 +146,7 @@
 <div class="container px-2 py-3">
     <button
         type="button"
-        class="btn btn-info btn-floating btn-lg shadow-lg"
+        class="btn btn-info btn-floating btn-lg shadow-extra"
         id="btn-back-to-top"
         >
   <i class="fas fa-arrow-up"></i>
@@ -204,7 +204,7 @@
     <div class="row">
     {% for marker in payload.services %}
         <div class="col-md-4" id="{{ marker.id }}">
-            <div class="card border-info mb-3" style="height:325px;">
+            <div class="card border-info mb-3 shadow-lg" style="height:325px;">
                 <div class="card-header text-info d-flex justify-content-between align-items-center"><strong>{{ marker['name'] }}</strong>
                     <button type="button" class="btn-close" onclick="hideCard('{{ marker.id }}')"></button>
                 </div>
