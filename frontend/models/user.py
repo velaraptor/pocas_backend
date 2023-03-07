@@ -22,6 +22,7 @@ class User(UserMixin, db.Model):
     created_on = db.Column(db.DateTime, index=False, unique=False, nullable=True)
     last_login = db.Column(db.DateTime, index=False, unique=False, nullable=True)
     city = db.Column(db.String(200), index=False, unique=False, nullable=True)
+    search_city = db.Column(db.String(200), index=False, unique=False, nullable=True)
     affiliation = db.Column(db.String(200), index=False, unique=False, nullable=True)
 
     def set_password(self, password):

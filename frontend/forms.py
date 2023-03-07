@@ -10,6 +10,7 @@ from wtforms import (
     BooleanField,
     IntegerField,
     SelectMultipleField,
+    SelectField,
 )
 from wtforms.validators import InputRequired, EqualTo, Length, Email, NumberRange
 import pandas as pd
@@ -46,6 +47,9 @@ class EditForm(FlaskForm):
     city = StringField("City", validators=[InputRequired()])
     affiliation = StringField("Affiliation")
     email = StringField("Email", validators=[InputRequired(), Email()])
+    search_city = SelectField(
+        "Search City", choices=["", "Tucson, AZ", "Austin, TX", "Rio Grande Valley, TX"]
+    )
     submit = SubmitField("Save Changes")
 
 

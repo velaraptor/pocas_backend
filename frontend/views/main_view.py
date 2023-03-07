@@ -109,6 +109,7 @@ def get_services():
             active=tag,
             results=False,
             affiliation=current_user.affiliation,
+            user_name=current_user.user_name,
         )
 
     return render_template(
@@ -119,6 +120,7 @@ def get_services():
         active=False,
         results=False,
         affiliation=current_user.affiliation,
+        user_name=current_user.user_name,
     )
 
 
@@ -185,6 +187,7 @@ def home_page():
             vals=get_tags(),
             results=True,
             affiliation=current_user.affiliation,
+            user_name=current_user.user_name,
         )
     # get unique questions
     question_tags = []
@@ -208,7 +211,12 @@ def home_page():
                 payload["questions"].append(form_question_temp)
         questions_payload.append(payload)
 
-    return render_template("home.html", form=form, questions=questions_payload)
+    return render_template(
+        "home.html",
+        form=form,
+        questions=questions_payload,
+        user_name=current_user.user_name,
+    )
 
 
 @main_blueprint.route("/login_page", methods=["GET", "POST"])
@@ -260,9 +268,13 @@ def change_password():
         if user.check_password(pass_form.old_password.data):
             user.set_password(pass_form.password.data)
             flash("Password Changed!", "info")
-            return render_template("password_change.html", form=pass_form)
+            return render_template(
+                "password_change.html", form=pass_form, user_name=current_user.user_name
+            )
         flash("Current Password is incorrect!", "warning")
-    return render_template("password_change.html", form=pass_form)
+    return render_template(
+        "password_change.html", form=pass_form, user_name=current_user.user_name
+    )
 
 
 @main_blueprint.route("/account", methods=["GET", "POST"])
@@ -275,6 +287,7 @@ def user_account():
         city=current_user.city,
         affiliation=current_user.affiliation,
         email=current_user.email,
+        search_city=current_user.search_city,
     )
     city = current_user.city
     affiliation = current_user.affiliation
@@ -285,10 +298,21 @@ def user_account():
         existing_user.city = form.city.data
         existing_user.affiliation = form.affiliation.data
         existing_user.email = form.email.data
+        existing_user.search_city = form.search_city.data
         db.session.commit()
         flash("Updated Profile!", "info")
-        return render_template("user_account.html", form=form, user_data=user_data)
-    return render_template("user_account.html", form=form, user_data=user_data)
+        return render_template(
+            "user_account.html",
+            form=form,
+            user_data=user_data,
+            user_name=current_user.user_name,
+        )
+    return render_template(
+        "user_account.html",
+        form=form,
+        user_data=user_data,
+        user_name=current_user.user_name,
+    )
 
 
 @main_blueprint.route("/register", methods=["GET", "POST"])
