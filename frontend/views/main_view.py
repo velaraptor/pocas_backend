@@ -135,7 +135,6 @@ def get_services(bypass=False):
             affiliation=current_user.affiliation,
             user_name=current_user.user_name,
         )
-
     return render_template(
         "services.html",
         payload=obj.export(),
