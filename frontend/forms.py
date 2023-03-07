@@ -17,7 +17,7 @@ import pandas as pd
 from frontend.consts import API_URL  # pylint: disable=import-error
 from frontend.setup_logging import logger
 
-CITY_CHOICES = ["", "Tucson, AZ", "Austin, TX", "Rio Grande Valley, TX"]
+CITY_CHOICES = ["", "Tucson, AZ", "Austin, TX"]
 
 
 def get_tags():

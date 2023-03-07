@@ -101,21 +101,25 @@ def service_base():
 
 
 @main_blueprint.route("/services/", methods=["GET"])
+@main_blueprint.route("/services/<bypass>", methods=["GET"])
 @login_required
 def get_services(bypass=False):
     """Get all Services"""
-    # TODO: do /services/{city} and filter on api based on location
     if not current_user.search_city and not bypass:
         return redirect(url_for("main.service_base"))
     tag = request.args.get("tag")
 
     tag_form = Tags()
     logger.debug(tag_form.tags.data)
-    data = None
+    data = {}
     if tag:
-        data = {"tag": tag}
-    services_resp = requests.get(f"{API_URL}services", timeout=20, data=data)
+        data["tag"] = tag
+    if current_user.search_city:
+        data["city"] = current_user.search_city
+    print(data)
+    services_resp = requests.get(f"{API_URL}services", timeout=20, params=data)
     payload = services_resp.json()
+    print(payload)
     obj = Services(payload)
     obj.sort()
     obj.encode_services()
