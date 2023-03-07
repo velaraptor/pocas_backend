@@ -8,7 +8,8 @@
   <a class="nav-link {% block services %}{% endblock %}" href="/services"><i class="fa-regular fa-building"></i> Services</a>
 </li>
 <li class="nav-item">
-  <a class="nav-link {% block account %}{% endblock %}" href="/account"><i class="fa-regular fa-user"></i> Account</a>
+  <a class="nav-link {% block account %}{% endblock %}" href="/account">
+    <i class="fa-solid fa-user-nurse"></i> {{ user_name }} </a>
 </li>
 {% endblock %}
 

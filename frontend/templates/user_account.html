@@ -19,16 +19,16 @@
     {% from "_formhelpers.html" import render_field %}
     <div class="jumbotron vertical-center">
         <div class="row">
-            <h1 class="text-primary"><i class="fa-regular fa-user"></i> User Profile</h1>
-            <div class="row">
-                <div class="column">
+            <h1 class="text-primary"><i class="fa-solid fa-user-nurse"></i> User Profile</h1>
+            <div class="row my-2">
+                <div class="col-md-6 my-2">
                     <h4 class="text-secondary">
-                        User Name: {{ user_data.user_name }}
+                        {{ user_data.user_name }}
                     </h4>
                 </div>
-                <div class="column mb-3">
+                <div class="col-md-6">
                     <a href="password_change">
-                        <button class="btn btn-lg btn-warning" type="button">Edit Password</button>
+                        <button class="btn btn-lg btn-warning" type="button" style="width:100%">Edit Password</button>
                     </a>
 
                 </div>
@@ -38,6 +38,12 @@
                 {{ render_field(form.email) }}
                 {{ render_field(form.city) }}
                 {{ render_field(form.affiliation) }}
+                <div class="form-floating mb-3">
+                    {{ form.search_city(class_="form-control", placeholder="&nbsp;")|safe }}
+                    {{ form.search_city.label(class_="form-label") }}
+                    <small id="searchHelp" class="form-text text-muted">Add a Region here if you want your search results to be filtered. Blank value will show all regions!</small>
+                </div>
+
             <input id="submit" name="submit" type="submit"  style="width:100%" value="Save Changes" class="btn btn-primary">
             </form>
         </div>

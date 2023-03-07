@@ -10,11 +10,14 @@ from wtforms import (
     BooleanField,
     IntegerField,
     SelectMultipleField,
+    SelectField,
 )
 from wtforms.validators import InputRequired, EqualTo, Length, Email, NumberRange
 import pandas as pd
 from frontend.consts import API_URL  # pylint: disable=import-error
 from frontend.setup_logging import logger
+
+CITY_CHOICES = ["", "Tucson, AZ"]
 
 
 def get_tags():
@@ -46,6 +49,7 @@ class EditForm(FlaskForm):
     city = StringField("City", validators=[InputRequired()])
     affiliation = StringField("Affiliation")
     email = StringField("Email", validators=[InputRequired(), Email()])
+    search_city = SelectField("Search City", choices=CITY_CHOICES)
     submit = SubmitField("Save Changes")
 
 
@@ -130,4 +134,13 @@ class Questions(FlaskForm):
             Length(min=5, max=5, message="Zip Code length must be %(max)d characters"),
         ],
     )
+    submit = SubmitField("Submit")
+
+
+class SearchServices(FlaskForm):
+    """Search Form"""
+
+    search_city = SelectField("Search City", choices=CITY_CHOICES)
+    remember = BooleanField()
+
     submit = SubmitField("Submit")

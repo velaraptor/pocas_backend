@@ -100,18 +100,33 @@ def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
     response_model=FullServices,
     dependencies=[Depends(RateLimiter(times=50, seconds=5))],
 )
-async def get_services(tag: Optional[str] = None):
+async def get_services(
+    tag: Optional[str] = None,
+    city: Optional[str] = None,
+    max_distance: Optional[int] = 100,
+):
     """
     Get all Services for POCAS
     """
     m = MongoConnectorAsync()
     query = {}
+
     if tag:
-        query = {
-            "$or": [
-                {"tags": {"$in": [tag]}},
-                {"general_topic": {"$in": [tag]}},
-            ],
+        query["$or"] = [
+            {"tags": {"$in": [tag]}},
+            {"general_topic": {"$in": [tag]}},
+        ]
+    if city:
+        model = get_lat_lon({"city": city})
+        print(model)
+        query["loc"] = {
+            "$near": {
+                "$geometry": {
+                    "type": "Point",
+                    "coordinates": [model["lon"], model["lat"]],
+                },
+                "$maxDistance": int(max_distance * 1609),
+            }
         }
     results = await m.query_results_api(
         db="results", collection="services", query=query

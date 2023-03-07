@@ -47,13 +47,13 @@ def get_env_bool(env):
 def get_lat_lon(model):
     """Get Lat/Lon from form"""
     google_address = (
-        model.get("address")
+        model.get("address", "")
         + " "
-        + model.get("city")
+        + model.get("city", "")
         + " "
-        + model.get("state")
+        + model.get("state", "")
         + " "
-        + str(model.get("zip_code"))
+        + str(model.get("zip_code", ""))
     )
     gmaps = googlemaps.Client(key=os.getenv("GOOGLE_KEY"))
     a = gmaps.geocode(google_address)
