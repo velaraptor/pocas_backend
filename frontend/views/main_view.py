@@ -34,6 +34,7 @@ from frontend.forms import (  # pylint: disable=import-error
     ChangePassForm,
     Tags,
     get_tags,
+    SearchServices,
 )  # pylint: disable=import-error
 from frontend.consts import API_URL  # pylint: disable=import-error
 from frontend.models.user import User  # pylint: disable=import-error
@@ -83,10 +84,29 @@ def unauthorized():
     return redirect(url_for("main.login_page"))
 
 
+@main_blueprint.route("/base/services/", methods=["GET", "POST"])
+@login_required
+def service_base():
+    """Filter Services by City"""
+    search = SearchServices(search_city=current_user.search_city)
+    if search.validate_on_submit():
+        remember = search.remember.data
+        if remember:
+            current_user.search_city = search.search_city.data
+            db.session.commit()
+        return redirect(url_for("main.get_services", bypass=True))
+    return render_template(
+        "search_services.html", search=search, user_name=current_user.user_name
+    )
+
+
 @main_blueprint.route("/services/", methods=["GET"])
 @login_required
-def get_services():
+def get_services(bypass=False):
     """Get all Services"""
+    # TODO: do /services/{city} and filter on api based on location
+    if not current_user.search_city and not bypass:
+        return redirect(url_for("main.service_base"))
     tag = request.args.get("tag")
 
     tag_form = Tags()
