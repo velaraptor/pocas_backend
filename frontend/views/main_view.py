@@ -100,14 +100,15 @@ def service_base():
     )
 
 
-@main_blueprint.route("/services/", methods=["GET"])
-@main_blueprint.route("/services/<bypass>", methods=["GET"])
+@main_blueprint.route("/services/", methods=["GET", "POST"])
+@main_blueprint.route("/services/<bypass>", methods=["GET", "POST"])
 @login_required
 def get_services(bypass=False):
     """Get all Services"""
     if not current_user.search_city and not bypass:
         return redirect(url_for("main.service_base"))
     tag = request.args.get("tag")
+    search = SearchServices(search_city=current_user.search_city)
 
     tag_form = Tags()
     logger.debug(tag_form.tags.data)
@@ -134,6 +135,7 @@ def get_services(bypass=False):
             results=False,
             affiliation=current_user.affiliation,
             user_name=current_user.user_name,
+            search=search,
         )
     return render_template(
         "services.html",
@@ -144,6 +146,7 @@ def get_services(bypass=False):
         results=False,
         affiliation=current_user.affiliation,
         user_name=current_user.user_name,
+        search=search,
     )
 
 
