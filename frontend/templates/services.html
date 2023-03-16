@@ -1,4 +1,5 @@
 {% extends 'base_mhp.html' %}
+{% from "_formhelpers.html" import render_field %}
 {% block style_head %}
 <style>
 #map-container {
@@ -158,10 +159,15 @@
       </div>
     {% endfor %}
     {% if not results %}
+    <button class="btn btn-outline-primary btn-lg mb-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFilters"
+            aria-expanded="false" aria-controls="collapseFilters" style="width:100%;">
+        <i class="fa-solid fa-filter"></i> Filters
+    </button>
+    <div class="collapse" id="collapseFilters">
         <form method="POST" id="filters" action="/filter">
             {{ tags.csrf_token }}
-            <div class="form-group">
-                <div class="input-group mb-3">
+            <div class="form-group mx-1 py-2">
+                <div class="input-group mb-7">
                         <select name="comp_select" class="selectpicker form-control">
                             <option value="nada" disabled selected>Filter by Tags</option>
                             {% for o in vals %}
@@ -179,6 +185,18 @@
                 </div>
             </div>
         </form>
+     <form method=post>
+                {{ search.csrf_token }}
+                <div class="form-group mx-1 py-2">
+                    <div class="input-group mb-3">
+                        {{ render_field(search.search_city) }}
+                        <button id="submit-city" type="submit" class="btn btn-primary btn-lg mb-3">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+    </div>
     {% else %}
     <h4 class="text-muted">
         <small>
