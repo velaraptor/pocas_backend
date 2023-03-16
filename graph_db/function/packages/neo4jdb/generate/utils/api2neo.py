@@ -65,12 +65,20 @@ class Analytics2NeoImporter(BaseNeoImporter):
         )
         zip_codes_url = f"{self.api_path}/api/v1/platform/zip_codes"
         data_zip_url = f"{self.api_path}/api/v1/platform/data/%s"
+        question_url = f"{self.api_path}/api/v1/questions"
         resp = s.get(zip_codes_url)
         z_c = resp.json()
         json_data = []
+        resp_question = s.get(question_url)
+        question_data = resp_question.json().get("items")
+        question_data = sorted(question_data, key=lambda d: d["id"])
+
+        # TODO: map answers to sorted questions id and merge nodes with that! only ones that are 1s (answered)
         for z in z_c:
             resp = s.get(data_zip_url % z["id"])
             json_data = json_data + resp.json()
+        for data in json_data:
+            data["questions"] = question_data[data["answers"]]
         self.data = json_data
 
     def import_graph(self):
@@ -80,6 +88,7 @@ class Analytics2NeoImporter(BaseNeoImporter):
             session.execute_write(self._create_node_message, message=self.data)
             nodes_written += len(self.data)
             session.execute_write(self.__create_node_tag_rel_user, message=self.data)
+            session.execute_write(self.__create_node_questions_rel, message=self.data)
         print({"nodes": nodes_written})
 
     def __create_node_tag_rel_user(self, tx, message):
@@ -100,6 +109,24 @@ class Analytics2NeoImporter(BaseNeoImporter):
         )
         return result
 
+    def __create_node_questions_rel(self, tx, message):
+        """Create a relationship with user to Service"""
+        result = tx.run(
+            """
+            UNWIND $message as message
+            UNWIND message.questions as question
+            MATCH
+              (a:%s {id: message.name, date: $date}),
+              (t:Questions {id: question.id, date: $date})
+            MERGE (a)-[r:REC]->(t)
+            RETURN a
+            """
+            % self.node_type,
+            message=message,
+            date=self.date,
+        )
+        return result
+
     def _create_node_message(self, tx, message):
         """Create a standard Node"""
         result = tx.run(
@@ -111,6 +138,7 @@ class Analytics2NeoImporter(BaseNeoImporter):
                   SET t.zip_code = message.zip_code
                   SET t.dob = message.dob
                   SET t.time = message.time
+                  SET t.answers = message.answers
             RETURN t.name, t.created
             """
             % self.node_type,

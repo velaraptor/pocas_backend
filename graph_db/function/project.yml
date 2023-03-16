@@ -26,5 +26,5 @@ packages:
         parameters: {}
         annotations: {}
         limits:
-          timeout: 65000
+          timeout: 180000
           memory: 512
