@@ -4,7 +4,7 @@ keys.env
 migrations/versions/*.py
 google_github.txt
 Untitled.ipynb
-
+todo.txt
 .ipynb_checkpoints/
 c/*
 *.icloud

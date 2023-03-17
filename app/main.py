@@ -104,6 +104,7 @@ async def get_services(
     tag: Optional[str] = None,
     city: Optional[str] = None,
     max_distance: Optional[int] = 100,
+    text: Optional[str] = None,
 ):
     """
     Get all Services for POCAS
@@ -111,12 +112,14 @@ async def get_services(
     m = MongoConnectorAsync()
     query = {}
 
+    if text:
+        query["$text"] = {"$search": text}
     if tag:
         query["$or"] = [
             {"tags": {"$in": [tag]}},
             {"general_topic": {"$in": [tag]}},
         ]
-    if city:
+    if city and not text:
         model = get_lat_lon({"city": city})
         print(model)
         query["loc"] = {
@@ -126,6 +129,14 @@ async def get_services(
                     "coordinates": [model["lon"], model["lat"]],
                 },
                 "$maxDistance": int(max_distance * 1609),
+            }
+        }
+    if city and text:
+        model = get_lat_lon({"city": city})
+        print(model)
+        query["loc"] = {
+            "$geoWithin": {
+                "$center": [[model["lon"], model["lat"]], max_distance * (1 / 69)],
             }
         }
     results = await m.query_results_api(

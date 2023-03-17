@@ -1,9 +1,9 @@
-{% macro render_field(field) %}
+{% macro render_field(field, class="mb-3") %}
 
 {% if field.flags.required %}
   <div class="form-floating required mb-3">
       {% else %}
-  <div class="form-floating mb-3">
+  <div class="form-floating {{ class }}">
       {% endif %}
       {% if field.type == 'SwitchField' %}
         <div class="form-check form-switch">

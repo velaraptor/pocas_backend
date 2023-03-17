@@ -82,8 +82,8 @@ class ChangePassForm(FlaskForm):
 class SignupForm(FlaskForm):
     """User Sign-up Form."""
 
-    user_name = StringField("User Name", validators=[InputRequired()])
-    password = PasswordField(
+    user_name2 = StringField("User Name", validators=[InputRequired()])
+    password2 = PasswordField(
         "Password",
         validators=[
             InputRequired(),
@@ -97,7 +97,7 @@ class SignupForm(FlaskForm):
         "Confirm Your Password",
         validators=[
             InputRequired(),
-            EqualTo("password", message="Passwords must match."),
+            EqualTo("password2", message="Passwords must match."),
         ],
     )
     submit = SubmitField("Register")
