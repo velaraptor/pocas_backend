@@ -15,11 +15,11 @@ class MongoConnector:
     General MongoDB Connector
     """
 
-    def __init__(self, fsync=False):
+    def __init__(self, fsync=False, user=None, password=None):
         self.__host = os.getenv("MONGO_HOST", "0.0.0.0")
         self.__port = os.getenv("MONGO_PORT", "27017")
-        self.__pass = os.getenv("MONGO_INITDB_ROOT_PASSWORD")
-        self.__user = os.getenv("MONGO_INITDB_ROOT_USERNAME")
+        self.__pass = os.getenv("MONGO_INITDB_ROOT_PASSWORD", password)
+        self.__user = os.getenv("MONGO_INITDB_ROOT_USERNAME", user)
 
         self._uri = f"mongodb://{self.__user}:{self.__pass}@{self.__host}:{self.__port}"
         self.client = MongoClient(self._uri, fsync=fsync)
@@ -129,8 +129,8 @@ class MongoConnectorAsync(MongoConnector):
     General MongoDB Connector
     """
 
-    def __init__(self, fsync=False):
-        super().__init__(fsync=fsync)
+    def __init__(self, fsync=False, user=None, password=None):
+        super().__init__(fsync=fsync, user=user, password=password)
         self.client = motor.motor_asyncio.AsyncIOMotorClient(self._uri, fsync=fsync)
 
     @staticmethod
