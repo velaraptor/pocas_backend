@@ -147,7 +147,7 @@
 <div class="container px-2 py-3">
     <button
         type="button"
-        class="btn btn-info btn-floating btn-lg shadow-extra"
+        class="btn btn-success btn-floating btn-lg shadow-extra"
         id="btn-back-to-top"
         >
   <i class="fas fa-arrow-up"></i>
@@ -163,39 +163,50 @@
             aria-expanded="false" aria-controls="collapseFilters" style="width:100%;">
         <i class="fa-solid fa-filter"></i> Filters
     </button>
-    <div class="collapse" id="collapseFilters">
-        <form method="POST" id="filters" action="/filter">
-            {{ tags.csrf_token }}
-            <div class="form-group mx-1 py-2">
-                <div class="input-group mb-7">
-                        <select name="comp_select" class="selectpicker form-control">
-                            <option value="nada" disabled selected>Filter by Tags</option>
-                            {% for o in vals %}
-                                {% if active == o %}
-                                    <option value="{{ o }}" selected>{{ o }}</option>
-                                {% else %}
-                                    <option value="{{ o }}">{{ o }}</option>
-                                {% endif %}
-                            {% endfor %}
-                        </select>
-                        <button type="submit" class="btn btn-success">
-                            <i class="fa-solid fa-magnifying-glass"></i></button>
-                    <button class="btn btn-warning btn-lg" onclick="resetHide()">Reset</button>
-
-                </div>
-            </div>
-        </form>
-     <form method=post>
+    <div class="rounded bg-light collapse" id="collapseFilters">
+        <div class="container">
+            <form method=post>
                 {{ search.csrf_token }}
-                <div class="form-group mx-1 py-2">
-                    <div class="input-group mb-3">
-                        {{ render_field(search.search_city) }}
-                        <button id="submit-city" type="submit" class="btn btn-primary btn-lg mb-3">
+                <div class="form-group py-2">
+                    <div class="input-group">
+                        {{ render_field(search.search_city, class="") }}
+                        <button id="submit-city" type="submit" class="btn btn-primary btn-lg">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </button>
+                                    <button class="btn btn-warning btn-lg" onclick="resetHide()">Reset</button>
+
                     </div>
                 </div>
             </form>
+            <form method="POST" id="filters" action="/filter">
+                {{ tags.csrf_token }}
+                <div class="form-group py-2">
+                    <div class="input-group">
+                        <div class="form-floating">
+                            <select id="comp_select" name="comp_select" class="selectpicker form-control">
+                                <option value="nada" disabled selected></option>
+                                {% for o in vals %}
+                                    {% if active == o %}
+                                        <option value="{{ o }}" selected>{{ o }}</option>
+                                    {% else %}
+                                        <option value="{{ o }}">{{ o }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                            <label class="form-label" for="comp_select">Filter by Tag</label>
+                        </div>
+                         <div class="form-floating">
+                            <input id="search-value" name="search-value" class="form-control"
+                                   type="search" {% if search_value  %}
+                                   value="{{ search_value }}" {% endif %}>
+                             <label class="form-label" for="search-value">Search Services</label>
+                         </div>
+                        <button type="submit" class="btn btn-success btn-lg">
+                            <i class="fa-solid fa-magnifying-glass"></i></button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
     {% else %}
     <h4 class="text-muted">
@@ -205,20 +216,17 @@
     </h4>
 
     {% endif %}
-    <hr>
     <div class="jumbotron vertical-center" id="map-container">
         <div id="map"></div>
     </div>
     {% if payload.services %}
-        <hr>
-        <div style="display: flex; justify-content: flex-end">
-            <button type="button" class="btn btn-success btn-lg" style="width:100%"
+        <div class="py-4 mx-2">
+            <button type="button" class="btn btn-success btn-lg shadow-sm" style="width:100%"
                     data-bs-toggle="modal" data-bs-target="#exampleModal"
                     id="get-pdf" name="get-pdf">
                 Download/Email <i class="fa-solid fa-file-pdf"></i></button>
         </div>
     {% endif %}
-    <hr>
     <div class="row">
     {% for marker in payload.services %}
         <div class="col-md-4" id="{{ marker.id }}">

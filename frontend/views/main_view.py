@@ -108,6 +108,7 @@ def get_services(bypass=False):
     if not current_user.search_city and not bypass:
         return redirect(url_for("main.service_base"))
     tag = request.args.get("tag")
+    search_param = request.args.get("search")
     search = SearchServices(search_city=current_user.search_city)
 
     tag_form = Tags()
@@ -117,10 +118,11 @@ def get_services(bypass=False):
         data["tag"] = tag
     if current_user.search_city:
         data["city"] = current_user.search_city
+    if search_param:
+        data["text"] = search_param
     print(data)
     services_resp = requests.get(f"{API_URL}services", timeout=20, params=data)
     payload = services_resp.json()
-    print(payload)
     obj = Services(payload)
     obj.sort()
     obj.encode_services()
@@ -136,6 +138,7 @@ def get_services(bypass=False):
             affiliation=current_user.affiliation,
             user_name=current_user.user_name,
             search=search,
+            search_value=search_param,
         )
     return render_template(
         "services.html",
@@ -147,6 +150,7 @@ def get_services(bypass=False):
         affiliation=current_user.affiliation,
         user_name=current_user.user_name,
         search=search,
+        search_value=search_param,
     )
 
 
@@ -154,10 +158,13 @@ def get_services(bypass=False):
 @login_required
 def filter_tags():
     """Filter by Tag and show services"""
+    s_val = None
+    f_val = None
+    if request.form.get("search-value"):
+        s_val = request.form["search-value"]
     if request.form.get("comp_select"):
         f_val = request.form["comp_select"]
-        return redirect(url_for("main.get_services", tag=f_val))
-    return redirect(url_for("main.get_services", tag=None))
+    return redirect(url_for("main.get_services", tag=f_val, search=s_val))
 
 
 @main_blueprint.route("/home", methods=["GET", "POST"])
@@ -267,9 +274,30 @@ def login_page():
 @main_blueprint.route("/login", methods=["GET", "POST"])
 def login():
     """Login Route"""
+    google_key = os.getenv("GOOGLE_API_KEY")
     if current_user.is_authenticated:
         return redirect(url_for("main.home_page"))
     form = LoginForm()
+    register_form = SignupForm(prefix="a")
+    if register_form.validate_on_submit():
+        existing_user = User.query.filter_by(
+            user_name=register_form.user_name2.data.lower()
+        ).first()
+        if existing_user is None:
+            user = User(
+                user_name=register_form.user_name2.data,
+                city=register_form.city.data,
+                email=register_form.email.data,
+                affiliation=register_form.affiliation.data,
+                created_on=datetime.now(),
+            )
+            user.set_password(register_form.password2.data)
+            db.session.add(user)
+            db.session.commit()  # Create new user
+            login_user(user)  # Log in as newly created user
+            return redirect(url_for("main.login_page"))
+        flash("A user already exists with that username.", "warning")
+
     if form.validate_on_submit():
         user = User.query.filter_by(user_name=form.user_name.data.lower()).first()
         if user and user.check_password(password=form.password.data):
@@ -280,7 +308,12 @@ def login():
             return redirect(url_for("main.home_page"))
         flash("Invalid username/password combination", "warning")
         return redirect(url_for("main.login_page"))
-    return render_template("public/index.html", form=form)
+    return render_template(
+        "public/index.html",
+        form=form,
+        googleAPIKey=google_key,
+        register_form=register_form,
+    )
 
 
 @main_blueprint.route("/password_change", methods=["GET", "POST"])
@@ -348,17 +381,17 @@ def register():
     google_key = os.getenv("GOOGLE_API_KEY")
     if form.validate_on_submit():
         existing_user = User.query.filter_by(
-            user_name=form.user_name.data.lower()
+            user_name=form.user_name2.data.lower()
         ).first()
         if existing_user is None:
             user = User(
-                user_name=form.user_name.data,
+                user_name=form.user_name2.data,
                 city=form.city.data,
                 email=form.email.data,
                 affiliation=form.affiliation.data,
                 created_on=datetime.now(),
             )
-            user.set_password(form.password.data)
+            user.set_password(form.password2.data)
             db.session.add(user)
             db.session.commit()  # Create new user
             login_user(user)  # Log in as newly created user

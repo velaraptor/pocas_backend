@@ -24,6 +24,7 @@ from fastapi_limiterx.depends import RateLimiter
 from fastapi_paginate import Page, add_pagination
 from fastapi_paginate.ext.motor import paginate
 import aioredis
+from thefuzz import process
 from cosine_search.top_results import GetTopNResults
 from db.mongo_connector import MongoConnector, MongoConnectorAsync
 from db.consts import DB_SERVICES, get_lat_lon, EXAMPLE_RESULTS
@@ -104,6 +105,7 @@ async def get_services(
     tag: Optional[str] = None,
     city: Optional[str] = None,
     max_distance: Optional[int] = 100,
+    text: Optional[str] = None,
 ):
     """
     Get all Services for POCAS
@@ -116,7 +118,7 @@ async def get_services(
             {"tags": {"$in": [tag]}},
             {"general_topic": {"$in": [tag]}},
         ]
-    if city:
+    if city and not text:
         model = get_lat_lon({"city": city})
         print(model)
         query["loc"] = {
@@ -128,9 +130,29 @@ async def get_services(
                 "$maxDistance": int(max_distance * 1609),
             }
         }
+    if city and text:
+        model = get_lat_lon({"city": city})
+        print(model)
+        query["loc"] = {
+            "$geoWithin": {
+                "$center": [[model["lon"], model["lat"]], max_distance * (1 / 69)],
+            }
+        }
     results = await m.query_results_api(
         db="results", collection="services", query=query
     )
+
+    if text:
+        names = [r["name"] for r in results]
+        best = process.extractBests(text, names)
+        f, _ = zip(*best)
+        f = list(f)
+        results_fuzzy = []
+        for result in results:
+            if result["name"] in f:
+                results_fuzzy.append(result)
+        results = results_fuzzy
+
     num_docs = len(results)
     if num_docs > 0:
         response = {"services": results, "num_of_services": num_docs}
