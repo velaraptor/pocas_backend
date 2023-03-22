@@ -16,7 +16,7 @@ class MongoConnector:
     """
 
     def __init__(self, fsync=False, user=None, password=None):
-        self.__host = os.getenv("MONGO_HOST", "0.0.0.0")
+        self.__host = os.getenv("MONGO_HOST", "10.62.1.181")
         self.__port = os.getenv("MONGO_PORT", "27017")
         self.__pass = os.getenv("MONGO_INITDB_ROOT_PASSWORD", password)
         self.__user = os.getenv("MONGO_INITDB_ROOT_USERNAME", user)
