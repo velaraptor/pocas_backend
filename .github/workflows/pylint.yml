@@ -23,6 +23,8 @@ jobs:
         pip install -r requirements.txt
         pip install -r requirements_ui.txt
         pip install apache-airflow
+        pip install tqdm
+        pip install spacy
     - name: Analysing the code with pylint
       run: |
         pylint $(git ls-files '*.py') --load-plugins=pylint_flask_sqlalchemy,pylint_airflow
