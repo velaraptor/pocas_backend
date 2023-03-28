@@ -15,3 +15,8 @@ graph_db/.env
 **/.deployed/**
 **/__deployer__.zip
 graph_db/function/.env
+*.npy
+*.model
+*.bin
+*.dat
+*.pickle

@@ -2,7 +2,7 @@ pandas==1.4.4
 numpy==1.23.3
 mongo==0.2.0
 flask==2.2.2
-googlemaps
+googlemaps==4.10.0
 pytz
 pymongo==4.2.0
 scikit-learn==1.1.2
@@ -18,8 +18,8 @@ Flask-Limiter==2.6.2
 werkzeug==2.2.3
 fastapi==0.83.0
 reportlab==3.6.11
-fastapi-limiterx
-aioredis
+fastapi-limiterx==0.1.6
+aioredis==2.0.1
 psycopg2-binary==2.9.2
 neo4j==5.4.0
 SQLAlchemy==1.4.46
@@ -27,3 +27,8 @@ motor==3.1.1
 fastapi-paginate==0.1.0
 thefuzz==0.19.0
 python-Levenshtein==0.20.9
+boto3
+rank_bm25==0.2.2
+gensim==4.3.1
+nmslib==2.1.1
+compress-fasttext==0.1.3
