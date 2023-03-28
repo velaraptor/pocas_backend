@@ -50,14 +50,14 @@ class TextModel:
         query = [self.ft_model[vec] for vec in inpu]
         query = np.mean(query, axis=0)
         print(query)
-        ids, distances = self.index.knnQuery(query, k=15)
+        ids, distances = self.index.knnQuery(query, k=30)
         t1 = time.time()
         print(
             f"Searched {len(self.services)} records in {round(t1 - t0, 4)} seconds \n"
         )
         queried_ids = []
         for i, j in zip(ids, distances):
-            if j < 0.3:
+            if j < 0.45:
                 queried_ids.append(self.services[i]["id"])
         print(queried_ids)
         return queried_ids
