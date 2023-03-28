@@ -181,7 +181,7 @@ class ServicesView(MyModelView):
     def on_model_change(self, form, model, is_created):
         """On model change get lat/lon from Google API"""
         model = get_lat_lon(model)
-
+        # TODO: trigger model training through rabbitmq
         return model
 
     def _feed_tag_choices(self, form):

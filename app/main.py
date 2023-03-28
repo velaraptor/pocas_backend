@@ -24,7 +24,6 @@ from fastapi_limiterx.depends import RateLimiter
 from fastapi_paginate import Page, add_pagination
 from fastapi_paginate.ext.motor import paginate
 import aioredis
-from thefuzz import process
 from cosine_search.top_results import GetTopNResults
 from db.mongo_connector import MongoConnector, MongoConnectorAsync
 from db.consts import DB_SERVICES, get_lat_lon, EXAMPLE_RESULTS
@@ -42,6 +41,7 @@ from models import (
 )
 from mongo_utils import send_user_data, send_ip_address_mongo
 from pdf_gen import generate_pdf
+from fasttext import TextModel
 
 REDIS_NAME = "pocas_redis"
 description = """
@@ -66,6 +66,9 @@ app.include_router(temp, prefix="/api/v1")
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("MHP_API")
 mongo_client = MongoConnectorAsync().client
+
+TEXT_MODEL = TextModel()
+TEXT_MODEL.load_recent_model()
 
 
 @app.on_event("startup")
@@ -143,15 +146,13 @@ async def get_services(
     )
 
     if text:
-        names = [r["name"] for r in results]
-        best = process.extractBests(text, names)
-        f, _ = zip(*best)
-        f = list(f)
-        results_fuzzy = []
-        for result in results:
-            if result["name"] in f:
-                results_fuzzy.append(result)
-        results = results_fuzzy
+        predictions = TEXT_MODEL.predict(text)
+        search_results = []
+        for r in predictions:
+            for s in results:
+                if s["id"] == r:
+                    search_results.append(s)
+        results = search_results
 
     num_docs = len(results)
     if num_docs > 0:
