@@ -57,7 +57,7 @@ class TextModel:
         )
         queried_ids = []
         for i, j in zip(ids, distances):
-            if j < 0.45:
+            if j < 0.4:
                 queried_ids.append(self.services[i]["id"])
         print(queried_ids)
         return queried_ids

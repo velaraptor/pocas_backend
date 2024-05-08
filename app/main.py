@@ -41,7 +41,8 @@ from models import (
 )
 from mongo_utils import send_user_data, send_ip_address_mongo
 from pdf_gen import generate_pdf
-from fasttext import TextModel
+
+# from fasttext import TextModel
 
 REDIS_NAME = "pocas_redis"
 description = """
@@ -67,8 +68,8 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("MHP_API")
 mongo_client = MongoConnectorAsync().client
 
-TEXT_MODEL = TextModel()
-TEXT_MODEL.load_recent_model()
+# TEXT_MODEL = TextModel()
+# TEXT_MODEL.load_recent_model()
 
 
 @app.on_event("startup")
@@ -145,14 +146,14 @@ async def get_services(
         db="results", collection="services", query=query
     )
 
-    if text:
-        predictions = TEXT_MODEL.predict(text)
-        search_results = []
-        for r in predictions:
-            for s in results:
-                if s["id"] == r:
-                    search_results.append(s)
-        results = search_results
+    # if text:
+    #     predictions = TEXT_MODEL.predict(text)
+    #     search_results = []
+    #     for r in predictions:
+    #         for s in results:
+    #             if s["id"] == r:
+    #                 search_results.append(s)
+    #     results = search_results
 
     num_docs = len(results)
     if num_docs > 0:

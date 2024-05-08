@@ -49,7 +49,7 @@ class ProgressPercentage:
 class TextModel:
     """Run Text Model"""
 
-    def __init__(self, epoch=40):
+    def __init__(self, epoch=20):
         self.epoch = epoch
         self.api_url = "https://mhpportal.app"
         self.services = None
@@ -60,8 +60,8 @@ class TextModel:
         self.weighted_doc_vects = []
         self.ft_model = FastText(
             sg=1,  # use skip-gram: usually gives better results
-            window=25,  # window size: 10 tokens before and 10 tokens after to get wider context
-            min_count=4,  # only consider tokens with at least n occurrences in the corpus
+            window=30,  # window size: 10 tokens before and 10 tokens after to get wider context
+            min_count=3,  # only consider tokens with at least n occurrences in the corpus
             negative=25,  # negative subsampling: bigger than default to sample negative examples more
             min_n=3,  # min character n-gram
             max_n=15,  # max character n-gram
@@ -115,18 +115,14 @@ class TextModel:
             text = ""
             for text_choices in [
                 "name",
-                "city",
-                "address",
-                "state",
-                "general_topic",
-                "zip_code",
+                # "general_topic",
                 "description",
             ]:
                 t = r.get(text_choices, " ")
                 if t:
                     text += f" {t}"
 
-            text += " " + " ".join(r.get("tags", [""]))
+            # text += " " + " ".join(r.get("tags", [""]))
             self.texts.append(text.lower())
 
     def fix_text(self, x):
@@ -139,7 +135,7 @@ class TextModel:
         text = [self.fix_text(str(i)) for i in self.texts]
         for doc in tqdm(self.nlp.pipe(text, disable=["ner"])):
             tok = [
-                t.lemma_
+                t.text
                 for t in doc
                 if (t.is_ascii and not t.is_punct and not t.is_space)
             ]
@@ -175,13 +171,15 @@ class TextModel:
                 )
                 weighted_vector = vector * weight
                 doc_vector.append(weighted_vector)
-            doc_vector_mean = np.mean(doc_vector, axis=0)
+            doc_vector_mean = np.median(doc_vector, axis=0)
             self.weighted_doc_vects.append(doc_vector_mean)
         data = np.vstack(self.weighted_doc_vects)
         # initialize a new index, using a HNSW index on Cosine Similarity - can take a couple of mins
 
         self.index.addDataPointBatch(data)
-        self.index.createIndex({"post": 2}, print_progress=True)
+
+        params = {"M": 100, "indexThreadQty": 1, "efConstruction": 200, "post": 2}
+        self.index.createIndex(params, print_progress=True)
 
     def predict(self, search_query):
         """Predict services based on search query"""
@@ -193,6 +191,7 @@ class TextModel:
         except:  # noqa: E722
             query = [self.ft_model[vec] for vec in inpu]
         query = np.mean(query, axis=0)
+        print(query)
         ids, distances = self.index.knnQuery(query, k=30)
         t1 = time.time()
         print(
@@ -200,7 +199,8 @@ class TextModel:
         )
         queried_ids = []
         for i, j in zip(ids, distances):
-            if j < 0.45:
+            if j < 0.4:
+                print(i, j)
                 queried_ids.append(self.services[i]["id"])
         return queried_ids
 
